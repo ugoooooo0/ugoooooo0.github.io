@@ -6,100 +6,284 @@
     <title>Mon Portfolio - Projets</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="portfolio-page">
     <div class="container">
         <header>
-            <h1>Mon Portfolio</h1>
+            <div class="header-content">
+                <a href="index.html" class="back-home-btn">
+                    ACCUEIL
+                </a>
+                <h1>MON PORTFOLIO</h1>
+            </div>
             <nav>
                 <ul>
-                    <li><a href="index.html">Accueil</a></li>
-                    <li><a href="#projets">Projets</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#" class="filter-btn" data-filter="1">2D/3D</a></li>
+                    <li><a href="#" class="filter-btn active" data-filter="all">PORTFOLIO</a></li>
+                    <li><a href="#" class="filter-btn" data-filter="2">Films</a></li>
                 </ul>
             </nav>
         </header>
         
         <main>
-            <!-- Section Projets -->
-            <section id="projets" class="section">
-                <h2>Mes Projets</h2>
-                <div class="projects-grid">
+            <!-- Projects Grid -->
+            <section id="projets" class="projects-section">
+                <div class="projects-gallery">
                     
-                    <!-- Projet 1 -->
-                    <div class="project-card">
-                        <div class="project-image">
-                            <img src="assets/images/projet1.jpg" alt="Projet 1">
-                        </div>
-                        <div class="project-info">
-                            <h3>Nom du Projet 1</h3>
-                            <p>Description courte de votre projet. Technologies utilisées, objectifs, etc.</p>
-                            <div class="project-links">
-                                <a href="https://github.com/votre-repo" target="_blank" class="btn btn-secondary">
-                                    💻 GitHub
-                                </a>
-                                <a href="https://votre-demo.com" target="_blank" class="btn btn-primary">
-                                    🔗 Démo
-                                </a>
-                            </div>
-                        </div>
+                    <!-- Projet 1 - Capture d'écran (sans sous-images) -->
+                    <div class="gallery-item large" data-category="1" data-order="1" data-has-video="non">
+                        <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/Capture%20d'écran%202024-12-01%20120103.png" 
+                             alt="Capture d'écran 3D"
+                             data-description="Scène sur une éolienne sous une mer de nuages">
                     </div>
 
-                    <!-- Projet 2 -->
-                    <div class="project-card">
-                        <div class="project-image">
-                            <img src="assets/images/projet2.jpg" alt="Projet 2">
-                        </div>
-                        <div class="project-info">
-                            <h3>Nom du Projet 2</h3>
-                            <p>Description courte de votre deuxième projet.</p>
-                            <div class="project-links">
-                                <a href="https://github.com/votre-repo2" target="_blank" class="btn btn-secondary">
-                                    💻 GitHub
-                                </a>
-                                <a href="https://votre-demo2.com" target="_blank" class="btn btn-primary">
-                                    🔗 Démo
-                                </a>
-                            </div>
-                        </div>
+                    <!-- Projet 2 - 1.png (sans sous-images) -->
+                    <div class="gallery-item medium" data-category="1" data-order="2" data-has-video="non">
+                        <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/1.png" 
+                             alt="Projet 3D 1"
+                             data-description="ville futuriste">
                     </div>
 
-                    <!-- Projet 3 -->
-                    <div class="project-card">
-                        <div class="project-image">
-                            <img src="assets/images/projet3.jpg" alt="Projet 3">
-                        </div>
-                        <div class="project-info">
-                            <h3>Nom du Projet 3</h3>
-                            <p>Description courte de votre troisième projet.</p>
-                            <div class="project-links">
-                                <a href="https://github.com/votre-repo3" target="_blank" class="btn btn-secondary">
-                                    💻 GitHub
-                                </a>
-                                <a href="https://votre-demo3.com" target="_blank" class="btn btn-primary">
-                                    🔗 Démo
-                                </a>
-                            </div>
-                        </div>
+                    <!-- Projet 3 - City Blender (sans sous-images) -->
+                    <div class="gallery-item medium" data-category="1" data-order="3" data-has-video="non">
+                        <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/city%20blender.png" 
+                             alt="Ville 3D Blender"
+                             data-description="ville futuriste">
+                    </div>
+
+                    <!-- Projet 5 - City avec galerie (CONTIENT UNE VIDÉO YOUTUBE) -->
+                    <div class="gallery-item small" data-category="1" data-order="4" data-has-video="oui"
+                         data-gallery='[
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/city.png",
+                             "https://www.youtube.com/watch?v=BwSIBaaBu-8",
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/NY.png"
+                         ]'>
+                        <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/city.png" 
+                             alt="projet d'animation de voiture dans une ville"
+                             data-description="Projet de ville 3D avec animation de voiture">
+                    </div>
+
+                    <!-- Projet 6 - GIF Animation (sans sous-images) -->
+                    <div class="gallery-item small" data-category="1" data-order="5" data-has-video="non">
+                        <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/RAVARD%20Ugo%20gif.gif" 
+                             alt="Animation 3D GIF"
+                             data-description="Animation pixel art - épreuve de sélection à mon école (Cnam Enjmin)">
+                    </div>
+
+                    <!-- Projet 7 - Screenshot Gallery (sans sous-images) -->
+                    <div class="gallery-item medium" data-category="1" data-order="6" data-has-video="non">
+                        <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/Screenshot_20241110_174832_Gallery.jpg" 
+                             alt="Screenshot Gallery"
+                             data-description="Astraunaute dans une nébuleuse volumétrique">
+                    </div>
+
+                    <!-- Projet 8 - Toon Scape (sans sous-images) -->
+                    <div class="gallery-item small" data-category="1" data-order="7" data-has-video="non">
+                        <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/TOON%20SCAPE.png" 
+                             alt="Toon Scape"
+                             data-description="Environnement cartoon inspiré des films Ghibli">
+                    </div>
+
+                    <!-- Projet 9 - Distrib Insta (sans sous-images) -->
+                    <div class="gallery-item small" data-category="1" data-order="8" data-has-video="non">
+                        <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/distrib%20insta.png" 
+                             alt="Distribution Instagram"
+                             data-description="Distributeur style cartoon">
+                    </div>
+
+                    <!-- Projet 10 - Animation Route avec galerie (1 sous-image) -->
+                    <div class="gallery-item medium" data-category="1" data-order="9" data-has-video="non"
+                         data-gallery='[
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/animation-road-and-rain-3d-model-d5b1ecc601.jpg",
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/animation-road-and-rain-3d-model-0e03d8c290.jpg"
+                         ]'>
+                        <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/animation-road-and-rain-3d-model-d5b1ecc601.jpg" 
+                             alt="Animation route et pluie"
+                             data-description="Route sous la pluie">
+                    </div>
+
+                    <!-- Projet 11 - Fog and GTR (sans sous-images) -->
+                    <div class="gallery-item small" data-category="1" data-order="10" data-has-video="non">
+                        <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/fog%20and%20GTR.png" 
+                             alt="Fog and GTR"
+                             data-description="Voiture Nissane GTR dans le brouillard">
+                    </div>
+
+                    <!-- Projet 12 - Batspace avec galerie (2 sous-images) -->
+                    <div class="gallery-item large" data-category="1" data-order="11" data-has-video="non"
+                         data-gallery='[
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/batspace%202.png",
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/batspace.png",
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/batspace%203.png"
+                         ]'>
+                        <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/batspace%202.png" 
+                             alt="Batspace 3D"
+                             data-description="Projet Batspace - Vaisseau spatial">
+                    </div>
+
+                    <!-- Projet 13 - Armor avec galerie (2 sous-images) -->
+                    <div class="gallery-item medium" data-category="1" data-order="12" data-has-video="non"
+                         data-gallery='[
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/armor%201.png",
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/armor%202.png",
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/armor%203.png"
+                         ]'>
+                        <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/armor%201.png" 
+                             alt="Armure 3D"
+                             data-description="Modélisation d'armure / combinaison spatiale">
+                    </div>
+
+                    <!-- Projet 14 - Apple Vision Pro avec galerie (2 sous-images) -->
+                    <div class="gallery-item small" data-category="1" data-order="13" data-has-video="non"
+                         data-gallery='[
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/apple-vision-pro-2024-3d-model-27653652a4.jpg",
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/apple-vision-pro-2024-3d-model-e1fa30294c.jpg",
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/apple-vision-pro-2024-3d-model-e8829515fc.jpg"
+                         ]'>
+                        <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/apple-vision-pro-2024-3d-model-27653652a4.jpg" 
+                             alt="Apple Vision Pro 3D"
+                             data-description="Modélisation Apple Vision Pro">
+                    </div>
+
+                    <!-- Projet 15 - Image16 bis avec galerie (1 sous-image) -->
+                    <div class="gallery-item medium" data-category="1" data-order="14" data-has-video="non"
+                         data-gallery='[
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/Image16.jpg",
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/image.png"
+                         ]'>
+                        <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/Image16.jpg" 
+                             alt="Image16 avec variations"
+                             data-description="base terrestre - Blender - Twinmotion">
+                    </div>
+
+                    <!-- Projet 17 - Motor Space avec galerie (4 sous-images) -->
+                    <div class="gallery-item large" data-category="1" data-order="15" data-has-video="non"
+                         data-gallery='[
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/motor%20space%201%20bis.png",
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/motor%20space%202.png",
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/motor%20space%203.png",
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/space%20moto%203.png",
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/space%20moto%204.png"
+                         ]'>
+                        <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/motor%20space%201%20bis.png" 
+                             alt="Moto spatiale 3D"
+                             data-description="Projet moto futuriste - inspiré de la saga Star Wars">
+                    </div>
+
+                    <!-- Projet 18 - Retribution avec galerie (1 sous-image) -->
+                    <div class="gallery-item medium" data-category="1" data-order="16" data-has-video="non"
+                         data-gallery='[
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/retribution%202.png",
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/retribution.png"
+                         ]'>
+                        <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/retribution%202.png" 
+                             alt="Retribution"
+                             data-description="Projet Retribution - FanArt Star Citizen">
+                    </div>
+
+                    <!-- Projet 19 - Sci-fi Scene avec galerie (2 sous-images) -->
+                    <div class="gallery-item small" data-category="1" data-order="17" data-has-video="non"
+                         data-gallery='[
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/sci%20fi%20scene%203.png",
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/sci%20fi%20scene%202.png",
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/sci%20fi%20scene%201.png"
+                         ]'>
+                        <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/sci%20fi%20scene%203.png" 
+                             alt="Scène Sci-fi"
+                             data-description="base de science science-fiction">
+                    </div>
+
+                    <!-- Projet 20 - Shoot Tel (sans sous-images) -->
+                    <div class="gallery-item small" data-category="1" data-order="18" data-has-video="non">
+                        <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/shoot%201%20tel.png" 
+                             alt="Shoot téléphone"
+                             data-description="Imagination de shooting photo">
+                    </div>
+
+                    <!-- Projet 22 - Space Station avec galerie (2 sous-images) -->
+                    <div class="gallery-item large" data-category="1" data-order="19" data-has-video="non"
+                         data-gallery='[
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/space%20station.png",
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/space%20station%20solid.png"
+                         ]'>
+                        <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/space%20station.png" 
+                             alt="Station spatiale"
+                             data-description="Epave d'une station spatiale">
+                    </div>
+
+                    <!-- Projet 23 - Terra avec galerie (1 sous-image) -->
+                    <div class="gallery-item medium" data-category="1" data-order="20" data-has-video="non"
+                         data-gallery='[
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/terra%203.png",
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/terra%202.png"
+                         ]'>
+                        <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/terra%203.png" 
+                             alt="Terra"
+                             data-description="Projet Terra - Exoplanète et sa lune">
+                    </div>
+
+<div class="gallery-item medium" data-category="1" data-order="21" data-has-video="oui"
+                         data-gallery='[
+                             "https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/aaaaa%20(1).png",
+                             "https://www.youtube.com/watch?v=dkax0LbPZuI"
+                         ]'>
+                        <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/portfolio%20assets/tournage%20imagesassets/3D%20imagesassets/aaaaa%20(1).png" 
+                             alt="Terra"
+                             data-description="Projet de conception de téléphone pour mon Baccalauréat">
                     </div>
 
                 </div>
             </section>
 
             <!-- Section Contact -->
-            <section id="contact" class="section">
-                <h2>Me Contacter</h2>
+            <section id="contact" class="section contact-section">
+                <h2>CONTACT</h2>
                 <div class="contact-info">
-                    <p>📧 Email : votre.email@example.com</p>
-                    <p>💼 LinkedIn : <a href="https://linkedin.com/in/votre-profil" target="_blank">Mon profil LinkedIn</a></p>
-                    <p>🐙 GitHub : <a href="https://github.com/ugoooooo0" target="_blank">Mon GitHub</a></p>
+                    <p>📧 ugo.ravard47@gmail.com</p>
+                    <p>💼 <a href="https://www.linkedin.com/in/ugo-ravard-42b408349" target="_blank">LinkedIn</a></p>
+                    <p>🐙 <a href="https://github.com/ugoooooo0" target="_blank">GitHub</a></p>
+                </div>
+                
+                <!-- Formulaire de contact -->
+                <div class="contact-form-container">
+                    <h3>Envoyez-moi un message</h3>
+                    <form id="contact-form" class="contact-form">
+                        <div class="form-group">
+                            <input type="text" id="name" name="name" placeholder="Votre nom" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" name="email" placeholder="Votre email" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" name="message" placeholder="Votre message..." rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            📩 Envoyer le message
+                        </button>
+                    </form>
                 </div>
             </section>
         </main>
-        
-        <footer class="footer">
-            <p>&copy; 2023 Mon Portfolio - Tous droits réservés</p>
-        </footer>
     </div>
+
+    <!-- Lightbox Modal améliorée -->
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox-content">
+            <span class="lightbox-close">&times;</span>
+            <div class="lightbox-navigation">
+                <button class="lightbox-prev">‹</button>
+                <button class="lightbox-next">›</button>
+            </div>
+            <div class="lightbox-image-container">
+                <img id="lightbox-image" src="" alt="">
+            </div>
+            <div id="lightbox-description" class="lightbox-description"></div>
+            <div class="lightbox-counter">
+                <span id="current-image">1</span> / <span id="total-images">1</span>
+            </div>
+        </div>
+    </div>
+
     <script src="main.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </body>
 </html>
