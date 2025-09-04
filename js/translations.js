@@ -54,7 +54,7 @@ class TranslationSystem {
                 
                 // Descriptions des projets portfolio
                 'Scène sur une éolienne sous une mer de nuages': 'Scène sur une éolienne sous une mer de nuages',
-                'Route sous la pluie': 'Route sous la pluie',
+                'Route sous la pluie': 'vile futuriste',
                 'Projet de ville 3D avec animation de voiture': 'Projet de ville 3D avec animation de voiture',
                 'Animation pixel art - épreuve de sélection à mon école (Cnam Enjmin)': 'Animation pixel art - épreuve de sélection à mon école (Cnam Enjmin)',
                 'Astraunaute dans une nébuleuse volumétrique': 'Astronaute dans une nébuleuse volumétrique',
@@ -323,4 +323,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Debug info
     console.log('🌐 Translation System initialized');
     console.log('Current language:', translationSystem.currentLanguage);
+
 });
