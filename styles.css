@@ -606,48 +606,62 @@ nav a:hover {
     padding: 20px;
     max-width: 1400px;
     margin: 0 auto;
+    grid-auto-rows: 20px; /* Petites unités pour un meilleur contrôle */
 }
 
-/* Tailles des items - effet masonry moderne */
+/* Tailles des items - respecte l'orientation naturelle */
 .gallery-item {
     position: relative;
     overflow: hidden;
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.3s ease;
-    break-inside: avoid;
     background: rgba(26, 31, 54, 0.4);
     border: 1px solid rgba(100, 255, 218, 0.1);
     backdrop-filter: blur(10px);
 }
 
-/* Tailles variées pour effet masonry */
-.gallery-item:nth-child(6n+1) {
-    grid-row: span 2; /* Plus haut */
-}
-
-.gallery-item:nth-child(8n+3) {
-    grid-row: span 1; /* Normal */
-}
-
-.gallery-item:nth-child(5n+2) {
-    grid-row: span 3; /* Très haut */
-}
-
-.gallery-item:nth-child(7n+4) {
-    grid-row: span 1; /* Normal */
-}
-
-.gallery-item:nth-child(4n+5) {
-    grid-row: span 2; /* Plus haut */
-}
-
+/* Adaptation automatique selon l'orientation de l'image */
 .gallery-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
     min-height: 200px;
+}
+
+/* Tailles prédéfinies pour différents ratios */
+.gallery-item.portrait {
+    grid-row: span 18; /* Images verticales - plus hautes */
+}
+
+.gallery-item.landscape {
+    grid-row: span 12; /* Images horizontales - moyennes */
+}
+
+.gallery-item.square {
+    grid-row: span 15; /* Images carrées */
+}
+
+/* Si pas de classe spécifique, on devine selon le nth-child */
+.gallery-item:not(.portrait):not(.landscape):not(.square):nth-child(6n+1) {
+    grid-row: span 16; /* Moyen-haut */
+}
+
+.gallery-item:not(.portrait):not(.landscape):not(.square):nth-child(8n+3) {
+    grid-row: span 12; /* Normal */
+}
+
+.gallery-item:not(.portrait):not(.landscape):not(.square):nth-child(5n+2) {
+    grid-row: span 20; /* Très haut */
+}
+
+.gallery-item:not(.portrait):not(.landscape):not(.square):nth-child(7n+4) {
+    grid-row: span 14; /* Moyen */
+}
+
+.gallery-item:not(.portrait):not(.landscape):not(.square):nth-child(4n+5) {
+    grid-row: span 18; /* Plus haut */
 }
 
 .gallery-item:hover {
@@ -665,7 +679,7 @@ nav a:hover {
     .projects-gallery {
         grid-template-columns: repeat(4, 1fr);
         gap: 25px;
-        grid-auto-rows: minmax(150px, auto);
+        grid-auto-rows: 20px;
     }
 }
 
@@ -673,7 +687,7 @@ nav a:hover {
     .projects-gallery {
         grid-template-columns: repeat(3, 1fr);
         gap: 20px;
-        grid-auto-rows: minmax(140px, auto);
+        grid-auto-rows: 20px;
     }
 }
 
@@ -681,7 +695,7 @@ nav a:hover {
     .projects-gallery {
         grid-template-columns: repeat(2, 1fr);
         gap: 18px;
-        grid-auto-rows: minmax(160px, auto);
+        grid-auto-rows: 20px;
     }
 }
 
@@ -690,11 +704,24 @@ nav a:hover {
         grid-template-columns: 1fr;
         gap: 15px;
         padding: 20px 10px;
-        grid-auto-rows: minmax(200px, auto);
+        grid-auto-rows: 25px;
     }
     
-    .gallery-item {
-        grid-row: span 1 !important; /* Uniformise sur mobile */
+    /* Sur mobile, réduire les hauteurs pour un meilleur affichage */
+    .gallery-item.portrait {
+        grid-row: span 12 !important;
+    }
+    
+    .gallery-item.landscape {
+        grid-row: span 10 !important;
+    }
+    
+    .gallery-item.square {
+        grid-row: span 11 !important;
+    }
+    
+    .gallery-item:not(.portrait):not(.landscape):not(.square) {
+        grid-row: span 10 !important;
     }
 }
 
