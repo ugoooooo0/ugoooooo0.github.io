@@ -58,25 +58,8 @@ function initCarousel() {
         const titleEl = item.querySelector('.carousel-overlay h3');
         const descEl = item.querySelector('.carousel-overlay p');
         
-        // Descriptions fixes pour éviter les bugs avec la lightbox
-        const carouselDescriptions = {
-            '27': 'Station spatiale futuriste',
-            '3': 'Projet de ville 3D avec animation de voiture',
-            '10': 'Animation pixel art - épreuve de sélection à mon école (Cnam Enjmin)',
-            '20': 'Tournage professionnel pour EDF',
-            '32': 'Projet audiovisuel'
-        };
-        
-        const carouselTitles = {
-            '27': 'Le Colossus',
-            '3': 'Ville 3D',
-            '10': 'Projet Baccalauréat',
-            '20': 'Projet EDF',
-            '32': 'La Vie du Chef'
-        };
-        
         if (projectOrder && img) {
-            // Trouver le projet correspondant dans la galerie pour l'image
+            // Trouver le projet correspondant dans la galerie
             const galleryItem = document.querySelector(`[data-order="${projectOrder}"]`);
             if (galleryItem) {
                 const galleryImg = galleryItem.querySelector('img');
@@ -84,12 +67,21 @@ function initCarousel() {
                     // Utiliser l'image de couverture du projet
                     img.src = galleryImg.src;
                     img.alt = galleryImg.alt;
+                    
+                    // Remplir avec les vraies descriptions de la galerie ET les sauvegarder
+                    const originalTitle = galleryImg.alt || `Projet ${projectOrder}`;
+                    const originalDescription = galleryImg.getAttribute('data-description') || 'Description du projet';
+                    
+                    if (titleEl) {
+                        titleEl.textContent = originalTitle;
+                        titleEl.setAttribute('data-original-title', originalTitle); // Sauvegarde
+                    }
+                    if (descEl) {
+                        descEl.textContent = originalDescription;
+                        descEl.setAttribute('data-original-description', originalDescription); // Sauvegarde
+                    }
                 }
             }
-            
-            // Utiliser les descriptions et titres fixes du carrousel
-            if (titleEl) titleEl.textContent = carouselTitles[projectOrder] || `Projet ${projectOrder}`;
-            if (descEl) descEl.textContent = carouselDescriptions[projectOrder] || 'Description du projet';
             
             // Ajouter le clic pour ouvrir dans la lightbox
             item.style.cursor = 'pointer';
@@ -864,11 +856,30 @@ function initLightbox() {
         }
     }
     
+    // Restaurer les descriptions originales du carrousel
+    function restoreCarouselDescriptions() {
+        const carouselItems = document.querySelectorAll('.carousel-item');
+        carouselItems.forEach(item => {
+            const titleEl = item.querySelector('.carousel-overlay h3');
+            const descEl = item.querySelector('.carousel-overlay p');
+            
+            if (titleEl && titleEl.hasAttribute('data-original-title')) {
+                titleEl.textContent = titleEl.getAttribute('data-original-title');
+            }
+            if (descEl && descEl.hasAttribute('data-original-description')) {
+                descEl.textContent = descEl.getAttribute('data-original-description');
+            }
+        });
+    }
+    
     // Fermer la lightbox
     function closeLightbox() {
         lightbox.style.display = 'none';
         document.body.style.overflow = '';
         isLightboxOpen = false;
+        
+        // Restaurer les descriptions originales du carrousel
+        restoreCarouselDescriptions();
         
         // Arrêter toutes les vidéos
         const iframes = lightboxImageContainer.querySelectorAll('iframe');
