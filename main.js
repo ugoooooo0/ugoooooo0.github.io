@@ -15,6 +15,17 @@ document.addEventListener('DOMContentLoaded', function() {
     if (document.querySelector('.portfolio-page')) {
         initFilters();
         initLightbox();
+        
+        // Attendre un peu que les images se chargent avant de détecter l'orientation
+        setTimeout(() => {
+            detectImageOrientations();
+        }, 500);
+        
+        // Détecter aussi quand toutes les images sont chargées
+        window.addEventListener('load', () => {
+            console.log('All images loaded, re-detecting orientations...');
+            detectImageOrientations();
+        });
     }
     
     // Gestion du chatbot
@@ -23,6 +34,48 @@ document.addEventListener('DOMContentLoaded', function() {
     // Gestion du contrôleur de taille
     initSizeController();
 });
+
+// Fonction pour détecter l'orientation des images et optimiser l'affichage
+function detectImageOrientations() {
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    console.log('Detecting image orientations for', galleryItems.length, 'items');
+    
+    galleryItems.forEach((item, index) => {
+        const img = item.querySelector('img');
+        if (!img) return;
+        
+        // Créer une nouvelle image pour obtenir les dimensions naturelles
+        const tempImg = new Image();
+        tempImg.onload = function() {
+            const aspectRatio = this.naturalWidth / this.naturalHeight;
+            console.log(`Image ${index}: ${this.naturalWidth}x${this.naturalHeight}, ratio: ${aspectRatio.toFixed(2)}`);
+            
+            // Supprimer les anciennes classes d'orientation
+            item.classList.remove('portrait', 'landscape', 'square');
+            
+            // Déterminer l'orientation et ajuster
+            if (aspectRatio > 1.4) {
+                // Image horizontale (landscape) - très large
+                item.classList.add('landscape');
+                console.log(`Image ${index}: classified as LANDSCAPE`);
+            } else if (aspectRatio < 0.75) {
+                // Image verticale (portrait) - très haute
+                item.classList.add('portrait');
+                console.log(`Image ${index}: classified as PORTRAIT`);
+            } else {
+                // Image carrée ou presque carrée
+                item.classList.add('square');
+                console.log(`Image ${index}: classified as SQUARE`);
+            }
+        };
+        
+        tempImg.onerror = function() {
+            console.error('Failed to load image for orientation detection:', img.src);
+        };
+        
+        tempImg.src = img.src;
+    });
+}
 
 // Fonction pour le contrôleur de taille
 function initSizeController() {
@@ -243,13 +296,15 @@ Titre de la page : ${siteContent.pageTitle}\n`;
         }
 
         return baseContext + siteContentText + `\n\nINSTRUCTIONS IMPORTANTES :
-- Réponds de manière professionnelle et amicale
-- GARDE TES RÉPONSES COURTES ET CONCISES (maximum 2-3 phrases)
-- Utilise ces informations pour donner des réponses précises
-- Si on te demande des informations spécifiques sur le site, utilise le contenu extrait ci-dessus
-- N'utilise pas d'émojis, juste du texte clair
-- Si on te demande des détails, donne-les mais reste concis
-- Évite les listes trop longues, privilégie l'essentiel`;
+- Tu es Ugo Ravard (parle à la première personne : "je", "mon", "ma")
+- Réponds de manière naturelle et personnelle, comme si tu étais vraiment Ugo
+- Évite les réponses trop formatées ou robotiques
+- Montre ta passion pour la 3D et les jeux vidéo
+- Partage des anecdotes personnelles si pertinent
+- Sois décontracté et accessible, tu as 18 ans
+- Varie tes réponses même pour des questions similaires
+- N'hésite pas à exprimer tes opinions et goûts personnels
+- Si on te demande quelque chose que tu ne sais pas, dis-le simplement`;
     }
 
     // OUVRIR AUTOMATIQUEMENT LE CHATBOT AU CHARGEMENT
@@ -265,9 +320,9 @@ Titre de la page : ${siteContent.pageTitle}\n`;
             }
         }, 100);
         
-        // Message de bienvenue automatique
+        // Message de bienvenue automatique plus personnel
         setTimeout(() => {
-            addMessage("Salut ! Je suis l'assistant virtuel d'Ugo. Vous avez des questions sur ses projets, compétences ou parcours ? Je suis là pour vous aider !", false);
+            addMessage("Salut ! Moi c'est Ugo 👋 Artiste 3D de 18 ans et étudiant à l'ENJMIN. J'adore créer des univers et des objets en 3D - ça me passionne depuis 4 ans maintenant ! Tu as des questions sur mes projets, ma formation, ou juste envie de discuter création ? Je suis là !", false);
         }, 500);
     }, 1500); // Attendre 1.5 secondes après le chargement
 
@@ -290,36 +345,10 @@ Titre de la page : ${siteContent.pageTitle}\n`;
         chatbotWindow.classList.remove('active');
     });
 
-    // Réponses de secours enrichies et plus concises
+    // Réponses de secours uniquement pour les vraies erreurs
     function getFallbackResponse(userMessage) {
-        const message = userMessage.toLowerCase();
-        
-        if (message.includes('projet') || message.includes('travail') || message.includes('création')) {
-            return "Ugo se spécialise en modélisation 3D avec Blender depuis 4 ans, créant objets, véhicules et environnements 3D réalistes. Il maîtrise le pipeline complet jusqu'à l'export .fbx pour Unreal Engine.";
-        } else if (message.includes('compétence') || message.includes('technique') || message.includes('logiciel')) {
-            return "Ugo maîtrise Blender, Substance Painter, Unreal Engine et tout le pipeline 3D. Il excelle aussi en audiovisuel (tournage, VFX, montage) et compose avec FL Studio.";
-        } else if (message.includes('formation') || message.includes('école') || message.includes('enjmin') || message.includes('étude')) {
-            return "Ugo étudie à l'ENJMIN Angoulême en jeux vidéo et 3D. Formation autodidacte via YouTube, stages chez ProdCastFilms en audiovisuel.";
-        } else if (message.includes('workflow') || message.includes('méthode') || message.includes('processus')) {
-            return "Processus structuré : idée → PureRef → whitebox → greybox → high-poly → low-poly → UVs → Texturing → export .fbx. Il prend le temps nécessaire pour un rendu satisfaisant.";
-        } else if (message.includes('inspiration') || message.includes('référence') || message.includes('artiste')) {
-            return "Références artistiques : Kane Parsent, Dan MacCabe, Chris Doretz. Découverte 3D via films d'animation et réseaux sociaux. Suit les showcases Unreal Engine et Blender.";
-        } else if (message.includes('age') || message.includes('né') || message.includes('jeune')) {
-            return "18 ans (né le 25/06/2007). Champion de France de gymnastique, 4 ans d'expérience 3D malgré son jeune âge.";
-        } else if (message.includes('contact') || message.includes('email') || message.includes('linkedin')) {
-            return "Email : ugo.ravard47@gmail.com, LinkedIn et GitHub disponibles. Formulaire de contact sur cette page.";
-        } else if (message.includes('objectif') || message.includes('futur') || message.includes('ambition')) {
-            return "Objectif : devenir artiste 3D dans l'industrie du jeu vidéo. Se prépare avec un portfolio solide spécialisé véhicules et environnements 3D.";
-        } else if (message.includes('contrainte') || message.includes('client') || message.includes('optimisation')) {
-            return "Expérience contraintes techniques : composants électroniques pour sites web, optimisation moteurs de jeu, projets clients/concours.";
-        } else if (message.includes('salut') || message.includes('bonjour') || message.includes('hello')) {
-            return "Salut ! Je suis l'assistant d'Ugo Ravard. Je peux vous parler de ses projets 3D, ses compétences, sa formation à l'ENJMIN, ou ses objectifs professionnels. Que souhaitez-vous savoir ?";
-        } else if (message.includes('qui') || message.includes('présent')) {
-            return "Ugo Ravard est un artiste 3D de 18 ans, étudiant à l'ENJMIN et passionné par la création numérique. Il combine développement web et modélisation 3D pour créer des projets innovants.";
-        } else {
-            // Utiliser la fonction améliorée qui s'adapte au contenu du site
-            return getEnhancedFallbackResponse(userMessage);
-        }
+        console.log('Utilisation du fallback pour:', userMessage);
+        return "Je suis temporairement indisponible. Pouvez-vous reformuler votre question ? En attendant, n'hésitez pas à explorer le portfolio d'Ugo ou à le contacter directement.";
     }
 
     // Fonction pour appeler l'API OpenRouter
@@ -348,8 +377,8 @@ Titre de la page : ${siteContent.pageTitle}\n`;
                             content: userMessage
                         }
                     ],
-                    max_tokens: 200, // Réduit pour des réponses plus concises
-                    temperature: 0.7
+                    max_tokens: 300, // Augmenté pour des réponses plus développées
+                    temperature: 0.8 // Augmenté pour plus de créativité
                 })
             });
 
@@ -375,30 +404,10 @@ Titre de la page : ${siteContent.pageTitle}\n`;
         }
     }
 
-    // Réponses de secours améliorées avec contenu du site
+    // Réponses de secours améliorées - UTILISÉES UNIQUEMENT EN CAS D'ERREUR API
     function getEnhancedFallbackResponse(userMessage) {
-        const message = userMessage.toLowerCase();
-        const siteContent = extractSiteContent();
-        
-        if (message.includes('projet') || message.includes('portfolio')) {
-            if (siteContent.sections.portfolio) {
-                const projectTitles = siteContent.sections.portfolio.projects.map(p => p.title).join(', ');
-                return `Ugo a plusieurs projets dans son portfolio : ${projectTitles}. Vous pouvez voir tous ses projets sur la page Portfolio avec leurs descriptions détaillées.`;
-            }
-            return "Ugo se spécialise en modélisation 3D avec Blender depuis 4 ans. Consultez la page Portfolio pour voir ses créations détaillées.";
-        } else if (message.includes('compétence') || message.includes('technique')) {
-            if (siteContent.sections.presentation && siteContent.sections.presentation.skills.length > 0) {
-                return `Les compétences principales d'Ugo incluent : ${siteContent.sections.presentation.skills.join(', ')}. Il maîtrise aussi Blender, Substance Painter et tout le pipeline 3D.`;
-            }
-            return "Ugo maîtrise JavaScript, React, Blender, 3D Design, Substance Painter, Unreal Engine et tout le pipeline 3D.";
-        } else if (message.includes('contact')) {
-            if (siteContent.sections.contact) {
-                return `Vous pouvez contacter Ugo via : ${siteContent.sections.contact.info.join(', ')}. Il y a aussi un formulaire de contact sur cette page.`;
-            }
-            return "Email : ugo.ravard47@gmail.com, LinkedIn et GitHub disponibles. Formulaire de contact sur cette page.";
-        } else {
-            return "Je connais tout le contenu de ce site ! Posez-moi des questions sur les projets d'Ugo, ses compétences, ou consultez les sections Présentation, Portfolio et Contact.";
-        }
+        console.log('API indisponible, utilisation du fallback amélioré');
+        return "Désolé, je rencontre un petit problème technique. Pouvez-vous reformuler votre question ? Je suis là pour vous parler de mes projets 3D, ma formation à l'ENJMIN, ou tout ce qui vous intéresse !";
     }
 
     // Afficher l'indicateur de frappe
@@ -691,12 +700,16 @@ function initLightbox() {
     const currentImageSpan = document.getElementById('current-image');
     const totalImagesSpan = document.getElementById('total-images');
     
-    if (!lightbox) return;
+    if (!lightbox || !lightboxImageContainer) {
+        console.error('Lightbox elements not found');
+        return;
+    }
     
     // Clic sur une image
     document.addEventListener('click', function(e) {
         if (e.target.matches('.gallery-item img')) {
             e.preventDefault();
+            console.log('Image clicked:', e.target.src);
             
             const img = e.target;
             const galleryItem = img.closest('.gallery-item');
@@ -707,6 +720,7 @@ function initLightbox() {
             if (galleryData) {
                 try {
                     currentGallery = JSON.parse(galleryData);
+                    console.log('Gallery loaded:', currentGallery);
                 } catch (e) {
                     console.error('Erreur parsing gallery:', e);
                     currentGallery = [img.src];
@@ -722,6 +736,7 @@ function initLightbox() {
     
     // Ouvrir la lightbox
     function openLightbox(description) {
+        console.log('Opening lightbox with gallery:', currentGallery);
         lightbox.style.display = 'flex';
         document.body.style.overflow = 'hidden';
         isLightboxOpen = true;
@@ -734,49 +749,110 @@ function initLightbox() {
         updateNavigation();
     }
     
-    // Charger un média (image ou vidéo)
+    // Charger un média (image ou vidéo) avec adaptation parfaite
     function loadMedia(index) {
-        if (currentGallery[index]) {
-            const mediaUrl = currentGallery[index];
-            currentImageIndex = index;
-            
-            // Nettoyer le conteneur
-            lightboxImageContainer.innerHTML = '';
-            
-            if (isYouTubeUrl(mediaUrl)) {
-                // C'est une vidéo YouTube
-                const embedUrl = getYouTubeEmbedUrl(mediaUrl);
-                if (embedUrl) {
-                    const videoContainer = document.createElement('div');
-                    videoContainer.className = 'lightbox-video-container';
-                    
-                    const iframe = document.createElement('iframe');
-                    iframe.src = embedUrl;
-                    iframe.allowFullscreen = true;
-                    iframe.title = 'Vidéo YouTube';
-                    iframe.style.cssText = 'width: 100%; height: 100%; border: none; border-radius: 10px;';
-                    
-                    videoContainer.appendChild(iframe);
-                    lightboxImageContainer.appendChild(videoContainer);
-                }
-            } else {
-                // C'est une image
-                const img = document.createElement('img');
-                img.id = 'lightbox-image';
-                img.src = mediaUrl;
-                img.alt = 'Image du portfolio';
-                img.style.cssText = 'max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px;';
-                lightboxImageContainer.appendChild(img);
-            }
-            
-            updateCounter();
-            updateNavigation();
+        if (!currentGallery || !currentGallery[index]) {
+            console.error('No media to load at index:', index);
+            return;
         }
+        
+        const mediaUrl = currentGallery[index];
+        currentImageIndex = index;
+        console.log('Loading media:', mediaUrl);
+        
+        // Nettoyer le conteneur
+        lightboxImageContainer.innerHTML = '';
+        
+        if (isYouTubeUrl(mediaUrl)) {
+            // C'est une vidéo YouTube
+            const embedUrl = getYouTubeEmbedUrl(mediaUrl);
+            if (embedUrl) {
+                const videoContainer = document.createElement('div');
+                videoContainer.className = 'lightbox-video-container';
+                videoContainer.style.cssText = `
+                    width: 100%;
+                    height: 100%;
+                    max-width: 90vw;
+                    max-height: 70vh;
+                    aspect-ratio: 16/9;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                `;
+                
+                const iframe = document.createElement('iframe');
+                iframe.src = embedUrl;
+                iframe.allowFullscreen = true;
+                iframe.title = 'Vidéo YouTube';
+                iframe.style.cssText = `
+                    width: 100%;
+                    height: 100%;
+                    border: none;
+                    border-radius: 10px;
+                    box-shadow: 0 0 50px rgba(100, 255, 218, 0.3);
+                `;
+                
+                videoContainer.appendChild(iframe);
+                lightboxImageContainer.appendChild(videoContainer);
+                console.log('YouTube video loaded');
+            }
+        } else {
+            // C'est une image - adaptation parfaite à l'écran
+            const img = document.createElement('img');
+            img.id = 'lightbox-image';
+            img.src = mediaUrl;
+            img.alt = 'Image du portfolio';
+            
+            // Style pour adaptation parfaite
+            img.style.cssText = `
+                max-width: 100%;
+                max-height: 100%;
+                width: auto;
+                height: auto;
+                object-fit: contain;
+                border-radius: 10px;
+                box-shadow: 0 0 50px rgba(100, 255, 218, 0.3);
+                display: block;
+                margin: 0 auto;
+            `;
+            
+            // Calculer la taille optimale une fois l'image chargée
+            img.onload = function() {
+                const windowWidth = window.innerWidth;
+                const windowHeight = window.innerHeight;
+                const imgRatio = this.naturalWidth / this.naturalHeight;
+                const windowRatio = windowWidth / windowHeight;
+                
+                // Padding pour les contrôles
+                const maxWidth = windowWidth * 0.9;
+                const maxHeight = windowHeight * 0.8;
+                
+                if (imgRatio > windowRatio) {
+                    // Image plus large que la fenêtre
+                    this.style.width = Math.min(maxWidth, this.naturalWidth) + 'px';
+                    this.style.height = 'auto';
+                } else {
+                    // Image plus haute que la fenêtre
+                    this.style.height = Math.min(maxHeight, this.naturalHeight) + 'px';
+                    this.style.width = 'auto';
+                }
+                console.log('Image loaded and resized');
+            };
+            
+            img.onerror = function() {
+                console.error('Failed to load image:', mediaUrl);
+            };
+            
+            lightboxImageContainer.appendChild(img);
+        }
+        
+        updateCounter();
+        updateNavigation();
     }
     
     // Mettre à jour le compteur
     function updateCounter() {
-        if (currentImageSpan && totalImagesSpan) {
+        if (currentImageSpan && totalImagesSpan && currentGallery) {
             currentImageSpan.textContent = currentImageIndex + 1;
             totalImagesSpan.textContent = currentGallery.length;
         }
@@ -784,7 +860,7 @@ function initLightbox() {
     
     // Mettre à jour la navigation
     function updateNavigation() {
-        if (lightboxPrev && lightboxNext) {
+        if (lightboxPrev && lightboxNext && currentGallery) {
             lightboxPrev.style.display = currentGallery.length > 1 ? 'block' : 'none';
             lightboxNext.style.display = currentGallery.length > 1 ? 'block' : 'none';
         }
@@ -831,15 +907,23 @@ function initLightbox() {
         }
     });
     
-    // Navigation au clavier
+    // Navigation au clavier améliorée
     document.addEventListener('keydown', function(e) {
         if (isLightboxOpen) {
+            e.preventDefault(); // Empêcher le scroll de la page
+            
             if (e.key === 'Escape') {
                 closeLightbox();
             } else if (e.key === 'ArrowLeft' && currentImageIndex > 0) {
                 loadMedia(currentImageIndex - 1);
             } else if (e.key === 'ArrowRight' && currentImageIndex < currentGallery.length - 1) {
                 loadMedia(currentImageIndex + 1);
+            } else if (e.key === 'Home') {
+                // Aller à la première image
+                loadMedia(0);
+            } else if (e.key === 'End') {
+                // Aller à la dernière image
+                loadMedia(currentGallery.length - 1);
             }
         }
     });
@@ -871,120 +955,4 @@ function initFilters() {
             });
         });
     });
-}
-
-// Fonction pour initialiser la lightbox
-function initLightbox() {
-    const galleryItems = document.querySelectorAll('.gallery-item img');
-    
-    galleryItems.forEach(img => {
-        img.addEventListener('click', function() {
-            const galleryItem = this.closest('.gallery-item');
-            const galleryData = galleryItem.getAttribute('data-gallery');
-            
-            if (galleryData) {
-                // Si l'image a une galerie
-                try {
-                    currentGallery = JSON.parse(galleryData);
-                    currentImageIndex = 0;
-                } catch(e) {
-                    console.error('Erreur parsing gallery data:', e);
-                    currentGallery = [this.src];
-                    currentImageIndex = 0;
-                }
-            } else {
-                // Image simple
-                currentGallery = [this.src];
-                currentImageIndex = 0;
-            }
-            
-            openLightbox();
-            loadMedia(0);
-        });
-    });
-    
-    // Événements de la lightbox
-    const lightbox = document.getElementById('lightbox');
-    const closeBtn = document.querySelector('.lightbox-close');
-    const prevBtn = document.querySelector('.lightbox-prev');
-    const nextBtn = document.querySelector('.lightbox-next');
-    
-    if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
-    if (prevBtn) prevBtn.addEventListener('click', () => currentImageIndex > 0 && loadMedia(currentImageIndex - 1));
-    if (nextBtn) nextBtn.addEventListener('click', () => currentImageIndex < currentGallery.length - 1 && loadMedia(currentImageIndex + 1));
-    
-    if (lightbox) {
-        lightbox.addEventListener('click', function(e) {
-            if (e.target === lightbox) {
-                closeLightbox();
-            }
-        });
-    }
-}
-
-// Ouvrir la lightbox
-function openLightbox() {
-    const lightbox = document.getElementById('lightbox');
-    if (lightbox) {
-        lightbox.style.display = 'flex';
-        isLightboxOpen = true;
-        document.body.style.overflow = 'hidden';
-    }
-}
-
-// Fermer la lightbox
-function closeLightbox() {
-    const lightbox = document.getElementById('lightbox');
-    if (lightbox) {
-        lightbox.style.display = 'none';
-        isLightboxOpen = false;
-        document.body.style.overflow = 'auto';
-    }
-}
-
-// Charger un média (image ou vidéo)
-function loadMedia(index) {
-    currentImageIndex = index;
-    const mediaUrl = currentGallery[index];
-    const image = document.getElementById('lightbox-image');
-    const counter = document.querySelector('.lightbox-counter');
-    
-    if (!image) return;
-    
-    // Mettre à jour le compteur
-    if (counter) {
-        const currentSpan = document.getElementById('current-image');
-        const totalSpan = document.getElementById('total-images');
-        if (currentSpan) currentSpan.textContent = index + 1;
-        if (totalSpan) totalSpan.textContent = currentGallery.length;
-    }
-    
-    if (mediaUrl.includes('youtube.com') || mediaUrl.includes('youtu.be')) {
-        // C'est une vidéo YouTube - redirection
-        let embedUrl = mediaUrl;
-        if (mediaUrl.includes('watch?v=')) {
-            const videoId = mediaUrl.split('watch?v=')[1].split('&')[0];
-            embedUrl = `https://www.youtube.com/embed/${videoId}`;
-        }
-        window.open(embedUrl, '_blank');
-        closeLightbox();
-    } else {
-        // C'est une image
-        image.src = mediaUrl;
-        
-        // Mettre à jour la description
-        const description = document.getElementById('lightbox-description');
-        const galleryItem = document.querySelector(`img[src="${currentGallery[0]}"]`)?.closest('.gallery-item');
-        if (description && galleryItem) {
-            const desc = galleryItem.querySelector('img').getAttribute('data-description') || '';
-            description.textContent = desc;
-        }
-    }
-    
-    // Gérer les boutons prev/next
-    const prevBtn = document.querySelector('.lightbox-prev');
-    const nextBtn = document.querySelector('.lightbox-next');
-    
-    if (prevBtn) prevBtn.style.display = index > 0 ? 'block' : 'none';
-    if (nextBtn) nextBtn.style.display = index < currentGallery.length - 1 ? 'block' : 'none';
 }
