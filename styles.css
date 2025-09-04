@@ -598,7 +598,7 @@ nav a:hover {
     margin: 0 auto;
 }
 
-/* Conteneur de la galerie avec effet masonry intelligent */
+/* Conteneur de la galerie - grille simple et efficace */
 .projects-gallery {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -606,10 +606,9 @@ nav a:hover {
     padding: 20px;
     max-width: 1400px;
     margin: 0 auto;
-    grid-auto-rows: 15px; /* Unités très petites pour un contrôle précis */
 }
 
-/* Style de base pour tous les éléments */
+/* Style uniforme pour tous les éléments */
 .gallery-item {
     position: relative;
     overflow: hidden;
@@ -619,6 +618,7 @@ nav a:hover {
     background: rgba(26, 31, 54, 0.4);
     border: 1px solid rgba(100, 255, 218, 0.1);
     backdrop-filter: blur(10px);
+    aspect-ratio: 16/9; /* Toutes les images horizontales */
 }
 
 .gallery-item img {
@@ -627,48 +627,6 @@ nav a:hover {
     object-fit: cover;
     transition: transform 0.3s ease;
     display: block;
-}
-
-/* Tailles adaptées selon l'orientation naturelle des images */
-.gallery-item.landscape {
-    grid-row: span 14; /* Images horizontales - plus courtes */
-    aspect-ratio: 16/10; /* Force un ratio horizontal */
-}
-
-.gallery-item.portrait {
-    grid-row: span 24; /* Images verticales - plus hautes */
-    aspect-ratio: 3/4; /* Force un ratio vertical */
-}
-
-.gallery-item.square {
-    grid-row: span 18; /* Images carrées - moyennes */
-    aspect-ratio: 1/1; /* Force un ratio carré */
-}
-
-/* Images sans classification - tailles par défaut variées */
-.gallery-item:not(.landscape):not(.portrait):not(.square):nth-child(6n+1) {
-    grid-row: span 16;
-    aspect-ratio: 4/3;
-}
-
-.gallery-item:not(.landscape):not(.portrait):not(.square):nth-child(8n+3) {
-    grid-row: span 20;
-    aspect-ratio: 3/4;
-}
-
-.gallery-item:not(.landscape):not(.portrait):not(.square):nth-child(5n+2) {
-    grid-row: span 22;
-    aspect-ratio: 2/3;
-}
-
-.gallery-item:not(.landscape):not(.portrait):not(.square):nth-child(7n+4) {
-    grid-row: span 14;
-    aspect-ratio: 16/9;
-}
-
-.gallery-item:not(.landscape):not(.portrait):not(.square):nth-child(4n+5) {
-    grid-row: span 18;
-    aspect-ratio: 1/1;
 }
 
 /* Effets hover */
@@ -682,12 +640,11 @@ nav a:hover {
     transform: scale(1.05);
 }
 
-/* Grille responsive optimisée pour les différentes orientations */
+/* Grille responsive simple */
 @media (min-width: 1200px) {
     .projects-gallery {
         grid-template-columns: repeat(4, 1fr);
         gap: 25px;
-        grid-auto-rows: 15px;
     }
 }
 
@@ -695,7 +652,6 @@ nav a:hover {
     .projects-gallery {
         grid-template-columns: repeat(3, 1fr);
         gap: 20px;
-        grid-auto-rows: 16px;
     }
 }
 
@@ -703,13 +659,7 @@ nav a:hover {
     .projects-gallery {
         grid-template-columns: repeat(2, 1fr);
         gap: 18px;
-        grid-auto-rows: 18px;
     }
-    
-    /* Ajuster les tailles pour tablette */
-    .gallery-item.landscape { grid-row: span 12; }
-    .gallery-item.portrait { grid-row: span 20; }
-    .gallery-item.square { grid-row: span 16; }
 }
 
 @media (max-width: 599px) {
@@ -717,28 +667,6 @@ nav a:hover {
         grid-template-columns: 1fr;
         gap: 15px;
         padding: 20px 10px;
-        grid-auto-rows: 20px;
-    }
-    
-    /* Sur mobile, optimiser pour un scroll fluide */
-    .gallery-item.landscape {
-        grid-row: span 10 !important;
-        aspect-ratio: 16/10 !important;
-    }
-    
-    .gallery-item.portrait {
-        grid-row: span 16 !important;
-        aspect-ratio: 3/4 !important;
-    }
-    
-    .gallery-item.square {
-        grid-row: span 12 !important;
-        aspect-ratio: 1/1 !important;
-    }
-    
-    .gallery-item:not(.landscape):not(.portrait):not(.square) {
-        grid-row: span 12 !important;
-        aspect-ratio: 4/3 !important;
     }
 }
 
