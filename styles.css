@@ -598,67 +598,27 @@ nav a:hover {
     margin: 0 auto;
 }
 
-/* Conteneur de la galerie avec effet masonry (briques) */
+/* Conteneur de la galerie - grille simple et efficace */
 .projects-gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
     padding: 20px;
     max-width: 1400px;
     margin: 0 auto;
-    grid-auto-rows: 20px; /* Petites unités pour un meilleur contrôle */
 }
 
-/* Tailles des items - effet masonry moderne */
-/* Tailles des items - respecte l'orientation naturelle */
+/* Style uniforme pour tous les éléments */
 .gallery-item {
     position: relative;
     overflow: hidden;
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.3s ease;
-    break-inside: avoid;
     background: rgba(26, 31, 54, 0.4);
     border: 1px solid rgba(100, 255, 218, 0.1);
     backdrop-filter: blur(10px);
-}
-
-/* Tailles variées pour effet masonry */
-.gallery-item:nth-child(6n+1) {
-    grid-row: span 2; /* Plus haut */
-/* Adaptation automatique selon l'orientation de l'image */
-.gallery-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-    min-height: 200px;
-}
-
-.gallery-item:nth-child(8n+3) {
-    grid-row: span 1; /* Normal */
-/* Tailles prédéfinies pour différents ratios */
-.gallery-item.portrait {
-    grid-row: span 18; /* Images verticales - plus hautes */
-}
-
-.gallery-item:nth-child(5n+2) {
-    grid-row: span 3; /* Très haut */
-.gallery-item.landscape {
-    grid-row: span 12; /* Images horizontales - moyennes */
-}
-
-.gallery-item:nth-child(7n+4) {
-    grid-row: span 1; /* Normal */
-.gallery-item.square {
-    grid-row: span 15; /* Images carrées */
-}
-
-.gallery-item:nth-child(4n+5) {
-    grid-row: span 2; /* Plus haut */
-/* Si pas de classe spécifique, on devine selon le nth-child */
-.gallery-item:not(.portrait):not(.landscape):not(.square):nth-child(6n+1) {
-    grid-row: span 16; /* Moyen-haut */
+    aspect-ratio: 16/9; /* Toutes les images horizontales */
 }
 
 .gallery-item img {
@@ -666,23 +626,10 @@ nav a:hover {
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
-    min-height: 200px;
-.gallery-item:not(.portrait):not(.landscape):not(.square):nth-child(8n+3) {
-    grid-row: span 12; /* Normal */
+    display: block;
 }
 
-.gallery-item:not(.portrait):not(.landscape):not(.square):nth-child(5n+2) {
-    grid-row: span 20; /* Très haut */
-}
-
-.gallery-item:not(.portrait):not(.landscape):not(.square):nth-child(7n+4) {
-    grid-row: span 14; /* Moyen */
-}
-
-.gallery-item:not(.portrait):not(.landscape):not(.square):nth-child(4n+5) {
-    grid-row: span 18; /* Plus haut */
-}
-
+/* Effets hover */
 .gallery-item:hover {
     transform: translateY(-5px);
     box-shadow: 0 20px 40px rgba(100, 255, 218, 0.2);
@@ -693,13 +640,11 @@ nav a:hover {
     transform: scale(1.05);
 }
 
-/* Grille responsive optimisée pour masonry */
+/* Grille responsive simple */
 @media (min-width: 1200px) {
     .projects-gallery {
         grid-template-columns: repeat(4, 1fr);
         gap: 25px;
-        grid-auto-rows: minmax(150px, auto);
-        grid-auto-rows: 20px;
     }
 }
 
@@ -707,8 +652,6 @@ nav a:hover {
     .projects-gallery {
         grid-template-columns: repeat(3, 1fr);
         gap: 20px;
-        grid-auto-rows: minmax(140px, auto);
-        grid-auto-rows: 20px;
     }
 }
 
@@ -716,8 +659,6 @@ nav a:hover {
     .projects-gallery {
         grid-template-columns: repeat(2, 1fr);
         gap: 18px;
-        grid-auto-rows: minmax(160px, auto);
-        grid-auto-rows: 20px;
     }
 }
 
@@ -726,27 +667,6 @@ nav a:hover {
         grid-template-columns: 1fr;
         gap: 15px;
         padding: 20px 10px;
-        grid-auto-rows: minmax(200px, auto);
-        grid-auto-rows: 25px;
-    }
-    
-    /* Sur mobile, réduire les hauteurs pour un meilleur affichage */
-    .gallery-item.portrait {
-        grid-row: span 12 !important;
-    }
-    
-    .gallery-item.landscape {
-        grid-row: span 10 !important;
-    }
-    
-    .gallery-item.square {
-        grid-row: span 11 !important;
-    }
-
-    .gallery-item {
-        grid-row: span 1 !important; /* Uniformise sur mobile */
-    .gallery-item:not(.portrait):not(.landscape):not(.square) {
-        grid-row: span 10 !important;
     }
 }
 
@@ -1024,7 +944,7 @@ nav a:hover {
         gap: 20px;
         margin-bottom: 20px;
     }
-
+    
     .back-home-btn {
         position: static; /* Retour en position normale sur mobile */
         transform: none; /* Supprime le transform sur mobile */
@@ -1032,11 +952,11 @@ nav a:hover {
         font-size: 0.85em !important;
         padding: 10px 16px !important;
     }
-
+    
     .back-home-btn:hover {
         transform: translateY(-2px) !important; /* Seul effet sur mobile */
     }
-
+    
     .portfolio-page header h1 {
         padding: 0; /* Supprime le padding sur mobile */
         font-size: 2em;
@@ -1047,18 +967,18 @@ nav a:hover {
     .portfolio-page header h1 {
         font-size: 1.6em;
     }
-
+    
     .portfolio-page nav ul {
         gap: 10px;
         padding: 10px 15px;
     }
-
+    
     .filter-btn {
         font-size: 0.75em !important;
         padding: 6px 12px !important;
         letter-spacing: 0.5px !important;
     }
-
+    
     .filter-btn[data-filter="all"] {
         font-size: 0.8em !important;
         padding: 8px 15px !important;
@@ -1169,12 +1089,12 @@ body:not(.portfolio-page) nav a:hover::before {
         height: 225px !important; /* 150px + 50% = 225px */
         border-radius: 12px !important; /* Bords plus petits sur mobile */
     }
-
+    
     .image-content {
         margin-left: 0 !important;
         margin-top: 20px !important;
     }
-
+    
     .presentation-content {
         flex-direction: column !important;
         text-align: center !important;
@@ -1324,19 +1244,19 @@ body:not(.portfolio-page) nav a:hover::before {
     .lightbox {
         padding: 10px;
     }
-
+    
     .lightbox-prev {
         left: 15px;
         padding: 12px 15px;
         font-size: 24px;
     }
-
+    
     .lightbox-next {
         right: 15px;
         padding: 12px 15px;
         font-size: 24px;
     }
-
+    
     .lightbox-close {
         top: 15px;
         right: 15px;
@@ -1344,14 +1264,14 @@ body:not(.portfolio-page) nav a:hover::before {
         height: 45px;
         font-size: 35px;
     }
-
+    
     .lightbox-description {
         bottom: 70px;
         font-size: 1em;
         max-width: 90%;
         padding: 12px 20px;
     }
-
+    
     .lightbox-counter {
         bottom: 20px;
         padding: 8px 15px;
@@ -1365,7 +1285,7 @@ body:not(.portfolio-page) nav a:hover::before {
         padding: 10px 12px;
         font-size: 20px;
     }
-
+    
     .lightbox-close {
         width: 40px;
         height: 40px;
@@ -1491,7 +1411,7 @@ body:not(.portfolio-page) nav a:hover::before {
         top: 8px;
         right: 8px;
     }
-
+    
     .gallery-item[data-has-video="oui"]::before {
         border-width: 2px;
     }
@@ -1916,17 +1836,17 @@ body:not(.portfolio-page) nav a:hover::before {
         width: 350px;
         height: 500px;
     }
-
+    
     .chatbot-widget {
         bottom: 15px;
         right: 15px;
     }
-
+    
     .chatbot-toggle {
         width: 80px;
         height: 80px;
     }
-
+    
     .chatbot-avatar {
         width: 65px;
         height: 65px;
@@ -1939,12 +1859,12 @@ body:not(.portfolio-page) nav a:hover::before {
         right: 5px;
         height: 450px;
     }
-
+    
     .chatbot-toggle {
         width: 85px;
         height: 85px;
     }
-
+    
     .chatbot-avatar {
         width: 70px;
         height: 70px;
@@ -2008,7 +1928,7 @@ body:not(.portfolio-page) nav a:hover::before {
     .chatbot-widget {
         gap: 12px;
     }
-
+    
     .chatbot-text {
         font-size: 13px;
         padding: 10px 16px;
