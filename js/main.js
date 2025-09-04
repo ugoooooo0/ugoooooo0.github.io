@@ -58,8 +58,25 @@ function initCarousel() {
         const titleEl = item.querySelector('.carousel-overlay h3');
         const descEl = item.querySelector('.carousel-overlay p');
         
+        // Descriptions fixes pour éviter les bugs avec la lightbox
+        const carouselDescriptions = {
+            '27': 'Station spatiale futuriste',
+            '3': 'Projet de ville 3D avec animation de voiture',
+            '10': 'Animation pixel art - épreuve de sélection à mon école (Cnam Enjmin)',
+            '20': 'Tournage professionnel pour EDF',
+            '32': 'Projet audiovisuel'
+        };
+        
+        const carouselTitles = {
+            '27': 'Le Colossus',
+            '3': 'Ville 3D',
+            '10': 'Projet Baccalauréat',
+            '20': 'Projet EDF',
+            '32': 'La Vie du Chef'
+        };
+        
         if (projectOrder && img) {
-            // Trouver le projet correspondant dans la galerie
+            // Trouver le projet correspondant dans la galerie pour l'image
             const galleryItem = document.querySelector(`[data-order="${projectOrder}"]`);
             if (galleryItem) {
                 const galleryImg = galleryItem.querySelector('img');
@@ -67,12 +84,12 @@ function initCarousel() {
                     // Utiliser l'image de couverture du projet
                     img.src = galleryImg.src;
                     img.alt = galleryImg.alt;
-                    
-                    // Remplir automatiquement le titre et la description
-                    if (titleEl) titleEl.textContent = galleryImg.alt || `Projet ${projectOrder}`;
-                    if (descEl) descEl.textContent = galleryImg.getAttribute('data-description') || 'Description du projet';
                 }
             }
+            
+            // Utiliser les descriptions et titres fixes du carrousel
+            if (titleEl) titleEl.textContent = carouselTitles[projectOrder] || `Projet ${projectOrder}`;
+            if (descEl) descEl.textContent = carouselDescriptions[projectOrder] || 'Description du projet';
             
             // Ajouter le clic pour ouvrir dans la lightbox
             item.style.cursor = 'pointer';
