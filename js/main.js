@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (document.querySelector('.portfolio-page')) {
         initFilters();
         initLightbox();
+        
+        // Détecter l'orientation des images et ajuster la grille
+        detectImageOrientations();
     }
     
     // Gestion du chatbot
@@ -23,6 +26,38 @@ document.addEventListener('DOMContentLoaded', function() {
     // Gestion du contrôleur de taille
     initSizeController();
 });
+
+// Fonction pour détecter l'orientation des images et optimiser l'affichage
+function detectImageOrientations() {
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    
+    galleryItems.forEach(item => {
+        const img = item.querySelector('img');
+        if (!img) return;
+        
+        // Créer une nouvelle image pour obtenir les dimensions naturelles
+        const tempImg = new Image();
+        tempImg.onload = function() {
+            const aspectRatio = this.naturalWidth / this.naturalHeight;
+            
+            // Supprimer les anciennes classes d'orientation
+            item.classList.remove('portrait', 'landscape', 'square');
+            
+            // Déterminer l'orientation et ajuster
+            if (aspectRatio > 1.3) {
+                // Image horizontale (landscape)
+                item.classList.add('landscape');
+            } else if (aspectRatio < 0.8) {
+                // Image verticale (portrait)
+                item.classList.add('portrait');
+            } else {
+                // Image carrée ou presque carrée
+                item.classList.add('square');
+            }
+        };
+        tempImg.src = img.src;
+    });
+}
 
 // Fonction pour le contrôleur de taille
 function initSizeController() {
@@ -647,12 +682,16 @@ function initLightbox() {
     const currentImageSpan = document.getElementById('current-image');
     const totalImagesSpan = document.getElementById('total-images');
     
-    if (!lightbox) return;
+    if (!lightbox || !lightboxImageContainer) {
+        console.error('Lightbox elements not found');
+        return;
+    }
     
     // Clic sur une image
     document.addEventListener('click', function(e) {
         if (e.target.matches('.gallery-item img')) {
             e.preventDefault();
+            console.log('Image clicked:', e.target.src);
             
             const img = e.target;
             const galleryItem = img.closest('.gallery-item');
@@ -663,6 +702,7 @@ function initLightbox() {
             if (galleryData) {
                 try {
                     currentGallery = JSON.parse(galleryData);
+                    console.log('Gallery loaded:', currentGallery);
                 } catch (e) {
                     console.error('Erreur parsing gallery:', e);
                     currentGallery = [img.src];
@@ -678,6 +718,7 @@ function initLightbox() {
     
     // Ouvrir la lightbox
     function openLightbox(description) {
+        console.log('Opening lightbox with gallery:', currentGallery);
         lightbox.style.display = 'flex';
         document.body.style.overflow = 'hidden';
         isLightboxOpen = true;
@@ -692,98 +733,108 @@ function initLightbox() {
     
     // Charger un média (image ou vidéo) avec adaptation parfaite
     function loadMedia(index) {
-        if (currentGallery[index]) {
-            const mediaUrl = currentGallery[index];
-            currentImageIndex = index;
-            
-            // Nettoyer le conteneur
-            lightboxImageContainer.innerHTML = '';
-            
-            if (isYouTubeUrl(mediaUrl)) {
-                // C'est une vidéo YouTube
-                const embedUrl = getYouTubeEmbedUrl(mediaUrl);
-                if (embedUrl) {
-                    const videoContainer = document.createElement('div');
-                    videoContainer.className = 'lightbox-video-container';
-                    videoContainer.style.cssText = `
-                        width: 100%;
-                        height: 100%;
-                        max-width: 90vw;
-                        max-height: 70vh;
-                        aspect-ratio: 16/9;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                    `;
-                    
-                    const iframe = document.createElement('iframe');
-                    iframe.src = embedUrl;
-                    iframe.allowFullscreen = true;
-                    iframe.title = 'Vidéo YouTube';
-                    iframe.style.cssText = `
-                        width: 100%;
-                        height: 100%;
-                        border: none;
-                        border-radius: 10px;
-                        box-shadow: 0 0 50px rgba(100, 255, 218, 0.3);
-                    `;
-                    
-                    videoContainer.appendChild(iframe);
-                    lightboxImageContainer.appendChild(videoContainer);
-                }
-            } else {
-                // C'est une image - adaptation parfaite à l'écran
-                const img = document.createElement('img');
-                img.id = 'lightbox-image';
-                img.src = mediaUrl;
-                img.alt = 'Image du portfolio';
-                
-                // Style pour adaptation parfaite
-                img.style.cssText = `
-                    max-width: 100%;
-                    max-height: 100%;
-                    width: auto;
-                    height: auto;
-                    object-fit: contain;
-                    border-radius: 10px;
-                    box-shadow: 0 0 50px rgba(100, 255, 218, 0.3);
-                    display: block;
-                    margin: 0 auto;
+        if (!currentGallery || !currentGallery[index]) {
+            console.error('No media to load at index:', index);
+            return;
+        }
+        
+        const mediaUrl = currentGallery[index];
+        currentImageIndex = index;
+        console.log('Loading media:', mediaUrl);
+        
+        // Nettoyer le conteneur
+        lightboxImageContainer.innerHTML = '';
+        
+        if (isYouTubeUrl(mediaUrl)) {
+            // C'est une vidéo YouTube
+            const embedUrl = getYouTubeEmbedUrl(mediaUrl);
+            if (embedUrl) {
+                const videoContainer = document.createElement('div');
+                videoContainer.className = 'lightbox-video-container';
+                videoContainer.style.cssText = `
+                    width: 100%;
+                    height: 100%;
+                    max-width: 90vw;
+                    max-height: 70vh;
+                    aspect-ratio: 16/9;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                 `;
                 
-                // Calculer la taille optimale une fois l'image chargée
-                img.onload = function() {
-                    const windowWidth = window.innerWidth;
-                    const windowHeight = window.innerHeight;
-                    const imgRatio = this.naturalWidth / this.naturalHeight;
-                    const windowRatio = windowWidth / windowHeight;
-                    
-                    // Padding pour les contrôles
-                    const maxWidth = windowWidth * 0.9;
-                    const maxHeight = windowHeight * 0.8;
-                    
-                    if (imgRatio > windowRatio) {
-                        // Image plus large que la fenêtre
-                        this.style.width = Math.min(maxWidth, this.naturalWidth) + 'px';
-                        this.style.height = 'auto';
-                    } else {
-                        // Image plus haute que la fenêtre
-                        this.style.height = Math.min(maxHeight, this.naturalHeight) + 'px';
-                        this.style.width = 'auto';
-                    }
-                };
+                const iframe = document.createElement('iframe');
+                iframe.src = embedUrl;
+                iframe.allowFullscreen = true;
+                iframe.title = 'Vidéo YouTube';
+                iframe.style.cssText = `
+                    width: 100%;
+                    height: 100%;
+                    border: none;
+                    border-radius: 10px;
+                    box-shadow: 0 0 50px rgba(100, 255, 218, 0.3);
+                `;
                 
-                lightboxImageContainer.appendChild(img);
+                videoContainer.appendChild(iframe);
+                lightboxImageContainer.appendChild(videoContainer);
+                console.log('YouTube video loaded');
             }
+        } else {
+            // C'est une image - adaptation parfaite à l'écran
+            const img = document.createElement('img');
+            img.id = 'lightbox-image';
+            img.src = mediaUrl;
+            img.alt = 'Image du portfolio';
             
-            updateCounter();
-            updateNavigation();
+            // Style pour adaptation parfaite
+            img.style.cssText = `
+                max-width: 100%;
+                max-height: 100%;
+                width: auto;
+                height: auto;
+                object-fit: contain;
+                border-radius: 10px;
+                box-shadow: 0 0 50px rgba(100, 255, 218, 0.3);
+                display: block;
+                margin: 0 auto;
+            `;
+            
+            // Calculer la taille optimale une fois l'image chargée
+            img.onload = function() {
+                const windowWidth = window.innerWidth;
+                const windowHeight = window.innerHeight;
+                const imgRatio = this.naturalWidth / this.naturalHeight;
+                const windowRatio = windowWidth / windowHeight;
+                
+                // Padding pour les contrôles
+                const maxWidth = windowWidth * 0.9;
+                const maxHeight = windowHeight * 0.8;
+                
+                if (imgRatio > windowRatio) {
+                    // Image plus large que la fenêtre
+                    this.style.width = Math.min(maxWidth, this.naturalWidth) + 'px';
+                    this.style.height = 'auto';
+                } else {
+                    // Image plus haute que la fenêtre
+                    this.style.height = Math.min(maxHeight, this.naturalHeight) + 'px';
+                    this.style.width = 'auto';
+                }
+                console.log('Image loaded and resized');
+            };
+            
+            img.onerror = function() {
+                console.error('Failed to load image:', mediaUrl);
+            };
+            
+            lightboxImageContainer.appendChild(img);
         }
+        
+        updateCounter();
+        updateNavigation();
     }
     
     // Mettre à jour le compteur
     function updateCounter() {
-        if (currentImageSpan && totalImagesSpan) {
+        if (currentImageSpan && totalImagesSpan && currentGallery) {
             currentImageSpan.textContent = currentImageIndex + 1;
             totalImagesSpan.textContent = currentGallery.length;
         }
@@ -791,7 +842,7 @@ function initLightbox() {
     
     // Mettre à jour la navigation
     function updateNavigation() {
-        if (lightboxPrev && lightboxNext) {
+        if (lightboxPrev && lightboxNext && currentGallery) {
             lightboxPrev.style.display = currentGallery.length > 1 ? 'block' : 'none';
             lightboxNext.style.display = currentGallery.length > 1 ? 'block' : 'none';
         }
@@ -886,120 +937,4 @@ function initFilters() {
             });
         });
     });
-}
-
-// Fonction pour initialiser la lightbox
-function initLightbox() {
-    const galleryItems = document.querySelectorAll('.gallery-item img');
-    
-    galleryItems.forEach(img => {
-        img.addEventListener('click', function() {
-            const galleryItem = this.closest('.gallery-item');
-            const galleryData = galleryItem.getAttribute('data-gallery');
-            
-            if (galleryData) {
-                // Si l'image a une galerie
-                try {
-                    currentGallery = JSON.parse(galleryData);
-                    currentImageIndex = 0;
-                } catch(e) {
-                    console.error('Erreur parsing gallery data:', e);
-                    currentGallery = [this.src];
-                    currentImageIndex = 0;
-                }
-            } else {
-                // Image simple
-                currentGallery = [this.src];
-                currentImageIndex = 0;
-            }
-            
-            openLightbox();
-            loadMedia(0);
-        });
-    });
-    
-    // Événements de la lightbox
-    const lightbox = document.getElementById('lightbox');
-    const closeBtn = document.querySelector('.lightbox-close');
-    const prevBtn = document.querySelector('.lightbox-prev');
-    const nextBtn = document.querySelector('.lightbox-next');
-    
-    if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
-    if (prevBtn) prevBtn.addEventListener('click', () => currentImageIndex > 0 && loadMedia(currentImageIndex - 1));
-    if (nextBtn) nextBtn.addEventListener('click', () => currentImageIndex < currentGallery.length - 1 && loadMedia(currentImageIndex + 1));
-    
-    if (lightbox) {
-        lightbox.addEventListener('click', function(e) {
-            if (e.target === lightbox) {
-                closeLightbox();
-            }
-        });
-    }
-}
-
-// Ouvrir la lightbox
-function openLightbox() {
-    const lightbox = document.getElementById('lightbox');
-    if (lightbox) {
-        lightbox.style.display = 'flex';
-        isLightboxOpen = true;
-        document.body.style.overflow = 'hidden';
-    }
-}
-
-// Fermer la lightbox
-function closeLightbox() {
-    const lightbox = document.getElementById('lightbox');
-    if (lightbox) {
-        lightbox.style.display = 'none';
-        isLightboxOpen = false;
-        document.body.style.overflow = 'auto';
-    }
-}
-
-// Charger un média (image ou vidéo)
-function loadMedia(index) {
-    currentImageIndex = index;
-    const mediaUrl = currentGallery[index];
-    const image = document.getElementById('lightbox-image');
-    const counter = document.querySelector('.lightbox-counter');
-    
-    if (!image) return;
-    
-    // Mettre à jour le compteur
-    if (counter) {
-        const currentSpan = document.getElementById('current-image');
-        const totalSpan = document.getElementById('total-images');
-        if (currentSpan) currentSpan.textContent = index + 1;
-        if (totalSpan) totalSpan.textContent = currentGallery.length;
-    }
-    
-    if (mediaUrl.includes('youtube.com') || mediaUrl.includes('youtu.be')) {
-        // C'est une vidéo YouTube - redirection
-        let embedUrl = mediaUrl;
-        if (mediaUrl.includes('watch?v=')) {
-            const videoId = mediaUrl.split('watch?v=')[1].split('&')[0];
-            embedUrl = `https://www.youtube.com/embed/${videoId}`;
-        }
-        window.open(embedUrl, '_blank');
-        closeLightbox();
-    } else {
-        // C'est une image
-        image.src = mediaUrl;
-        
-        // Mettre à jour la description
-        const description = document.getElementById('lightbox-description');
-        const galleryItem = document.querySelector(`img[src="${currentGallery[0]}"]`)?.closest('.gallery-item');
-        if (description && galleryItem) {
-            const desc = galleryItem.querySelector('img').getAttribute('data-description') || '';
-            description.textContent = desc;
-        }
-    }
-    
-    // Gérer les boutons prev/next
-    const prevBtn = document.querySelector('.lightbox-prev');
-    const nextBtn = document.querySelector('.lightbox-next');
-    
-    if (prevBtn) prevBtn.style.display = index > 0 ? 'block' : 'none';
-    if (nextBtn) nextBtn.style.display = index < currentGallery.length - 1 ? 'block' : 'none';
 }
