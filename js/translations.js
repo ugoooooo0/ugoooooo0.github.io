@@ -54,7 +54,7 @@ class TranslationSystem {
                 
                 // Descriptions des projets portfolio
                 'Scène sur une éolienne sous une mer de nuages': 'Scène sur une éolienne sous une mer de nuages',
-                'Route sous la pluie': 'vile futuriste',
+                'Route sous la pluie': 'Route sous la pluie',
                 'Projet de ville 3D avec animation de voiture': 'Projet de ville 3D avec animation de voiture',
                 'Animation pixel art - épreuve de sélection à mon école (Cnam Enjmin)': 'Animation pixel art - épreuve de sélection à mon école (Cnam Enjmin)',
                 'Astraunaute dans une nébuleuse volumétrique': 'Astronaute dans une nébuleuse volumétrique',
@@ -266,6 +266,9 @@ class TranslationSystem {
             }
         });
         
+        // Changer le lien du CV selon la langue
+        this.updateCVLink();
+        
         // Traduire les descriptions des images du portfolio
         this.originalDescriptions.forEach((originalDescription, element) => {
             if (this.currentLanguage === 'fr') {
@@ -297,6 +300,20 @@ class TranslationSystem {
         }
     }
     
+    updateCVLink() {
+        // Trouver le lien du CV
+        const cvLink = document.querySelector('a[data-translate="📄 Voir mon CV"]');
+        if (cvLink) {
+            if (this.currentLanguage === 'en') {
+                // Lien vers le CV en anglais
+                cvLink.href = 'https://www.canva.com/design/DAGjzlgawts/J7foXKJX4g_Yy0YpsQaT-w/edit?utm_content=DAGjzlgawts&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton';
+            } else {
+                // Lien vers le CV en français (original)
+                cvLink.href = 'https://www.canva.com/design/DAGivKtUR64/-KT03Q_Ya9h_PIMTtj5ceA/edit?utm_content=DAGivKtUR64&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton';
+            }
+        }
+    }
+    
     updateDocumentLanguage() {
         document.documentElement.setAttribute('lang', this.currentLanguage);
     }
@@ -323,5 +340,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Debug info
     console.log('🌐 Translation System initialized');
     console.log('Current language:', translationSystem.currentLanguage);
-
 });
