@@ -690,7 +690,7 @@ function initLightbox() {
         updateNavigation();
     }
     
-    // Charger un média (image ou vidéo)
+    // Charger un média (image ou vidéo) avec adaptation parfaite
     function loadMedia(index) {
         if (currentGallery[index]) {
             const mediaUrl = currentGallery[index];
@@ -705,23 +705,74 @@ function initLightbox() {
                 if (embedUrl) {
                     const videoContainer = document.createElement('div');
                     videoContainer.className = 'lightbox-video-container';
+                    videoContainer.style.cssText = `
+                        width: 100%;
+                        height: 100%;
+                        max-width: 90vw;
+                        max-height: 70vh;
+                        aspect-ratio: 16/9;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    `;
                     
                     const iframe = document.createElement('iframe');
                     iframe.src = embedUrl;
                     iframe.allowFullscreen = true;
                     iframe.title = 'Vidéo YouTube';
-                    iframe.style.cssText = 'width: 100%; height: 100%; border: none; border-radius: 10px;';
+                    iframe.style.cssText = `
+                        width: 100%;
+                        height: 100%;
+                        border: none;
+                        border-radius: 10px;
+                        box-shadow: 0 0 50px rgba(100, 255, 218, 0.3);
+                    `;
                     
                     videoContainer.appendChild(iframe);
                     lightboxImageContainer.appendChild(videoContainer);
                 }
             } else {
-                // C'est une image
+                // C'est une image - adaptation parfaite à l'écran
                 const img = document.createElement('img');
                 img.id = 'lightbox-image';
                 img.src = mediaUrl;
                 img.alt = 'Image du portfolio';
-                img.style.cssText = 'max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px;';
+                
+                // Style pour adaptation parfaite
+                img.style.cssText = `
+                    max-width: 100%;
+                    max-height: 100%;
+                    width: auto;
+                    height: auto;
+                    object-fit: contain;
+                    border-radius: 10px;
+                    box-shadow: 0 0 50px rgba(100, 255, 218, 0.3);
+                    display: block;
+                    margin: 0 auto;
+                `;
+                
+                // Calculer la taille optimale une fois l'image chargée
+                img.onload = function() {
+                    const windowWidth = window.innerWidth;
+                    const windowHeight = window.innerHeight;
+                    const imgRatio = this.naturalWidth / this.naturalHeight;
+                    const windowRatio = windowWidth / windowHeight;
+                    
+                    // Padding pour les contrôles
+                    const maxWidth = windowWidth * 0.9;
+                    const maxHeight = windowHeight * 0.8;
+                    
+                    if (imgRatio > windowRatio) {
+                        // Image plus large que la fenêtre
+                        this.style.width = Math.min(maxWidth, this.naturalWidth) + 'px';
+                        this.style.height = 'auto';
+                    } else {
+                        // Image plus haute que la fenêtre
+                        this.style.height = Math.min(maxHeight, this.naturalHeight) + 'px';
+                        this.style.width = 'auto';
+                    }
+                };
+                
                 lightboxImageContainer.appendChild(img);
             }
             
@@ -787,15 +838,23 @@ function initLightbox() {
         }
     });
     
-    // Navigation au clavier
+    // Navigation au clavier améliorée
     document.addEventListener('keydown', function(e) {
         if (isLightboxOpen) {
+            e.preventDefault(); // Empêcher le scroll de la page
+            
             if (e.key === 'Escape') {
                 closeLightbox();
             } else if (e.key === 'ArrowLeft' && currentImageIndex > 0) {
                 loadMedia(currentImageIndex - 1);
             } else if (e.key === 'ArrowRight' && currentImageIndex < currentGallery.length - 1) {
                 loadMedia(currentImageIndex + 1);
+            } else if (e.key === 'Home') {
+                // Aller à la première image
+                loadMedia(0);
+            } else if (e.key === 'End') {
+                // Aller à la dernière image
+                loadMedia(currentGallery.length - 1);
             }
         }
     });
