@@ -16,8 +16,16 @@ document.addEventListener('DOMContentLoaded', function() {
         initFilters();
         initLightbox();
         
-        // Détecter l'orientation des images et ajuster la grille
-        detectImageOrientations();
+        // Attendre un peu que les images se chargent avant de détecter l'orientation
+        setTimeout(() => {
+            detectImageOrientations();
+        }, 500);
+        
+        // Détecter aussi quand toutes les images sont chargées
+        window.addEventListener('load', () => {
+            console.log('All images loaded, re-detecting orientations...');
+            detectImageOrientations();
+        });
     }
     
     // Gestion du chatbot
@@ -30,8 +38,9 @@ document.addEventListener('DOMContentLoaded', function() {
 // Fonction pour détecter l'orientation des images et optimiser l'affichage
 function detectImageOrientations() {
     const galleryItems = document.querySelectorAll('.gallery-item');
+    console.log('Detecting image orientations for', galleryItems.length, 'items');
     
-    galleryItems.forEach(item => {
+    galleryItems.forEach((item, index) => {
         const img = item.querySelector('img');
         if (!img) return;
         
@@ -39,22 +48,31 @@ function detectImageOrientations() {
         const tempImg = new Image();
         tempImg.onload = function() {
             const aspectRatio = this.naturalWidth / this.naturalHeight;
+            console.log(`Image ${index}: ${this.naturalWidth}x${this.naturalHeight}, ratio: ${aspectRatio.toFixed(2)}`);
             
             // Supprimer les anciennes classes d'orientation
             item.classList.remove('portrait', 'landscape', 'square');
             
             // Déterminer l'orientation et ajuster
-            if (aspectRatio > 1.3) {
-                // Image horizontale (landscape)
+            if (aspectRatio > 1.4) {
+                // Image horizontale (landscape) - très large
                 item.classList.add('landscape');
-            } else if (aspectRatio < 0.8) {
-                // Image verticale (portrait)
+                console.log(`Image ${index}: classified as LANDSCAPE`);
+            } else if (aspectRatio < 0.75) {
+                // Image verticale (portrait) - très haute
                 item.classList.add('portrait');
+                console.log(`Image ${index}: classified as PORTRAIT`);
             } else {
                 // Image carrée ou presque carrée
                 item.classList.add('square');
+                console.log(`Image ${index}: classified as SQUARE`);
             }
         };
+        
+        tempImg.onerror = function() {
+            console.error('Failed to load image for orientation detection:', img.src);
+        };
+        
         tempImg.src = img.src;
     });
 }
