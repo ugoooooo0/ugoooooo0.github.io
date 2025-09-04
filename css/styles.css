@@ -588,24 +588,24 @@ nav a:hover {
     display: none !important;
 }
 
-/* Projects Gallery - Layout compact */
+/* Projects Gallery - Layout fixe comme avant */
 .projects-gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
     padding: 40px 20px;
     max-width: 1200px;
     margin: 0 auto;
 }
 
-/* Tailles des items - plus compactes */
+/* Items uniformes */
 .gallery-item {
     position: relative;
     overflow: hidden;
     border-radius: 8px;
     cursor: pointer;
     transition: transform 0.3s ease;
-    aspect-ratio: 16/9; /* Ratio fixe pour uniformité */
+    aspect-ratio: 16/9;
 }
 
 .gallery-item img {
@@ -648,22 +648,6 @@ nav a:hover {
         gap: 12px;
         padding: 20px 10px;
     }
-}
-
-/* Supprimer les anciennes classes de taille */
-.gallery-item.large,
-.gallery-item.medium,
-.gallery-item.small {
-    /* Toutes les images ont maintenant la même taille */
-}
-
-/* Quelques variations pour éviter la monotonie */
-.gallery-item:nth-child(5n+1) {
-    aspect-ratio: 4/3; /* Légèrement plus carré */
-}
-
-.gallery-item:nth-child(7n+2) {
-    aspect-ratio: 3/2; /* Légèrement plus large */
 }
 
 /* Hero section ajustée */
