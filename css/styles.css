@@ -2367,8 +2367,9 @@ body.mobile-test-mode .projects-gallery {
 
 .language-toggle {
     position: absolute;
-    top: 15px;
-    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    right: clamp(15px, 4vw, 20px);
     display: flex;
     gap: 8px;
     z-index: 100;
