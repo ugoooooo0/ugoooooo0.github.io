@@ -1,515 +1,1185 @@
+// main.js file for the portfolio website
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Portfolio - Projets</title>
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body class="portfolio-page">
-    <!-- Bouton de test mobile -->
-    <button id="mobile-test-btn" class="mobile-test-btn" title="Tester l'affichage mobile">
-        Test Mobile
-    </button>
+// Variables globales pour la lightbox
+let currentImageIndex = 0;
+let currentGallery = [];
+let isLightboxOpen = false;
+let lightboxDescription = null; // Variable globale pour la description
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Initialisation...');
     
-    <div class="container">
-        <header>
-            <div class="header-content">
-                <a href="index.html" class="back-home-btn" data-translate="ACCUEIL">
-                    ACCUEIL
-                </a>
-                <h1 data-translate="Ugo RAVARD Artist 3D / 2D">Ugo RAVARD Artist 3D / 2D</h1>
+    // Gestion du formulaire de contact
+    initContactForm();
+    
+    // Gestion de la lightbox (si on est sur portfolio.html)
+    if (document.querySelector('.portfolio-page')) {
+        console.log('Page portfolio détectée');
+        
+        // Initialiser le carrousel
+        initCarousel();
+        
+        initFilters();
+        initLightbox();
+        
+        // Pré-traitement des images pour améliorer le layout
+        preprocessImages();
+        
+        // Ajouter les tooltips de prévisualisation
+        initPreviewTooltips();
+        
+        // Initialiser le masonry après chargement des images
+        initMasonry();
+        
+        // Correction spéciale pour les images avec vidéos après 2 secondes
+        setTimeout(() => {
+            fixVideoImagePositioning();
+        }, 2000);
+    }
+    
+    // Gestion du contrôleur de taille
+    initSizeController();
+});
+
+// Carrousel des projets vedettes
+let currentSlide = 0;
+let carouselInterval;
+const CAROUSEL_AUTO_DELAY = 5000;
+
+function initCarousel() {
+    const track = document.getElementById('carousel-track');
+    const prevBtn = document.getElementById('carousel-prev');
+    const nextBtn = document.getElementById('carousel-next');
+    const indicators = document.querySelectorAll('.indicator');
+    const carouselItems = document.querySelectorAll('.carousel-item');
+    
+    if (!track || !prevBtn || !nextBtn) return;
+    
+    // Associer les images aux projets en utilisant data-order
+    carouselItems.forEach(item => {
+        const projectOrder = item.dataset.projectOrder;
+        const img = item.querySelector('img');
+        const titleEl = item.querySelector('.carousel-overlay h3');
+        const descEl = item.querySelector('.carousel-overlay p');
+        
+        if (projectOrder && img) {
+            // Trouver le projet correspondant dans la galerie
+            const galleryItem = document.querySelector(`[data-order="${projectOrder}"]`);
+            if (galleryItem) {
+                const galleryImg = galleryItem.querySelector('img');
+                if (galleryImg) {
+                    // Utiliser l'image de couverture du projet
+                    img.src = galleryImg.src;
+                    img.alt = galleryImg.alt;
+                    
+                    // Remplir avec les vraies descriptions de la galerie ET les sauvegarder
+                    const originalTitle = galleryImg.alt || `Projet ${projectOrder}`;
+                    const originalDescription = galleryImg.getAttribute('data-description') || 'Description du projet';
+                    
+                    if (titleEl) {
+                        titleEl.textContent = originalTitle;
+                        titleEl.setAttribute('data-original-title', originalTitle); // Sauvegarde
+                    }
+                    if (descEl) {
+                        descEl.textContent = originalDescription;
+                        descEl.setAttribute('data-original-description', originalDescription); // Sauvegarde
+                    }
+                }
+            }
+            
+            // Ajouter le clic pour ouvrir dans la lightbox
+            item.style.cursor = 'pointer';
+            item.addEventListener('click', () => {
+                // Trouver le projet correspondant dans la galerie
+                const galleryItem = document.querySelector(`[data-order="${projectOrder}"]`);
+                if (galleryItem) {
+                    const galleryImg = galleryItem.querySelector('img');
+                    if (galleryImg) {
+                        // D'abord s'assurer que l'item est visible (changer de filtre si nécessaire)
+                        const category = galleryItem.getAttribute('data-category');
+                        const activeFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
+                        
+                        // Si le filtre actuel ne correspond pas, changer pour 'all'
+                        if (activeFilter !== 'all' && activeFilter !== category) {
+                            const allButton = document.querySelector('.filter-btn[data-filter="all"]');
+                            if (allButton) {
+                                allButton.click();
+                                // Attendre que le filtre soit appliqué puis ouvrir la lightbox
+                                setTimeout(() => {
+                                    openProjectFromCarousel(galleryItem, galleryImg);
+                                }, 150);
+                                return;
+                            }
+                        }
+                        
+                        // Si déjà visible, ouvrir directement
+                        openProjectFromCarousel(galleryItem, galleryImg);
+                    }
+                }
+            });
+        }
+    });
+    
+    // Fonction spéciale pour ouvrir un projet depuis le carousel
+    function openProjectFromCarousel(galleryItem, galleryImg) {
+        // Définir correctement le projet actuel
+        window.currentProject = {
+            galleryItem: galleryItem,
+            img: galleryImg
+        };
+        
+        // Récupérer la galerie
+        const galleryData = galleryItem.getAttribute('data-gallery');
+        if (galleryData) {
+            try {
+                currentGallery = JSON.parse(galleryData);
+            } catch (e) {
+                console.error('Erreur parsing gallery:', e);
+                currentGallery = [galleryImg.src];
+            }
+        } else {
+            currentGallery = [galleryImg.src];
+        }
+        
+        currentImageIndex = 0;
+        openLightbox();
+    }
+    
+    function updateCarousel() {
+        const translateX = -currentSlide * 100;
+        track.style.transform = `translateX(${translateX}%)`;
+        
+        // Mettre à jour les indicateurs
+        indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === currentSlide);
+        });
+    }
+    
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % carouselItems.length;
+        updateCarousel();
+    }
+    
+    function prevSlide() {
+        currentSlide = (currentSlide - 1 + carouselItems.length) % carouselItems.length;
+        updateCarousel();
+    }
+    
+    function goToSlide(index) {
+        currentSlide = index;
+        updateCarousel();
+    }
+    
+    // Événements
+    nextBtn.addEventListener('click', () => {
+        nextSlide();
+        resetAutoPlay();
+    });
+    
+    prevBtn.addEventListener('click', () => {
+        prevSlide();
+        resetAutoPlay();
+    });
+    
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+            goToSlide(index);
+            resetAutoPlay();
+        });
+    });
+    
+    // Auto-play
+    function startAutoPlay() {
+        carouselInterval = setInterval(nextSlide, CAROUSEL_AUTO_DELAY);
+    }
+    
+    function stopAutoPlay() {
+        clearInterval(carouselInterval);
+    }
+    
+    function resetAutoPlay() {
+        stopAutoPlay();
+        startAutoPlay();
+    }
+    
+    // Pause sur hover
+    const carouselContainer = document.querySelector('.carousel-container');
+    if (carouselContainer) {
+        carouselContainer.addEventListener('mouseenter', stopAutoPlay);
+        carouselContainer.addEventListener('mouseleave', startAutoPlay);
+    }
+    
+    // Démarrer l'auto-play
+    startAutoPlay();
+    updateCarousel();
+}
+
+// Fonction pour préprocesser les images et améliorer le layout
+function preprocessImages() {
+    const items = document.querySelectorAll('.gallery-item');
+    
+    items.forEach(item => {
+        const img = item.querySelector('img');
+        const hasVideo = item.getAttribute('data-has-video') === 'oui';
+        
+        if (img) {
+            // Appliquer des classes CSS spéciales selon le contenu
+            if (hasVideo) {
+                item.classList.add('has-video');
+                console.log('Item avec vidéo détecté:', img.alt);
+            }
+            
+            // Optimiser le chargement des images
+            img.loading = 'eager'; // Chargement prioritaire pour améliorer le layout
+            
+            // Gérer les erreurs d'image
+            img.onerror = function() {
+                console.warn('Erreur de chargement pour:', this.src);
+                this.style.height = '200px'; // Hauteur par défaut en cas d'erreur
+                this.style.backgroundColor = 'rgba(100, 255, 218, 0.1)';
+                this.alt = 'Image non disponible';
+            };
+        }
+    });
+}
+
+// Fonction pour corriger spécifiquement le positionnement des images avec vidéos
+function fixVideoImagePositioning() {
+    const videoItems = document.querySelectorAll('.gallery-item[data-has-video="oui"]');
+    
+    console.log('Correction du positionnement pour', videoItems.length, 'items avec vidéos');
+    
+    videoItems.forEach(item => {
+        const currentTop = parseFloat(item.style.top) || 0;
+        const currentLeft = parseFloat(item.style.left) || 0;
+        
+        // Vérifier si l'item semble mal positionné (chevauchement ou position négative)
+        if (currentTop < 0 || currentLeft < 0) {
+            console.log('Correction de position nécessaire pour item avec vidéo');
+            
+            // Recalculer la position
+            const gallery = document.querySelector('.projects-gallery');
+            const computedStyle = getComputedStyle(document.documentElement);
+            const columns = parseInt(computedStyle.getPropertyValue('--masonry-columns').trim()) || 3;
+            const gap = parseInt(computedStyle.getPropertyValue('--masonry-gap').trim().replace('px', '')) || 20;
+            const galleryWidth = gallery.offsetWidth;
+            const itemWidth = (galleryWidth - (columns - 1) * gap) / columns;
+            
+            // Repositionner dans la première colonne disponible
+            const columnIndex = Math.floor(Math.random() * columns);
+            const newLeft = columnIndex * (itemWidth + gap);
+            
+            item.style.left = `${newLeft}px`;
+            item.style.transform = 'translateY(20px)'; // Léger décalage vers le bas
+            
+            setTimeout(() => {
+                item.style.transform = 'translateY(0)';
+            }, 300);
+        }
+    });
+    
+    // Relancer un layout complet après correction
+    setTimeout(() => {
+        layoutMasonry();
+    }, 500);
+}
+
+// Fonction pour initialiser le masonry JavaScript - ZERO TROU !
+function initMasonry() {
+    const gallery = document.querySelector('.projects-gallery');
+    const items = document.querySelectorAll('.gallery-item');
+    
+    if (!gallery || items.length === 0) return;
+    
+    console.log('Initialisation du masonry avec', items.length, 'éléments');
+    
+    // Attendre que toutes les images soient chargées
+    let loadedImages = 0;
+    const totalImages = items.length;
+    
+    function checkAllLoaded() {
+        loadedImages++;
+        console.log(`Image ${loadedImages}/${totalImages} chargée`);
+        if (loadedImages === totalImages) {
+            console.log('Toutes les images sont chargées, lancement du layout');
+            setTimeout(() => layoutMasonry(), 100); // Petit délai pour s'assurer que tout est prêt
+        }
+    }
+    
+    items.forEach((item, index) => {
+        const img = item.querySelector('img');
+        if (img) {
+            if (img.complete && img.naturalHeight !== 0) {
+                checkAllLoaded();
+            } else {
+                img.addEventListener('load', checkAllLoaded, { once: true });
+                img.addEventListener('error', () => {
+                    console.warn(`Erreur de chargement pour l'image ${index}`);
+                    checkAllLoaded();
+                }, { once: true });
+            }
+        } else {
+            checkAllLoaded();
+        }
+    });
+    
+    // Sécurité : forcer le layout après 3 secondes même si toutes les images ne sont pas chargées
+    setTimeout(() => {
+        if (loadedImages < totalImages) {
+            console.warn(`Timeout: seulement ${loadedImages}/${totalImages} images chargées, forçage du layout`);
+            layoutMasonry();
+        }
+    }, 3000);
+    
+    // Relayout au redimensionnement avec debounce amélioré
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            console.log('Redimensionnement détecté, re-layout');
+            layoutMasonry();
+        }, 300); // Délai plus long pour éviter les re-layouts trop fréquents
+    });
+    
+    // Relayout quand on change de filtre
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            setTimeout(() => {
+                console.log('Filtre changé, re-layout');
+                layoutMasonry();
+            }, 100);
+        });
+    });
+}
+
+function layoutMasonry() {
+    const gallery = document.querySelector('.projects-gallery');
+    const allItems = document.querySelectorAll('.gallery-item');
+    
+    // Filtrer seulement les items visibles
+    const items = Array.from(allItems).filter(item => 
+        getComputedStyle(item).display !== 'none' && !item.classList.contains('hidden')
+    );
+    
+    if (!gallery || items.length === 0) {
+        // Si aucun item visible, réduire la hauteur de la galerie ET minimiser l'espacement
+        gallery.style.height = '50px';
+        gallery.style.minHeight = '50px';
+        return;
+    }
+    
+    // Obtenir les variables CSS
+    const computedStyle = getComputedStyle(document.documentElement);
+    const columns = parseInt(computedStyle.getPropertyValue('--masonry-columns').trim()) || 3;
+    const gap = parseInt(computedStyle.getPropertyValue('--masonry-gap').trim().replace('px', '')) || 20;
+    
+    const galleryWidth = gallery.offsetWidth;
+    const itemWidth = (galleryWidth - (columns - 1) * gap) / columns;
+    
+    // Initialiser les hauteurs des colonnes
+    const columnHeights = new Array(columns).fill(0);
+    
+    // Traiter les items par ordre séquentiel
+    let processedItems = 0;
+    
+    items.forEach((item, index) => {
+        // Définir la largeur de l'item
+        item.style.width = `${itemWidth}px`;
+        item.style.position = 'absolute';
+        
+        // Cacher initialement pour éviter le flash
+        item.style.opacity = '0';
+        item.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        
+        const img = item.querySelector('img');
+        if (img) {
+            const processItem = () => {
+                // Attendre un frame pour que les dimensions soient calculées
+                requestAnimationFrame(() => {
+                    const itemHeight = item.offsetHeight;
+                    
+                    // Trouver la colonne la plus courte
+                    const shortestColumn = columnHeights.indexOf(Math.min(...columnHeights));
+                    
+                    // Calculer la position
+                    const x = shortestColumn * (itemWidth + gap);
+                    const y = columnHeights[shortestColumn];
+                    
+                    // Positionner l'item avec animation fluide
+                    item.style.left = `${x}px`;
+                    item.style.top = `${y}px`;
+                    item.style.opacity = '1';
+                    
+                    // Mettre à jour la hauteur de la colonne
+                    columnHeights[shortestColumn] += itemHeight + gap;
+                    
+                    processedItems++;
+                    
+                    // Ajuster la hauteur du conteneur quand tous les items sont traités
+                    if (processedItems === items.length) {
+                        const maxHeight = Math.max(...columnHeights);
+                        // Réduire la hauteur si peu d'éléments
+                        const finalHeight = items.length <= 3 ? Math.max(maxHeight, 200) : maxHeight;
+                        gallery.style.height = `${finalHeight}px`;
+                        
+                        // Ajouter classe spéciale si peu d'éléments
+                        if (items.length <= 3) {
+                            gallery.classList.add('few-items');
+                            gallery.style.marginBottom = '20px';
+                        } else {
+                            gallery.classList.remove('few-items');
+                            gallery.style.marginBottom = '';
+                        }
+                        
+                        console.log(`Masonry terminé: ${columns} colonnes, ${items.length} items, hauteur: ${finalHeight}px`);
+                    }
+                });
+            };
+            
+            // Si l'image est déjà chargée
+            if (img.complete && img.naturalHeight !== 0) {
+                processItem();
+            } else {
+                // Attendre le chargement de l'image
+                img.addEventListener('load', processItem, { once: true });
+                img.addEventListener('error', processItem, { once: true }); // Gérer les erreurs
+            }
+        } else {
+            // Pas d'image, traiter immédiatement
+            setTimeout(() => {
+                const itemHeight = item.offsetHeight;
+                const shortestColumn = columnHeights.indexOf(Math.min(...columnHeights));
+                const x = shortestColumn * (itemWidth + gap);
+                const y = columnHeights[shortestColumn];
                 
-                <!-- Boutons de traduction -->
-                <div class="language-switcher">
-                    <button id="lang-fr" class="lang-btn active" data-lang="fr">FR</button>
-                    <button id="lang-en" class="lang-btn" data-lang="en">EN</button>
-                </div>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="#" class="filter-btn active" data-filter="all" data-translate="ALL">ALL</a></li>
-                    <li><a href="#" class="filter-btn" data-filter="1" data-translate="3D">3D</a></li>
-                    <li><a href="#" class="filter-btn" data-filter="2" data-translate="Tournage/Montage">Tournage/Montage</a></li>
-                </ul>
-            </nav>
-        </header>
-
-        <main>
-            <!-- Bandeau Carrousel - Meilleurs Projets -->
-            <section class="featured-projects-section">
-                <div class="featured-projects-container">
-                    <h2 class="featured-title" data-translate="Mes Meilleurs Projets">Mes Meilleurs Projets</h2>
+                item.style.left = `${x}px`;
+                item.style.top = `${y}px`;
+                item.style.opacity = '1';
+                
+                columnHeights[shortestColumn] += itemHeight + gap;
+                processedItems++;
+                
+                if (processedItems === items.length) {
+                    const maxHeight = Math.max(...columnHeights);
+                    // Réduire la hauteur si peu d'éléments
+                    const finalHeight = items.length <= 3 ? Math.max(maxHeight, 200) : maxHeight;
+                    gallery.style.height = `${finalHeight}px`;
                     
-                    <div class="carousel-container">
-                        <button class="carousel-btn prev" id="carousel-prev">‹</button>
+                    // Ajouter classe spéciale si peu d'éléments
+                    if (items.length <= 3) {
+                        gallery.classList.add('few-items');
+                        gallery.style.marginBottom = '20px';
+                    } else {
+                        gallery.classList.remove('few-items');
+                        gallery.style.marginBottom = '';
+                    }
+                }
+            }, 50);
+        }
+    });
+    
+    console.log(`Masonry initialisé: ${columns} colonnes, ${items.length} items, largeur: ${itemWidth}px`);
+}
+
+// Fonction pour le contrôleur de taille
+function initSizeController() {
+    const sizeSlider = document.getElementById('size-slider');
+    const sizeValue = document.getElementById('size-value');
+    
+    if (!sizeSlider || !sizeValue) return;
+    
+    // Charger la valeur sauvegardée
+    const savedSize = localStorage.getItem('portfolio-size') || '100';
+    sizeSlider.value = savedSize;
+    sizeValue.textContent = savedSize + '%';
+    updateSectionScale(savedSize);
+    
+    // Écouter les changements
+    sizeSlider.addEventListener('input', function() {
+        const value = this.value;
+        sizeValue.textContent = value + '%';
+        updateSectionScale(value);
+        localStorage.setItem('portfolio-size', value);
+    });
+}
+
+// Fonction pour mettre à jour l'échelle
+function updateSectionScale(value) {
+    document.documentElement.style.setProperty('--section-scale', value + '%');
+}
+
+// Configuration de l'API OpenRouter
+const OPENROUTER_API_KEY = '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';
+const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
+
+// Gestion du formulaire de contact - Version mailto
+function initContactForm() {
+    const contactForm = document.getElementById('contact-form');
+    if (!contactForm) return;
+    
+    contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalText = submitButton.textContent;
+        
+        // Récupérer les données du formulaire
+        const formData = new FormData(this);
+        const name = formData.get('name');
+        const email = formData.get('email');
+        const message = formData.get('message');
+        
+        // Vérifier que tous les champs sont remplis
+        if (!name || !email || !message) {
+            showStatusMessage('❌ Veuillez remplir tous les champs', 'error');
+            return;
+        }
+        
+        // Vérifier le format de l'email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            showStatusMessage('❌ Veuillez entrer une adresse email valide', 'error');
+            return;
+        }
+        
+        // Afficher le chargement
+        submitButton.disabled = true;
+        submitButton.textContent = '� Ouverture de votre boîte mail...';
+        
+        // Créer le sujet et le corps du message
+        const subject = `Portfolio - Message pour ${name}`;
+        const body = `Bonjour Ugo,
+
+${message}
+
+---
+Cordialement,
+${name}
+Email: ${email}`;
+        
+        // Créer le lien mailto avec les données encodées
+        const mailtoLink = `mailto:ugo.ravard47@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        
+        // Ouvrir la boîte mail
+        try {
+            window.location.href = mailtoLink;
+            
+            // Afficher un message de succès
+            setTimeout(() => {
+                showStatusMessage('✅ Votre boîte mail s\'ouvre ! Le message est pré-rempli.', 'success');
+                
+                // Réinitialiser le formulaire après un délai
+                setTimeout(() => {
+                    this.reset();
+                    showStatusMessage('💡 Formulaire réinitialisé. N\'oubliez pas d\'envoyer votre email !', 'info');
+                }, 2000);
+            }, 500);
+            
+        } catch (error) {
+            console.error('Erreur lors de l\'ouverture du client mail:', error);
+            showStatusMessage('❌ Impossible d\'ouvrir votre boîte mail. Copiez cette adresse : ugo.ravard47@gmail.com', 'error');
+        }
+        
+        // Réactiver le bouton après un délai
+        setTimeout(() => {
+            submitButton.disabled = false;
+            submitButton.textContent = originalText;
+        }, 2000);
+    });
+}
+
+// Afficher un message de statut
+function showStatusMessage(message, type) {
+    const existingMessage = document.querySelector('.status-message');
+    if (existingMessage) {
+        existingMessage.remove();
+    }
+    
+    const statusDiv = document.createElement('div');
+    statusDiv.className = `status-message ${type}`;
+    statusDiv.textContent = message;
+    
+    let backgroundColor, textColor;
+    switch(type) {
+        case 'success':
+            backgroundColor = '#64ffda';
+            textColor = '#1a1a2e';
+            break;
+        case 'error':
+            backgroundColor = '#ff6b6b';
+            textColor = '#ffffff';
+            break;
+        case 'info':
+            backgroundColor = '#4dabf7';
+            textColor = '#ffffff';
+            break;
+        default:
+            backgroundColor = '#64ffda';
+            textColor = '#1a1a2e';
+    }
+    
+    statusDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${backgroundColor};
+        color: ${textColor};
+        padding: 15px 20px;
+        border-radius: 10px;
+        z-index: 10000;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        font-weight: bold;
+        max-width: 350px;
+        animation: slideIn 0.3s ease;
+        font-size: 14px;
+        line-height: 1.4;
+    `;
+    
+    document.body.appendChild(statusDiv);
+    
+    // Durée d'affichage selon le type
+    const displayTime = type === 'info' ? 4000 : 5000;
+    
+    setTimeout(() => {
+        if (statusDiv.parentNode) {
+            statusDiv.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => {
+                if (statusDiv.parentNode) {
+                    statusDiv.remove();
+                }
+            }, 300);
+        }
+    }, displayTime);
+}
+
+// Gestion des filtres pour le portfolio
+function initFilters() {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            if (this.getAttribute('href') && this.getAttribute('href').startsWith('#')) {
+                e.preventDefault();
+            }
+            
+            filterBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const filter = this.getAttribute('data-filter');
+            if (!filter) return;
+            
+            galleryItems.forEach(item => {
+                const category = item.getAttribute('data-category');
+                if (filter === 'all' || category === filter) {
+                    item.style.display = 'block';
+                    item.classList.remove('hidden');
+                } else {
+                    item.style.display = 'none';
+                    item.classList.add('hidden');
+                }
+            });
+            
+            // Compter les éléments visibles pour ajuster l'espacement
+            const visibleItems = Array.from(galleryItems).filter(item => 
+                getComputedStyle(item).display !== 'none' && !item.classList.contains('hidden')
+            );
+            
+            const gallery = document.querySelector('.projects-gallery');
+            if (gallery) {
+                if (visibleItems.length <= 3) {
+                    gallery.classList.add('few-items');
+                    gallery.style.padding = '20px';
+                } else {
+                    gallery.classList.remove('few-items');
+                    gallery.style.padding = '40px 20px';
+                }
+            }
+            
+            // Réorganiser le masonry après filtrage avec un délai plus court
+            setTimeout(() => {
+                layoutMasonry();
+            }, 50);
+        });
+    });
+}
+
+// Fonction pour convertir URL YouTube en embed
+function getYouTubeEmbedUrl(url) {
+    const regex = /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/;
+    const match = url.match(regex);
+    if (match) {
+        return `https://www.youtube.com/embed/${match[1]}`;
+    }
+    return null;
+}
+
+// Fonction pour vérifier si c'est une URL YouTube
+function isYouTubeUrl(url) {
+    return url.includes('youtube.com') || url.includes('youtu.be');
+}
+
+// Gestion de la lightbox avec support YouTube
+function initLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImageContainer = document.querySelector('.lightbox-image-container');
+    lightboxDescription = document.getElementById('lightbox-description'); // Assigner à la variable globale
+    const lightboxClose = document.querySelector('.lightbox-close');
+    const lightboxPrev = document.querySelector('.lightbox-prev');
+    const lightboxNext = document.querySelector('.lightbox-next');
+    const currentImageSpan = document.getElementById('current-image');
+    const totalImagesSpan = document.getElementById('total-images');
+    
+    if (!lightbox) return;
+    
+    // Clic sur une image
+    document.addEventListener('click', function(e) {
+        if (e.target.matches('.gallery-item img')) {
+            e.preventDefault();
+            
+            const img = e.target;
+            const galleryItem = img.closest('.gallery-item');
+            
+            // Stocker la référence au projet actuel pour récupérer la description dynamiquement
+            window.currentProject = {
+                galleryItem: galleryItem,
+                img: img
+            };
+            
+            // Récupérer la galerie
+            const galleryData = galleryItem.getAttribute('data-gallery');
+            if (galleryData) {
+                try {
+                    currentGallery = JSON.parse(galleryData);
+                } catch (e) {
+                    console.error('Erreur parsing gallery:', e);
+                    currentGallery = [img.src];
+                }
+            } else {
+                currentGallery = [img.src];
+            }
+            
+            currentImageIndex = 0;
+            openLightbox();
+        }
+    });
+    
+    // Ouvrir la lightbox
+    function openLightbox() {
+        lightbox.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        isLightboxOpen = true;
+        
+        loadMedia(currentImageIndex);
+        updateCounter();
+        updateNavigation();
+    }
+    
+    // Charger un média (image ou vidéo)
+    function loadMedia(index) {
+        if (currentGallery[index]) {
+            const mediaUrl = currentGallery[index];
+            currentImageIndex = index;
+            
+            // Nettoyer le conteneur
+            lightboxImageContainer.innerHTML = '';
+            
+            if (isYouTubeUrl(mediaUrl)) {
+                // C'est une vidéo YouTube
+                const embedUrl = getYouTubeEmbedUrl(mediaUrl);
+                if (embedUrl) {
+                    const videoContainer = document.createElement('div');
+                    videoContainer.className = 'lightbox-video-container';
+                    
+                    const iframe = document.createElement('iframe');
+                    iframe.src = embedUrl;
+                    iframe.allowFullscreen = true;
+                    iframe.title = 'Vidéo YouTube';
+                    iframe.style.cssText = 'width: 100%; height: 100%; border: none; border-radius: 10px;';
+                    
+                    videoContainer.appendChild(iframe);
+                    lightboxImageContainer.appendChild(videoContainer);
+                }
+            } else {
+                // C'est une image - avec détection automatique des dimensions
+                const img = document.createElement('img');
+                img.id = 'lightbox-image';
+                img.src = mediaUrl;
+                img.alt = 'Image du portfolio';
+                
+                // Attendre le chargement pour détecter les dimensions
+                img.onload = function() {
+                    const imgWidth = this.naturalWidth;
+                    const imgHeight = this.naturalHeight;
+                    const aspectRatio = imgWidth / imgHeight;
+                    
+                    // Supprimer les classes précédentes
+                    this.classList.remove('wide', 'tall');
+                    
+                    // Adapter selon le ratio
+                    if (aspectRatio > 2.5) {
+                        // Image très large (panoramique)
+                        this.classList.add('wide');
+                        this.style.cssText = `
+                            max-width: 95vw;
+                            max-height: 70vh;
+                            width: auto;
+                            height: auto;
+                            object-fit: contain;
+                            border-radius: 12px;
+                            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+                            border: 2px solid rgba(100, 255, 218, 0.2);
+                        `;
+                    } else if (aspectRatio < 0.7) {
+                        // Image très haute (portrait)
+                        this.classList.add('tall');
+                        this.style.cssText = `
+                            max-width: 80vw;
+                            max-height: 90vh;
+                            width: auto;
+                            height: auto;
+                            object-fit: contain;
+                            border-radius: 12px;
+                            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+                            border: 2px solid rgba(100, 255, 218, 0.2);
+                        `;
+                    } else {
+                        // Image normale
+                        this.style.cssText = `
+                            max-width: 90vw;
+                            max-height: 80vh;
+                            width: auto;
+                            height: auto;
+                            object-fit: contain;
+                            border-radius: 12px;
+                            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+                            border: 2px solid rgba(100, 255, 218, 0.2);
+                        `;
+                    }
+                    
+                    console.log(`Image dimensions: ${imgWidth}x${imgHeight}, ratio: ${aspectRatio.toFixed(2)}`);
+                };
+                
+                // Style initial pendant le chargement
+                img.style.cssText = `
+                    max-width: 90vw;
+                    max-height: 80vh;
+                    width: auto;
+                    height: auto;
+                    object-fit: contain;
+                    border-radius: 12px;
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+                    border: 2px solid rgba(100, 255, 218, 0.2);
+                    opacity: 0;
+                    transition: opacity 0.3s ease;
+                `;
+                
+                // Effet de fondu à l'apparition
+                setTimeout(() => {
+                    img.style.opacity = '1';
+                }, 50);
+                
+                lightboxImageContainer.appendChild(img);
+            }
+            
+            // Mettre à jour la description du projet actuel
+            updateLightboxDescription();
+            updateCounter();
+            updateNavigation();
+        }
+    }
+    
+    // Nouvelle fonction pour mettre à jour la description de la lightbox
+    function updateLightboxDescription() {
+        if (lightboxDescription && window.currentProject) {
+            const description = window.currentProject.img.getAttribute('data-description') || 
+                               window.currentProject.img.alt || 
+                               'Image du portfolio';
+            lightboxDescription.textContent = description;
+            lightboxDescription.style.display = 'block';
+        }
+    }
+    
+    // Mettre à jour le compteur
+    function updateCounter() {
+        if (currentImageSpan && totalImagesSpan) {
+            currentImageSpan.textContent = currentImageIndex + 1;
+            totalImagesSpan.textContent = currentGallery.length;
+        }
+    }
+    
+    // Mettre à jour la navigation
+    function updateNavigation() {
+        if (lightboxPrev && lightboxNext) {
+            lightboxPrev.style.display = currentGallery.length > 1 ? 'block' : 'none';
+            lightboxNext.style.display = currentGallery.length > 1 ? 'block' : 'none';
+        }
+    }
+    
+    // Restaurer les descriptions originales du carrousel
+    function restoreCarouselDescriptions() {
+        const carouselItems = document.querySelectorAll('.carousel-item');
+        carouselItems.forEach(item => {
+            const titleEl = item.querySelector('.carousel-overlay h3');
+            const descEl = item.querySelector('.carousel-overlay p');
+            
+            if (titleEl && titleEl.hasAttribute('data-original-title')) {
+                titleEl.textContent = titleEl.getAttribute('data-original-title');
+            }
+            if (descEl && descEl.hasAttribute('data-original-description')) {
+                descEl.textContent = descEl.getAttribute('data-original-description');
+            }
+        });
+    }
+    
+    // Fermer la lightbox
+    function closeLightbox() {
+        lightbox.style.display = 'none';
+        document.body.style.overflow = '';
+        isLightboxOpen = false;
+        
+        // Restaurer les descriptions originales du carrousel
+        restoreCarouselDescriptions();
+        
+        // Arrêter toutes les vidéos
+        const iframes = lightboxImageContainer.querySelectorAll('iframe');
+        iframes.forEach(iframe => {
+            iframe.src = iframe.src; // Recharge pour arrêter la vidéo
+        });
+    }
+    
+    // Event listeners
+    if (lightboxClose) {
+        lightboxClose.addEventListener('click', closeLightbox);
+    }
+    
+    if (lightboxPrev) {
+        lightboxPrev.addEventListener('click', function() {
+            if (currentImageIndex > 0) {
+                loadMedia(currentImageIndex - 1);
+            }
+        });
+    }
+    
+    if (lightboxNext) {
+        lightboxNext.addEventListener('click', function() {
+            if (currentImageIndex < currentGallery.length - 1) {
+                loadMedia(currentImageIndex + 1);
+            }
+        });
+    }
+    
+    // Fermer en cliquant sur le fond
+    lightbox.addEventListener('click', function(e) {
+        if (e.target === lightbox) {
+            closeLightbox();
+        }
+    });
+    
+    // Navigation au clavier
+    document.addEventListener('keydown', function(e) {
+        if (isLightboxOpen) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            } else if (e.key === 'ArrowLeft' && currentImageIndex > 0) {
+                loadMedia(currentImageIndex - 1);
+            } else if (e.key === 'ArrowRight' && currentImageIndex < currentGallery.length - 1) {
+                loadMedia(currentImageIndex + 1);
+            }
+        }
+    });
+}
+
+// Fonction pour initialiser les filtres
+function initFilters() {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Retirer la classe active de tous les boutons
+            filterBtns.forEach(b => b.classList.remove('active'));
+            
+            // Ajouter la classe active au bouton cliqué
+            this.classList.add('active');
+            
+            const filter = this.getAttribute('data-filter');
+            
+            galleryItems.forEach(item => {
+                if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                    item.classList.remove('hidden');
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+        });
+    });
+}
+
+// Fonction pour initialiser la lightbox
+function initLightbox() {
+    const galleryItems = document.querySelectorAll('.gallery-item img');
+    
+    galleryItems.forEach(img => {
+        img.addEventListener('click', function() {
+            const galleryItem = this.closest('.gallery-item');
+            const galleryData = galleryItem.getAttribute('data-gallery');
+            
+            if (galleryData) {
+                // Si l'image a une galerie
+                try {
+                    currentGallery = JSON.parse(galleryData);
+                    currentImageIndex = 0;
+                } catch(e) {
+                    console.error('Erreur parsing gallery data:', e);
+                    currentGallery = [this.src];
+                    currentImageIndex = 0;
+                }
+            } else {
+                // Image simple
+                currentGallery = [this.src];
+                currentImageIndex = 0;
+            }
+            
+            openLightbox();
+            loadMedia(0);
+        });
+    });
+    
+    // Événements de la lightbox
+    const lightbox = document.getElementById('lightbox');
+    const closeBtn = document.querySelector('.lightbox-close');
+    const prevBtn = document.querySelector('.lightbox-prev');
+    const nextBtn = document.querySelector('.lightbox-next');
+    
+    if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
+    if (prevBtn) prevBtn.addEventListener('click', () => currentImageIndex > 0 && loadMedia(currentImageIndex - 1));
+    if (nextBtn) nextBtn.addEventListener('click', () => currentImageIndex < currentGallery.length - 1 && loadMedia(currentImageIndex + 1));
+    
+    if (lightbox) {
+        lightbox.addEventListener('click', function(e) {
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+    }
+}
+
+// Ouvrir la lightbox
+function openLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    if (lightbox) {
+        lightbox.style.display = 'flex';
+        isLightboxOpen = true;
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+// Fermer la lightbox
+function closeLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    if (lightbox) {
+        lightbox.style.display = 'none';
+        isLightboxOpen = false;
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// Charger un média (image ou vidéo)
+function loadMedia(index) {
+    currentImageIndex = index;
+    const mediaUrl = currentGallery[index];
+    const image = document.getElementById('lightbox-image');
+    const counter = document.querySelector('.lightbox-counter');
+    
+    if (!image) return;
+    
+    // Mettre à jour le compteur
+    if (counter) {
+        const currentSpan = document.getElementById('current-image');
+        const totalSpan = document.getElementById('total-images');
+        if (currentSpan) currentSpan.textContent = index + 1;
+        if (totalSpan) totalSpan.textContent = currentGallery.length;
+    }
+    
+    if (mediaUrl.includes('youtube.com') || mediaUrl.includes('youtu.be')) {
+        // C'est une vidéo YouTube - redirection
+        let embedUrl = mediaUrl;
+        if (mediaUrl.includes('watch?v=')) {
+            const videoId = mediaUrl.split('watch?v=')[1].split('&')[0];
+            embedUrl = `https://www.youtube.com/embed/${videoId}`;
+        }
+        window.open(embedUrl, '_blank');
+        closeLightbox();
+    } else {
+        // C'est une image
+        image.src = mediaUrl;
+        
+        // Mettre à jour la description
+        const description = document.getElementById('lightbox-description');
+        const galleryItem = document.querySelector(`img[src="${currentGallery[0]}"]`)?.closest('.gallery-item');
+        if (description && galleryItem) {
+            const desc = galleryItem.querySelector('img').getAttribute('data-description') || '';
+            description.textContent = desc;
+        }
+    }
+    
+    // Gérer les boutons prev/next
+    const prevBtn = document.querySelector('.lightbox-prev');
+    const nextBtn = document.querySelector('.lightbox-next');
+    
+    if (prevBtn) prevBtn.style.display = index > 0 ? 'block' : 'none';
+    if (nextBtn) nextBtn.style.display = index < currentGallery.length - 1 ? 'block' : 'none';
+}
+
+// Fonction pour initialiser les tooltips de prévisualisation
+function initPreviewTooltips() {
+    // Tooltips pour les éléments de la galerie
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    galleryItems.forEach(item => {
+        const img = item.querySelector('img');
+        if (img) {
+            const description = img.getAttribute('data-description') || img.alt;
+            if (description) {
+                // Créer un tooltip avec une version courte de la description
+                const shortDescription = description.length > 60 ? 
+                    description.substring(0, 60) + '...' : description;
+                
+                const tooltip = document.createElement('div');
+                tooltip.className = 'preview-tooltip';
+                tooltip.textContent = shortDescription;
+                item.appendChild(tooltip);
+            }
+        }
+    });
+    
+    // Tooltips pour les éléments du carousel
+    const carouselItems = document.querySelectorAll('.carousel-item');
+    carouselItems.forEach(item => {
+        const projectOrder = item.getAttribute('data-project-order');
+        if (projectOrder) {
+            // Trouver le projet correspondant dans la galerie pour récupérer sa description
+            const galleryItem = document.querySelector(`[data-order="${projectOrder}"]`);
+            if (galleryItem) {
+                const galleryImg = galleryItem.querySelector('img');
+                if (galleryImg) {
+                    const description = galleryImg.getAttribute('data-description') || galleryImg.alt;
+                    if (description) {
+                        // Créer un tooltip plus court pour le carousel
+                        const shortDescription = description.length > 50 ? 
+                            description.substring(0, 50) + '...' : description;
                         
-                        <div class="carousel-wrapper">
-                            <div class="carousel-track" id="carousel-track">
-                                <!-- 1. Le Colossus -->
-                                <div class="carousel-item" data-project-order="27">
-                                    <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/images/2D%20-%203D/space%20station.png" alt="Le Colossus">
-                                    <div class="carousel-overlay">
-                                        <h3>Le Colossus</h3>
-                                    </div>
-                                </div>
-                                
-                                <!-- 2. Ville avec animation de voiture -->
-                                <div class="carousel-item" data-project-order="3">
-                                    <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/images/2D%20-%203D/city%20blender.png" alt="Ville 3D">
-                                    <div class="carousel-overlay">
-                                        <h3>Ville 3D</h3>
-                                    </div>
-                                </div>
-                                
-                                <!-- 3. Projet Baccalauréat avec téléphone -->
-                                <div class="carousel-item" data-project-order="10">
-                                    <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/images/2D%20-%203D/shoot%201%20tel.png" alt="Projet Baccalauréat">
-                                    <div class="carousel-overlay">
-                                        <h3>Projet Baccalauréat</h3>
-                                    </div>
-                                </div>
-                                
-                                <!-- 4. Projet EDF -->
-                                <div class="carousel-item" data-project-order="20">
-                                    <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/images/Tournages%20-%20Images/" alt="Projet EDF">
-                                    <div class="carousel-overlay">
-                                        <h3>Projet EDF</h3>
-                                    </div>
-                                </div>
-                                
-                                <!-- 5. La Vie du Chef -->
-                                <div class="carousel-item" data-project-order="32">
-                                    <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/images/Tournages%20-%20Images/" alt="La Vie du Chef">
-                                    <div class="carousel-overlay">
-                                        <h3>La Vie du Chef</h3>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <button class="carousel-btn next" id="carousel-next">›</button>
-                    </div>
-                    
-                    <!-- Indicateurs -->
-                    <div class="carousel-indicators" id="carousel-indicators">
-                        <button class="indicator active" data-slide="0"></button>
-                        <button class="indicator" data-slide="1"></button>
-                        <button class="indicator" data-slide="2"></button>
-                        <button class="indicator" data-slide="3"></button>
-                        <button class="indicator" data-slide="4"></button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Projects Grid -->
-            <section id="projets" class="projects-section">
-                <div class="projects-gallery">
-
-                    <!-- Projet 1 - Capture d'écran (sans sous-images) -->
-                    <div class="gallery-item large" data-category="1" data-order="1" data-has-video="non">
-                        <img src="https://i.imgur.com/rWLNaOi.jpeg" 
-                             alt="Capture d'écran 3D"
-                             data-description="Capture d'écran d'une scène 3D montrant mes compétences en modélisation et rendu 3D">
-                    </div>
-
-                    <div class="gallery-item medium" data-category="1" data-order="2" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/bYcyXZT.jpeg",
-                             "https://i.imgur.com/LMWlFZ1.jpeg"
-                         ]'>
-                        <img src="https://i.imgur.com/bYcyXZT.jpeg" 
-                             alt="Animation route et pluie"
-                             data-description="Animation 3D d'une route sous la pluie, travail sur les effets atmosphériques et l'ambiance cinématographique">
-                    </div>
-
-                    <!-- Projet 5 - City avec galerie (CONTIENT UNE VIDÉO YOUTUBE) -->
-                    <div class="gallery-item small" data-category="1" data-order="3" data-has-video="oui"
-                         data-gallery='[
-                             "https://i.imgur.com/M526tSA.jpeg",
-                             "https://i.imgur.com/yZC28wu.png",
-                             "https://i.imgur.com/xVpZU7N.jpeg",
-                             "https://i.imgur.com/owVA5LF.png",
-                             "https://www.youtube.com/watch?v=BwSIBaaBu-8"
-                         ]'>
-                        <img src="https://i.imgur.com/M526tSA.jpeg" 
-                             alt="Ville 3D avec animation"
-                             data-description="Projet d'animation de voiture dans une ville 3D - Modélisation environnementale et animation dynamique avec vidéo complète">
-                    </div>
-
-                    <!-- Projet 6 - GIF Animation (sans sous-images) -->
-                    <div class="gallery-item small" data-category="1" data-order="4" data-has-video="non">
-                        <img src="https://i.imgur.com/LB4dDrC.gif" 
-                             alt="Animation 3D GIF"
-                             data-description="Animation 3D au format GIF - Démonstration de cycles d'animation fluides et de techniques d'optimisation">
-                    </div>
-
-                    <!-- Projet 7 - Screenshot Gallery (sans sous-images) -->
-                    <div class="gallery-item medium" data-category="1" data-order="5" data-has-video="non">
-                        <img src="https://i.imgur.com/5Nrvako.jpeg" 
-                             alt="Screenshot Gallery"
-                             data-description="Galerie de captures d'écran montrant différentes étapes de production 3D et techniques de rendu">
-                    </div>
-
-                    <!-- Projet 8 - Toon Scape (sans sous-images) -->
-                    <div class="gallery-item small" data-category="1" data-order="6" data-has-video="non">
-                        <img src="https://i.imgur.com/nYp46XK.png" 
-                             alt="Toon Scape"
-                             data-description="Paysage en style cartoon - Exploration du rendu stylisé et des techniques de shading non-photoréaliste">
-                    </div>
-
-                    <!-- Projet 9 - Distrib Insta (sans sous-images) -->
-                    <div class="gallery-item small" data-category="1" data-order="7" data-has-video="non">
-                        <img src="https://i.imgur.com/IfFt83t.png" 
-                             alt="Projet cartoon Instagram"
-                             data-description="Design cartoon pour réseaux sociaux - Illustration stylisée et optimisation pour les plateformes digitales">
-                    </div>
-
-                    <!-- Projet 10 - Animation Route avec galerie (1 sous-image) -->
-                    <div class="gallery-item medium" data-category="1" data-order="8" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/M385dqA.jpeg",
-                             "https://i.imgur.com/hm5f6K1.jpeg"
-                         ]'>
-                        <img src="https://i.imgur.com/M385dqA.jpeg" 
-                             alt="Route et pluie"
-                             data-description="Scène d'animation route sous la pluie - Maîtrise des effets de particules et de l'éclairage atmosphérique">
-                    </div>
-
-                    <!-- Projet 11 - Fog and GTR (sans sous-images) -->
-                    <div class="gallery-item small" data-category="1" data-order="9" data-has-video="non">
-                        <img src="https://i.imgur.com/8bP2wNK.png" 
-                             alt="GTR dans le brouillard"
-                             data-description="Voiture GTR dans un environnement brumeux - Rendu photoréaliste avec effets de volumétrie">
-                    </div>
-
-                    <!-- Projet 12 - Batspace avec galerie (2 sous-images) -->
-                    <div class="gallery-item large" data-category="1" data-order="10" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/etJKXxT.jpeg",
-                             "https://i.imgur.com/Na8JoIe.jpeg",
-                             "https://i.imgur.com/jbFweKy.jpeg"
-                         ]'>
-                        <img src="https://i.imgur.com/etJKXxT.jpeg" 
-                             alt="Batspace - Véhicule spatial"
-                             data-description="Véhicule spatial futuriste - Design conceptuel et modélisation hard-surface avec variations">
-                    </div>
-
-                    <!-- Projet 13 - Correction -->
-                    <div class="gallery-item medium" data-category="1" data-order="11" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/An3GRse.png",
-                             "https://i.imgur.com/QLZEImJ.jpeg",
-                             "https://i.imgur.com/JQCLCv4.jpeg",
-                             "https://i.imgur.com/pcCXcri.png"
-                         ]'>
-                        <img src="https://i.imgur.com/An3GRse.png" 
-                             alt="Armure futuriste"
-                             data-description="Armure futuriste 3D - Modélisation détaillée avec matériaux métalliques et process de création">
-                    </div>
-
-                    <!-- Projet 14 - Apple Vision Pro avec galerie (2 sous-images) -->
-                    <div class="gallery-item small" data-category="1" data-order="12" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/PFnuGee.jpeg",
-                             "https://i.imgur.com/QXoDWjd.jpeg",
-                             "https://i.imgur.com/qN0tLs8.jpeg"
-                         ]'>
-                        <img src="https://i.imgur.com/PFnuGee.jpeg" 
-                             alt="Apple Vision Pro 3D"
-                             data-description="Modélisation Apple Vision Pro - Reproduction fidèle du casque VR avec matériaux réalistes">
-                    </div>
-
-                    <!-- Projet 15 - Correction -->
-                    <div class="gallery-item medium" data-category="1" data-order="13" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/jzolHlt.jpeg",
-                             "https://i.imgur.com/MkvQGFh.png"
-                         ]'>
-                        <img src="https://i.imgur.com/jzolHlt.jpeg" 
-                             alt="Scène conceptuelle avec variations"
-                             data-description="Scène conceptuelle 3D - Exploration artistique avec variations d'éclairage et d'ambiance">
-                    </div>
-
-                    <!-- Projet 17 - Motor Space avec galerie (4 sous-images) -->
-                    <div class="gallery-item large" data-category="1" data-order="14" data-has-video="non"
-                         data-gallery='[
-                            "https://i.imgur.com/JURiEbT.jpeg",
-                             "https://i.imgur.com/JoouOKq.png",
-                             "https://i.imgur.com/GDb3Gb7.png",
-                             "https://i.imgur.com/V93DInL.png",
-                             "https://i.imgur.com/gwwNqEg.png",
-                             "https://i.imgur.com/zTfQAkv.png"
-                         ]'>
-                        <img src="https://i.imgur.com/JURiEbT.jpeg" 
-                             alt="Moto spatiale futuriste"
-                             data-description="Moto spatiale futuriste - Concept design avec multiples variations et process de création détaillé">
-                    </div>
-
-                    <!-- Projet 18 - Correction -->
-                    <div class="gallery-item medium" data-category="1" data-order="15" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/AskS27f.jpeg",
-                             "https://i.imgur.com/MFObaDC.jpeg"
-                         ]'>
-                        <img src="https://i.imgur.com/AskS27f.jpeg" 
-                             alt="Retribution - Scène dramatique"
-                             data-description="Retribution - Scène dramatique 3D avec éclairage cinématographique et atmosphère sombre">
-                    </div>
-
-                    <!-- Projet 19 - Sci-fi Scene avec galerie (2 sous-images) -->
-                    <div class="gallery-item small" data-category="1" data-order="16" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/izVTzPB.jpeg",
-                             "https://i.imgur.com/Q1sF3Hb.jpeg",
-                             "https://i.imgur.com/i3YzyvI.jpeg"
-                         ]'>
-                        <img src="https://i.imgur.com/izVTzPB.jpeg" 
-                             alt="Environnement sci-fi futuriste"
-                             data-description="Environnement sci-fi futuriste - Architecture avancée et design de science-fiction avec multiples vues">
-                    </div>
-
-                    <!-- Projet 20 - Shoot Tel (sans sous-images) -->
-                    <div class="gallery-item small" data-category="1" data-order="17" data-has-video="non">
-                        <img src="https://i.imgur.com/c4EAy8n.png" 
-                             alt="Shoot photo téléphone stylisé"
-                             data-description="Shoot photo téléphone stylisé - Mise en scène créative avec lighting studio et rendu propre">
-                    </div>
-
-                    <!-- Projet 22 - Space Station avec galerie (2 sous-images) -->
-                    <div class="gallery-item large" data-category="1" data-order="18" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/3Ruqxku.jpeg",
-                             "https://i.imgur.com/6iZj9wI.jpeg",
-                             "https://i.imgur.com/Jv4KLle.jpeg"
-                         ]'>
-                        <img src="https://i.imgur.com/3Ruqxku.jpeg" 
-                             alt="Station spatiale orbitale"
-                             data-description="Station spatiale orbitale - Complex architectural spatial avec systèmes rotatifs et détails techniques">
-                    </div>
-
-                    <!-- Projet 23 - Correction -->
-                    <div class="gallery-item medium" data-category="1" data-order="19" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/K1iwNmq.jpeg",
-                             "https://i.imgur.com/i7mdDi4.png"
-                         ]'>
-                        <img src="https://i.imgur.com/K1iwNmq.jpeg"  
-                             alt="Terra - Planète conceptuelle"
-                             data-description="Terra - Conception de planète avec écosystème unique et formations géologiques fantastiques">
-                    </div>
-
-                <div class="gallery-item medium" data-category="1" data-order="20" data-has-video="oui"
-                         data-gallery='[
-                             "https://i.imgur.com/oiVM13r.png",
-                             "https://www.youtube.com/watch?v=dkax0LbPZuI"
-                         ]'>
-                        <img src="https://i.imgur.com/oiVM13r.png" 
-                             alt="Projet Baccalauréat - Téléphone 3D"
-                             data-description="Projet Baccalauréat - Conception téléphone 3D avec animation et présentation vidéo complète">
-                    </div>
-
-                     <div class="gallery-item large" data-category="1" data-order="21" data-has-video="non">
-                        <img src="https://i.imgur.com/jyIU6PG.jpeg" 
-                             alt="Paysage cosmique avec trou noir"
-                             data-description="Paysage cosmique avec trou noir - Exploration des effets spatiaux et de la distorsion gravitationnelle">
-                    </div>
-
-                    <div class="gallery-item large" data-category="1" data-order="22" data-has-video="non">
-                        <img src="https://i.imgur.com/KF3wwYm.jpeg" 
-                             alt="Entraînement textures PBR"
-                             data-description="Entraînement textures PBR - Étude des matériaux et techniques de texturage photoréaliste">
-                    </div>
-                    
-                    <div class="gallery-item large" data-category="1" data-order="23" data-has-video="non">
-                        <img src="https://i.imgur.com/aS0VZJH.jpeg" 
-                             alt="Paysages marécageux"
-                             data-description="Environnements marécageux 3D - Modélisation d'écosystèmes naturels et végétation procédurale">
-                    </div>
-
-                    <div class="gallery-item large" data-category="1" data-order="24" data-has-video="non">
-                        <img src="https://i.imgur.com/kdvNBHh.jpeg" 
-                             alt="Lune avec displacement mapping"
-                             data-description="Surface lunaire avec displacement mapping - Technique avancée de relief et de géologie spatiale">
-                    </div>                    <div class="gallery-item large" data-category="1" data-order="25" data-has-video="non">
-                        <img src="https://i.imgur.com/ynaluMT.png" 
-                             alt="Scène d'expérimentation 3D"
-                             data-description="Scène d'expérimentation 3D - Tests de lighting et de composition visuelle avancée">
-                    </div>
-
-                    <div class="gallery-item large" data-category="1" data-order="26" data-has-video="non">
-                        <img src="https://i.imgur.com/UCGzkfR.jpeg" 
-                             alt="Starship en vol dans les nuages"
-                             data-description="Starship en vol - Animation de vaisseau spatial avec simulation de nuages et atmosphère">
-                    </div>
-
-                    <div class="gallery-item large" data-category="1" data-order="27" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/7i4zVDY.jpeg",
-                             "https://i.imgur.com/HFJ4Oy3.png",
-                             "https://i.imgur.com/M7q9GN2.png",
-                             "https://i.imgur.com/IFNszcL.png",
-                             "https://i.imgur.com/5nvpECw.png",
-                             "https://i.imgur.com/yNVsPwr.jpeg",
-                             "https://i.imgur.com/c8okZ8T.jpeg",
-                             "https://i.imgur.com/5PjQr8Y.png",
-                             "https://i.imgur.com/L10rrjj.jpeg"
-                         ]'>
-                        <img src="https://i.imgur.com/7i4zVDY.jpeg" 
-                             alt="Le Colossus - Vaisseau spatial game-ready"
-                             data-description="Le Colossus - Vaisseau spatial game-ready complet avec textures, materials et process de création détaillé">
-                    </div>
-
-                  <div class="gallery-item medium" data-category="1" data-order="28" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/9veRK58.jpeg",
-                             "https://i.imgur.com/rIx4Wsw.jpeg"
-                         ]'>
-                        <img src="https://i.imgur.com/9veRK58.jpeg" 
-                             alt="Effets VFX cinématographiques"
-                             data-description="Effets VFX cinématographiques - Compositing et post-production avec intégration 3D/2D">
-                    </div>
-
-                    <div class="gallery-item medium" data-category="1" data-order="29" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/kgWAZ3n.png",
-                             "https://i.imgur.com/XhqrpAH.jpeg"
-                         ]'>
-                        <img src="https://i.imgur.com/kgWAZ3n.png" 
-                             alt="Compositing VFX avancé"
-                             data-description="Compositing VFX avancé - Intégration d'éléments 3D dans environnements réels avec color grading">
-                    </div>
-                    
-                    <div class="gallery-item medium" data-category="1" data-order="30" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/l8XUTI1.png",
-                             "https://i.imgur.com/WCtLyf8.png",
-                             "https://i.imgur.com/APd87TK.png"
-                         ]'>
-                        <img src="https://i.imgur.com/l8XUTI1.png" 
-                             alt="Level design architectural"
-                             data-description="Level design architectural - Conception d'environnements 3D pour jeux vidéo avec différentes variations">
-                    </div>
-
-                    <div class="gallery-item large" data-category="1" data-order="31" data-has-video="non">
-                        <img src="https://i.imgur.com/t8Y441L.jpeg" 
-                             alt="Paysage photoréaliste"
-                             data-description="Paysage photoréaliste - Environnement naturel avec techniques de rendu avancées et éclairage naturel">
-                    </div>
-
-                   <div class="gallery-item medium" data-category="1" data-order="32" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/gxCcinm.png",
-                             "https://i.imgur.com/bVVW1vk.jpeg"
-                         ]'>
-                        <img src="https://i.imgur.com/gxCcinm.png" 
-                             alt="Machines industrielles imprimables 3D"
-                             data-description="Machines industrielles - Modèles 3D techniques optimisés pour l'impression 3D avec assemblages complexes">
-                    </div>
-
-                    <div class="gallery-item medium" data-category="2" data-order="33" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/tvdD2dR.png",
-                             "https://i.imgur.com/JQn1Zpc.png",
-                             "https://i.imgur.com/6Pq71c5.jpeg",
-                             "https://i.imgur.com/m9k6Tso.png"
-                         ]'>
-                        <img src="https://i.imgur.com/tvdD2dR.png" 
-                             alt="Projet EDF - Tournage professionnel"
-                             data-description="Projet EDF - Tournage professionnel et captation d'images techniques pour entreprise énergétique">
-                    </div>
-
-
-                   <div class="gallery-item medium" data-category="2" data-order="34" data-has-video="oui"
-                         data-gallery='[
-                             "https://i.imgur.com/0T3tOw6.png",
-                             "https://www.youtube.com/watch?v=kCo_sF-JbVk"
-                         ]'>
-                        <img src="https://i.imgur.com/0T3tOw6.png" 
-                             alt="Electromontage Elec - Vidéo corporate"
-                             data-description="Electromontage Elec - Montage vidéo corporate avec grading et post-production complète">
-                    </div>
-
-                    <div class="gallery-item medium" data-category="2" data-order="35" data-has-video="oui"
-                         data-gallery='[
-                             "https://i.imgur.com/YfKKP0u.png",
-                             "https://www.youtube.com/@LavieDuchef/videos"
-                         ]'>
-                        <img src="https://i.imgur.com/YfKKP0u.png" 
-                             alt="La Vie Du Chef - Chaîne YouTube"
-                             data-description="La Vie Du Chef - Tournages et montages pour chaîne YouTube culinaire avec animations et effets">
-                    </div>
-
-
-                </div>
-            </section>
-
-            <!-- Section Contact -->
-            <section id="contact" class="section contact-section">
-                <h2 data-translate="CONTACT">CONTACT</h2>
-                <div class="contact-info">
-                    <p>
-                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2ZmMDAwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIzLjQ5OCA2LjE4NmMtLjI4NS0xLjA3Ni0xLjEyNS0xLjkyMy0yLjE5OC0yLjIwN0MxOS40MyAzLjU0IDEyIDMuNTQgMTIgMy41NHMtNy40MyAwLTkuMyAuNDM5Yy0xLjA3My4yODQtMS45MTMgMS4xMzEtMi4xOTggMi4yMDdDMCA4LjA3NCAwIDEyIDAgMTJzMCAzLjkyNi40NTggNS44MTRjLjI4NSAxLjA3NiAxLjEyNSAxLjkyMyAyLjE5OCAyLjIwN0M0LjU3IDIwLjQ2IDEyIDIwLjQ2IDEyIDIwLjQ2czcuNDMgMCA5LjMtLjQzOWMxLjA3My0uMjg0IDEuOTEzLTEuMTMxIDIuMTk4LTIuMjA3QzI0IDE1LjkyNiAyNCAxMiAyNCAxMnMwLTMuOTI2LS41MDItNS44MTRaIi8+CjxwYXRoIGQ9Im05LjU0NSAxNS41NjggNC43MjgtMi41NjgtNC43MjgtMi41Njh2NS4xMzZaIiBmaWxsPSIjZmZmZmZmIi8+Cjwvc3ZnPgo=" 
-                             alt="YouTube" class="social-icon">
-                        <a href="https://www.youtube.com/@Ugoravard" target="_blank">YouTube</a>
-                    </p>
-                    <p>
-                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwNzdiNSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwLjQ0NyAyMC40NTJIMTYuODkzVjE0Ljg4M2MwLTEuMzI4LS4wMjctMy4wMzctMS44NTItMy4wMzctMS44NTMgMC0yLjEzNiAxLjQ0NS0yLjEzNiAyLjkzOXY1LjY2N0g5LjM1MVY5aDMuNDE0djEuNTYxaC4wNDdjLjQ3My0uODk2IDEuNjM3LTEuODQgMy4zNy0xLjg0IDMuNjAxIDAgNC4yNjcgMi4zNyA0LjI2NyA1LjQ1NXY2Ljc3NnpNNS4zMzcgNy40MzNhMi4wNjIgMi4wNjIgMCAxIDEtLjAwMS00LjEyNSAyLjA2MyAyLjA2MyAwIDAgMSAuMDAxIDQuMTI1ek0zLjU1OSAyMC40NTJINC4xMTRWOUgzLjU1OXYxMS40NTJaTTIyLjIyNSAwSDEuNzcxQy43OTIgMCAwIC43NzQgMCAxLjcyOXYyMC41NDJDMCAyMy4yMjcuNzkyIDI0IDEuNzcxIDI0aDIwLjQ1NDJDI4MjMuMjA4IDI0IDI0IDIzLjIyNyAyNCAyMi4yNzFWMS43MjlDMjQgLjc3NCAyMy4yMDggMCAyMi4yMjUgMHoiLz4KPC9zdmc+Cg==" 
-                             alt="LinkedIn" class="social-icon">
-                        <a href="https://www.linkedin.com/in/ugo-ravard-42b408349" target="_blank">LinkedIn</a>
-                    </p>
-                    <p>
-                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzMzMzMzMyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIC4yOTdjLTYuNjMgMC0xMiA1LjM3My0xMiAxMiAwIDUuMzAzIDMuNDM4IDkuOCA4LjIwNSAxMS4zODcuNi4xMTMuODItLjI1OC44Mi0uNTc3IDAtLjI4NS0uMDEtMS4wNC0uMDE1LTIuMDQtMy4zMzguNzI0LTQuMDQyLTEuNjEtNC4wNDItMS42MS0uNTQ2LTEuMzg3LTEuMzMzLTEuNzU2LTEuMzMzLTEuNzU2LTEuMDg5LS43NDQuMDgzLS43MjkuMDgzLS43MjkgMS4yMDUuMDg0IDEuODM5IDEuMjM3IDEuODM5IDEuMjM3IDEuMDcgMS44MzQgMi44MDcgMS4zMDQgMy40OTIuOTk3LjEwNy0uNzc1LjQxOC0xLjMwNS43NjItMS42MDQtMi42NjUtLjMwNS01LjQ2Ny0xLjMzNC01LjQ2Ny01LjkzMSAwLTEuMzExLjQ2OS0yLjM4MSAxLjIzNi0zLjIyMS0uMTI0LS4zMDMtLjUzNS0xLjUyNC4xMTctMy4xNzYgMCAwIDEuMDA4LS4zMjIgMy4zIDEuMjMuOTU3LS4yNjYgMS45ODMtLjM5OSAzLjAwMy0uNDA0IDEuMDIuMDA1IDIuMDQ3LjEzOCAzLjAwNi40MDQgMi4yOTEtMS41NTIgMy4yOTctMS4yMyAzLjI5Ny0xLjIzLjY1MyAxLjY1My4yNDIgMi44NzQuMTE4IDMuMTc2Ljc3LjA0IDEuMjM1IDEuOTExIDEuMjM1IDMuMjIxIDAgNC42MDktMi44MDcgNS42MjQtNS40NzkgNS45MjEuNDMuMzcyLjgyMyAxLjEwMi44MjMgMi4yMjJ2My4yOTNjMCAuMzE5LjIxNi42OTQuODI1LjU3NkMyMC41NjUgMjIuMDkyIDI0IDE3LjU5MiAyNCAxMi4yOTdjMC02LjYyNy01LjM3My0xMi0xMi0xMiIvPgo8L3N2Zz4K" 
-                             alt="GitHub" class="social-icon">
-                        <a href="https://github.com/ugoooooo0" target="_blank">GitHub</a>
-                    </p>
-                </div>
-
-                <!-- Formulaire de contact -->
-                <div class="contact-form-container">
-                    <h3 data-translate="Envoyez-moi un message">Envoyez-moi un message</h3>
-                    <form id="contact-form" class="contact-form">
-                        <div class="form-group">
-                            <input type="text" id="name" name="name" placeholder="Votre nom" data-translate="Votre nom" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" id="email" name="email" placeholder="Votre email" data-translate="Votre email" required>
-                        </div>
-                        <div class="form-group">
-                            <textarea id="message" name="message" placeholder="Votre message..." data-translate="Votre message..." rows="5" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary" data-translate="📩 Envoyer le message">
-                            📩 Envoyer le message
-                        </button>
-                    </form>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <!-- Lightbox Modal améliorée -->
-    <div id="lightbox" class="lightbox">
-        <div class="lightbox-content">
-            <span class="lightbox-close">&times;</span>
-            <div class="lightbox-navigation">
-                <button class="lightbox-prev">‹</button>
-                <button class="lightbox-next">›</button>
-            </div>
-            <div class="lightbox-image-container">
-                <img id="lightbox-image" src="" alt="">
-            </div>
-            <div id="lightbox-description" class="lightbox-description"></div>
-            <div class="lightbox-counter">
-                <span id="current-image">1</span> / <span id="total-images">1</span>
-            </div>
-        </div>
-    </div>
-
-    <script src="js/translations.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/mobile-test.js"></script>
-</body>
-</html>
-
+                        const tooltip = document.createElement('div');
+                        tooltip.className = 'preview-tooltip';
+                        tooltip.textContent = shortDescription;
+                        item.appendChild(tooltip);
+                    }
+                }
+            }
+        }
+    });
+}
 
