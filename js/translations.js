@@ -212,12 +212,10 @@ class TranslationSystem {
             </button>
         `;
         
-        // Ajouter à la navigation
-        const nav = document.querySelector('nav ul');
-        if (nav) {
-            const langItem = document.createElement('li');
-            langItem.appendChild(languageToggle);
-            nav.appendChild(langItem);
+        // Ajouter en haut à gauche de l'entête
+        const headerContent = document.querySelector('.header-content');
+        if (headerContent) {
+            headerContent.appendChild(languageToggle);
         }
         
         // Ajouter les événements de clic
