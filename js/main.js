@@ -24,6 +24,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Pré-traitement des images pour améliorer le layout
         preprocessImages();
         
+        // Ajouter les tooltips de prévisualisation
+        initPreviewTooltips();
+        
         // Initialiser le masonry après chargement des images
         initMasonry();
         
@@ -89,9 +92,29 @@ function initCarousel() {
                 // Trouver le projet correspondant dans la galerie
                 const galleryItem = document.querySelector(`[data-order="${projectOrder}"]`);
                 if (galleryItem) {
+                    // D'abord s'assurer que l'item est visible (changer de filtre si nécessaire)
+                    const category = galleryItem.getAttribute('data-category');
+                    const activeFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
+                    
+                    // Si le filtre actuel ne correspond pas, changer pour 'all'
+                    if (activeFilter !== 'all' && activeFilter !== category) {
+                        const allButton = document.querySelector('.filter-btn[data-filter="all"]');
+                        if (allButton) {
+                            allButton.click();
+                            // Attendre que le filtre soit appliqué
+                            setTimeout(() => {
+                                const galleryImg = galleryItem.querySelector('img');
+                                if (galleryImg) {
+                                    galleryImg.click();
+                                }
+                            }, 100);
+                            return;
+                        }
+                    }
+                    
+                    // Si déjà visible, ouvrir directement
                     const galleryImg = galleryItem.querySelector('img');
                     if (galleryImg) {
-                        // Simuler un clic sur l'image de la galerie
                         galleryImg.click();
                     }
                 }
@@ -694,7 +717,7 @@ function initLightbox() {
             
             const img = e.target;
             const galleryItem = img.closest('.gallery-item');
-            const description = img.getAttribute('data-description') || 'Image du portfolio';
+            const description = img.getAttribute('data-description') || img.alt || 'Image du portfolio';
             
             // Récupérer la galerie
             const galleryData = galleryItem.getAttribute('data-gallery');
@@ -723,6 +746,8 @@ function initLightbox() {
         loadMedia(currentImageIndex);
         if (lightboxDescription) {
             lightboxDescription.textContent = description;
+            // Assurer que la description est visible
+            lightboxDescription.style.display = 'block';
         }
         updateCounter();
         updateNavigation();
@@ -1073,3 +1098,52 @@ function loadMedia(index) {
     if (prevBtn) prevBtn.style.display = index > 0 ? 'block' : 'none';
     if (nextBtn) nextBtn.style.display = index < currentGallery.length - 1 ? 'block' : 'none';
 }
+
+// Fonction pour initialiser les tooltips de prévisualisation
+function initPreviewTooltips() {
+    // Tooltips pour les éléments de la galerie
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    galleryItems.forEach(item => {
+        const img = item.querySelector('img');
+        if (img) {
+            const description = img.getAttribute('data-description') || img.alt;
+            if (description) {
+                // Créer un tooltip avec une version courte de la description
+                const shortDescription = description.length > 60 ? 
+                    description.substring(0, 60) + '...' : description;
+                
+                const tooltip = document.createElement('div');
+                tooltip.className = 'preview-tooltip';
+                tooltip.textContent = shortDescription;
+                item.appendChild(tooltip);
+            }
+        }
+    });
+    
+    // Tooltips pour les éléments du carousel
+    const carouselItems = document.querySelectorAll('.carousel-item');
+    carouselItems.forEach(item => {
+        const projectOrder = item.getAttribute('data-project-order');
+        if (projectOrder) {
+            // Trouver le projet correspondant dans la galerie pour récupérer sa description
+            const galleryItem = document.querySelector(`[data-order="${projectOrder}"]`);
+            if (galleryItem) {
+                const galleryImg = galleryItem.querySelector('img');
+                if (galleryImg) {
+                    const description = galleryImg.getAttribute('data-description') || galleryImg.alt;
+                    if (description) {
+                        // Créer un tooltip plus court pour le carousel
+                        const shortDescription = description.length > 50 ? 
+                            description.substring(0, 50) + '...' : description;
+                        
+                        const tooltip = document.createElement('div');
+                        tooltip.className = 'preview-tooltip';
+                        tooltip.textContent = shortDescription;
+                        item.appendChild(tooltip);
+                    }
+                }
+            }
+        }
+    });
+}
+
