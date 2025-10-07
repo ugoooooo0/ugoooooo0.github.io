@@ -194,34 +194,9 @@ class TranslationSystem {
     }
     
     createLanguageToggle() {
-        // Supprimer l'ancien sélecteur s'il existe
-        const existingToggle = document.querySelector('.language-toggle');
-        if (existingToggle) {
-            existingToggle.remove();
-        }
-        
-        // Créer le nouveau sélecteur de langue
-        const languageToggle = document.createElement('div');
-        languageToggle.className = 'language-toggle';
-        languageToggle.innerHTML = `
-            <button class="lang-btn ${this.currentLanguage === 'fr' ? 'active' : ''}" data-lang="fr">
-                🇫🇷 FR
-            </button>
-            <button class="lang-btn ${this.currentLanguage === 'en' ? 'active' : ''}" data-lang="en">
-                🇺🇸 EN
-            </button>
-        `;
-        
-        // Ajouter à la navigation
-        const nav = document.querySelector('nav ul');
-        if (nav) {
-            const langItem = document.createElement('li');
-            langItem.appendChild(languageToggle);
-            nav.appendChild(langItem);
-        }
-        
-        // Ajouter les événements de clic
-        languageToggle.addEventListener('click', (e) => {
+        // Ne plus créer de nouveaux boutons, utiliser ceux qui existent déjà dans le HTML
+        // Ajouter les événements de clic aux boutons existants
+        document.addEventListener('click', (e) => {
             if (e.target.classList.contains('lang-btn')) {
                 const newLang = e.target.dataset.lang;
                 if (newLang !== this.currentLanguage) {
@@ -235,8 +210,8 @@ class TranslationSystem {
         this.currentLanguage = lang;
         localStorage.setItem('portfolio-language', lang);
         
-        // Mettre à jour l'état des boutons
-        document.querySelectorAll('.lang-btn').forEach(btn => {
+        // Mettre à jour l'état des boutons dans l'entête
+        document.querySelectorAll('.language-switcher .lang-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.lang === lang);
         });
         
