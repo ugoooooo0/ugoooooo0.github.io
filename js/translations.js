@@ -13,17 +13,11 @@ class TranslationSystem {
                 'CONTACT': 'CONTACT',
                 'ACCUEIL': 'ACCUEIL',
                 'MON PORTFOLIO': 'MON PORTFOLIO',
-                'Ugo RAVARD Artist 3D / 2D': 'Ugo RAVARD Artist 3D / 2D',
                 
-                // Nouveaux filtres portfolio
-                'ALL': 'TOUT',
-                '3D': '3D',
-                'Tournage/Montage': 'Tournage/Montage',
-                
-                // Anciens filtres (rétrocompatibilité)
+                // Filtres portfolio
                 '2D/3D': '2D/3D',
                 'Films': 'Films/Images',
-                'Movies/Images': 'Films/Images',
+                'Movies/Images': 'Movies/Images',
                 
                 // Page d'accueil - Section présentation
                 'ARTISTE 3D': 'ARTISTE 3D',
@@ -103,14 +97,8 @@ class TranslationSystem {
                 'CONTACT': 'CONTACT',
                 'ACCUEIL': 'HOME',
                 'MON PORTFOLIO': 'MY PORTFOLIO',
-                'Ugo RAVARD Artist 3D / 2D': 'Ugo RAVARD Artist 3D / 2D',
                 
-                // Nouveaux filtres portfolio
-                'ALL': 'ALL',
-                '3D': '3D',
-                'Tournage/Montage': 'Filming/Editing',
-                
-                // Anciens filtres (rétrocompatibilité)
+                // Filtres portfolio
                 '2D/3D': '2D/3D',
                 'Films/Images': 'Movies/Images',
                 
@@ -206,58 +194,41 @@ class TranslationSystem {
     }
     
     createLanguageToggle() {
-        // Chercher les boutons existants dans le HTML
-        const languageSwitcher = document.querySelector('.language-switcher');
-        
-        if (languageSwitcher) {
-            // Si les boutons existent déjà dans le HTML, les configurer
-            const buttons = languageSwitcher.querySelectorAll('.lang-btn');
-            
-            // Mettre à jour l'état actif selon la langue courante
-            buttons.forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.lang === this.currentLanguage);
-            });
-            
-            // Ajouter les événements de clic
-            languageSwitcher.addEventListener('click', (e) => {
-                if (e.target.classList.contains('lang-btn')) {
-                    const newLang = e.target.dataset.lang;
-                    if (newLang !== this.currentLanguage) {
-                        this.switchLanguage(newLang);
-                    }
-                }
-            });
-        } else {
-            // Créer dynamiquement si pas trouvé (rétrocompatibilité)
-            const languageToggle = document.createElement('div');
-            languageToggle.className = 'language-toggle';
-            languageToggle.innerHTML = `
-                <button class="lang-btn ${this.currentLanguage === 'fr' ? 'active' : ''}" data-lang="fr">
-                    FR
-                </button>
-                <button class="lang-btn ${this.currentLanguage === 'en' ? 'active' : ''}" data-lang="en">
-                    EN
-                </button>
-            `;
-            
-            // Ajouter à la navigation
-            const nav = document.querySelector('nav ul');
-            if (nav) {
-                const langItem = document.createElement('li');
-                langItem.appendChild(languageToggle);
-                nav.appendChild(langItem);
-            }
-            
-            // Ajouter les événements de clic
-            languageToggle.addEventListener('click', (e) => {
-                if (e.target.classList.contains('lang-btn')) {
-                    const newLang = e.target.dataset.lang;
-                    if (newLang !== this.currentLanguage) {
-                        this.switchLanguage(newLang);
-                    }
-                }
-            });
+        // Supprimer l'ancien sélecteur s'il existe
+        const existingToggle = document.querySelector('.language-toggle');
+        if (existingToggle) {
+            existingToggle.remove();
         }
+        
+        // Créer le nouveau sélecteur de langue
+        const languageToggle = document.createElement('div');
+        languageToggle.className = 'language-toggle';
+        languageToggle.innerHTML = `
+            <button class="lang-btn ${this.currentLanguage === 'fr' ? 'active' : ''}" data-lang="fr">
+                🇫🇷 FR
+            </button>
+            <button class="lang-btn ${this.currentLanguage === 'en' ? 'active' : ''}" data-lang="en">
+                🇺🇸 EN
+            </button>
+        `;
+        
+        // Ajouter à la navigation
+        const nav = document.querySelector('nav ul');
+        if (nav) {
+            const langItem = document.createElement('li');
+            langItem.appendChild(languageToggle);
+            nav.appendChild(langItem);
+        }
+        
+        // Ajouter les événements de clic
+        languageToggle.addEventListener('click', (e) => {
+            if (e.target.classList.contains('lang-btn')) {
+                const newLang = e.target.dataset.lang;
+                if (newLang !== this.currentLanguage) {
+                    this.switchLanguage(newLang);
+                }
+            }
+        });
     }
     
     switchLanguage(lang) {
