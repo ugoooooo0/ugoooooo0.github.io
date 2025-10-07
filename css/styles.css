@@ -1025,49 +1025,6 @@ nav a:hover {
 }
 
 /* Bouton retour corrigé */
-/* Boutons de traduction */
-.language-switcher {
-    position: absolute;
-    right: clamp(15px, 4vw, 20px);
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    gap: 8px;
-}
-
-.lang-btn {
-    background: rgba(100, 255, 218, 0.1);
-    border: 1px solid rgba(100, 255, 218, 0.3);
-    color: #64ffda;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.lang-btn:hover {
-    background: rgba(100, 255, 218, 0.2);
-    border-color: #64ffda;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(100, 255, 218, 0.2);
-}
-
-.lang-btn.active {
-    background: #64ffda;
-    color: #0f1419;
-    border-color: #64ffda;
-    box-shadow: 0 4px 16px rgba(100, 255, 218, 0.3);
-}
-
-.lang-btn.active:hover {
-    background: #4db6cd;
-    transform: translateY(-1px) scale(1.05);
-}
-
 .back-home-btn {
     position: absolute;
     left: clamp(15px, 4vw, 20px);
@@ -2289,40 +2246,6 @@ body.mobile-test-mode .back-home-btn {
     transform: none !important;
     margin-bottom: 10px !important;
     align-self: flex-start !important;
-}
-
-body.mobile-test-mode .language-switcher {
-    position: static !important;
-    transform: none !important;
-    margin-bottom: 10px !important;
-    align-self: flex-end !important;
-}
-
-body.mobile-test-mode .lang-btn {
-    font-size: 10px !important;
-    padding: 6px 10px !important;
-}
-
-body.mobile-test-mode .portfolio-page .header-content {
-    flex-direction: column !important;
-    gap: 15px !important;
-    text-align: center !important;
-    min-height: auto !important;
-}
-
-body.mobile-test-mode .portfolio-page .header-content h1 {
-    order: 2;
-    margin: 0 !important;
-}
-
-body.mobile-test-mode .back-home-btn {
-    order: 1;
-    align-self: center !important;
-}
-
-body.mobile-test-mode .language-switcher {
-    order: 3;
-    align-self: center !important;
 }
 
 body.mobile-test-mode .presentation-content,
