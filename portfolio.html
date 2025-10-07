@@ -8,19 +8,24 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="portfolio-page">
+    <!-- Bouton de test mobile -->
+    <button id="mobile-test-btn" class="mobile-test-btn" title="Tester l'affichage mobile">
+        Test Mobile
+    </button>
+    
     <div class="container">
         <header>
             <div class="header-content">
                 <a href="index.html" class="back-home-btn" data-translate="ACCUEIL">
                     ACCUEIL
                 </a>
-                <h1 data-translate="MON PORTFOLIO">MON PORTFOLIO</h1>
+                <h1 data-translate="Hugo Ravard Artist 3D / 2D">Hugo Ravard Artist 3D / 2D</h1>
             </div>
             <nav>
                 <ul>
-                    <li><a href="#" class="filter-btn" data-filter="1" data-translate="2D/3D">2D/3D</a></li>
-                    <li><a href="#" class="filter-btn active" data-filter="all" data-translate="PORTFOLIO">PORTFOLIO</a></li>
-                    <li><a href="#" class="filter-btn" data-filter="2" data-translate="Films/Images">Films/Images</a></li>
+                    <li><a href="#" class="filter-btn active" data-filter="all" data-translate="ALL">ALL</a></li>
+                    <li><a href="#" class="filter-btn" data-filter="1" data-translate="3D">3D</a></li>
+                    <li><a href="#" class="filter-btn" data-filter="2" data-translate="Tournage/Montage">Tournage/Montage</a></li>
                 </ul>
             </nav>
         </header>
@@ -99,7 +104,8 @@
                     <!-- Projet 1 - Capture d'écran (sans sous-images) -->
                     <div class="gallery-item large" data-category="1" data-order="1" data-has-video="non">
                         <img src="https://i.imgur.com/rWLNaOi.jpeg" 
-                             alt="Capture d'écran 3D">
+                             alt="Capture d'écran 3D"
+                             data-description="Capture d'écran d'une scène 3D montrant mes compétences en modélisation et rendu 3D">
                     </div>
 
                     <div class="gallery-item medium" data-category="1" data-order="2" data-has-video="non"
@@ -108,7 +114,8 @@
                              "https://i.imgur.com/LMWlFZ1.jpeg"
                          ]'>
                         <img src="https://i.imgur.com/bYcyXZT.jpeg" 
-                             alt="Animation route et pluie">
+                             alt="Animation route et pluie"
+                             data-description="Animation 3D d'une route sous la pluie, travail sur les effets atmosphériques et l'ambiance cinématographique">
                     </div>
 
                     <!-- Projet 5 - City avec galerie (CONTIENT UNE VIDÉO YOUTUBE) -->
@@ -121,31 +128,36 @@
                              "https://www.youtube.com/watch?v=BwSIBaaBu-8"
                          ]'>
                         <img src="https://i.imgur.com/M526tSA.jpeg" 
-                             alt="projet d'animation de voiture dans une ville">
+                             alt="Ville 3D avec animation"
+                             data-description="Projet d'animation de voiture dans une ville 3D - Modélisation environnementale et animation dynamique avec vidéo complète">
                     </div>
 
                     <!-- Projet 6 - GIF Animation (sans sous-images) -->
                     <div class="gallery-item small" data-category="1" data-order="4" data-has-video="non">
                         <img src="https://i.imgur.com/LB4dDrC.gif" 
-                             alt="Animation 3D GIF">
+                             alt="Animation 3D GIF"
+                             data-description="Animation 3D au format GIF - Démonstration de cycles d'animation fluides et de techniques d'optimisation">
                     </div>
 
                     <!-- Projet 7 - Screenshot Gallery (sans sous-images) -->
                     <div class="gallery-item medium" data-category="1" data-order="5" data-has-video="non">
                         <img src="https://i.imgur.com/5Nrvako.jpeg" 
-                             alt="Screenshot Gallery">
+                             alt="Screenshot Gallery"
+                             data-description="Galerie de captures d'écran montrant différentes étapes de production 3D et techniques de rendu">
                     </div>
 
                     <!-- Projet 8 - Toon Scape (sans sous-images) -->
                     <div class="gallery-item small" data-category="1" data-order="6" data-has-video="non">
                         <img src="https://i.imgur.com/nYp46XK.png" 
-                             alt="Toon Scape">
+                             alt="Toon Scape"
+                             data-description="Paysage en style cartoon - Exploration du rendu stylisé et des techniques de shading non-photoréaliste">
                     </div>
 
                     <!-- Projet 9 - Distrib Insta (sans sous-images) -->
                     <div class="gallery-item small" data-category="1" data-order="7" data-has-video="non">
                         <img src="https://i.imgur.com/IfFt83t.png" 
-                             alt="Cartoon project">
+                             alt="Projet cartoon Instagram"
+                             data-description="Design cartoon pour réseaux sociaux - Illustration stylisée et optimisation pour les plateformes digitales">
                     </div>
 
                     <!-- Projet 10 - Animation Route avec galerie (1 sous-image) -->
@@ -155,13 +167,15 @@
                              "https://i.imgur.com/hm5f6K1.jpeg"
                          ]'>
                         <img src="https://i.imgur.com/M385dqA.jpeg" 
-                             alt="Animation route et pluie">
+                             alt="Route et pluie"
+                             data-description="Scène d'animation route sous la pluie - Maîtrise des effets de particules et de l'éclairage atmosphérique">
                     </div>
 
                     <!-- Projet 11 - Fog and GTR (sans sous-images) -->
                     <div class="gallery-item small" data-category="1" data-order="9" data-has-video="non">
                         <img src="https://i.imgur.com/8bP2wNK.png" 
-                             alt="Fog and GTR">
+                             alt="GTR dans le brouillard"
+                             data-description="Voiture GTR dans un environnement brumeux - Rendu photoréaliste avec effets de volumétrie">
                     </div>
 
                     <!-- Projet 12 - Batspace avec galerie (2 sous-images) -->
@@ -172,7 +186,8 @@
                              "https://i.imgur.com/jbFweKy.jpeg"
                          ]'>
                         <img src="https://i.imgur.com/etJKXxT.jpeg" 
-                             alt="Batspace 3D">
+                             alt="Batspace - Véhicule spatial"
+                             data-description="Véhicule spatial futuriste - Design conceptuel et modélisation hard-surface avec variations">
                     </div>
 
                     <!-- Projet 13 - Correction -->
@@ -184,7 +199,8 @@
                              "https://i.imgur.com/pcCXcri.png"
                          ]'>
                         <img src="https://i.imgur.com/An3GRse.png" 
-                             alt="Armure 3D">
+                             alt="Armure futuriste"
+                             data-description="Armure futuriste 3D - Modélisation détaillée avec matériaux métalliques et process de création">
                     </div>
 
                     <!-- Projet 14 - Apple Vision Pro avec galerie (2 sous-images) -->
@@ -195,7 +211,8 @@
                              "https://i.imgur.com/qN0tLs8.jpeg"
                          ]'>
                         <img src="https://i.imgur.com/PFnuGee.jpeg" 
-                             alt="Apple Vision Pro 3D">
+                             alt="Apple Vision Pro 3D"
+                             data-description="Modélisation Apple Vision Pro - Reproduction fidèle du casque VR avec matériaux réalistes">
                     </div>
 
                     <!-- Projet 15 - Correction -->
@@ -205,7 +222,8 @@
                              "https://i.imgur.com/MkvQGFh.png"
                          ]'>
                         <img src="https://i.imgur.com/jzolHlt.jpeg" 
-                             alt="Image16 avec variations">
+                             alt="Scène conceptuelle avec variations"
+                             data-description="Scène conceptuelle 3D - Exploration artistique avec variations d'éclairage et d'ambiance">
                     </div>
 
                     <!-- Projet 17 - Motor Space avec galerie (4 sous-images) -->
@@ -219,7 +237,8 @@
                              "https://i.imgur.com/zTfQAkv.png"
                          ]'>
                         <img src="https://i.imgur.com/JURiEbT.jpeg" 
-                             alt="Moto spatiale 3D">
+                             alt="Moto spatiale futuriste"
+                             data-description="Moto spatiale futuriste - Concept design avec multiples variations et process de création détaillé">
                     </div>
 
                     <!-- Projet 18 - Correction -->
@@ -229,7 +248,8 @@
                              "https://i.imgur.com/MFObaDC.jpeg"
                          ]'>
                         <img src="https://i.imgur.com/AskS27f.jpeg" 
-                             alt="Retribution">
+                             alt="Retribution - Scène dramatique"
+                             data-description="Retribution - Scène dramatique 3D avec éclairage cinématographique et atmosphère sombre">
                     </div>
 
                     <!-- Projet 19 - Sci-fi Scene avec galerie (2 sous-images) -->
@@ -240,13 +260,15 @@
                              "https://i.imgur.com/i3YzyvI.jpeg"
                          ]'>
                         <img src="https://i.imgur.com/izVTzPB.jpeg" 
-                             alt="Scène Sci-fi">
+                             alt="Environnement sci-fi futuriste"
+                             data-description="Environnement sci-fi futuriste - Architecture avancée et design de science-fiction avec multiples vues">
                     </div>
 
                     <!-- Projet 20 - Shoot Tel (sans sous-images) -->
                     <div class="gallery-item small" data-category="1" data-order="17" data-has-video="non">
                         <img src="https://i.imgur.com/c4EAy8n.png" 
-                             alt="Shoot téléphone">
+                             alt="Shoot photo téléphone stylisé"
+                             data-description="Shoot photo téléphone stylisé - Mise en scène créative avec lighting studio et rendu propre">
                     </div>
 
                     <!-- Projet 22 - Space Station avec galerie (2 sous-images) -->
@@ -257,7 +279,8 @@
                              "https://i.imgur.com/Jv4KLle.jpeg"
                          ]'>
                         <img src="https://i.imgur.com/3Ruqxku.jpeg" 
-                             alt="Station spatiale">
+                             alt="Station spatiale orbitale"
+                             data-description="Station spatiale orbitale - Complex architectural spatial avec systèmes rotatifs et détails techniques">
                     </div>
 
                     <!-- Projet 23 - Correction -->
@@ -267,46 +290,52 @@
                              "https://i.imgur.com/i7mdDi4.png"
                          ]'>
                         <img src="https://i.imgur.com/K1iwNmq.jpeg"  
-                             alt="Terra">
+                             alt="Terra - Planète conceptuelle"
+                             data-description="Terra - Conception de planète avec écosystème unique et formations géologiques fantastiques">
                     </div>
 
-<div class="gallery-item medium" data-category="1" data-order="20" data-has-video="oui"
+                <div class="gallery-item medium" data-category="1" data-order="20" data-has-video="oui"
                          data-gallery='[
                              "https://i.imgur.com/oiVM13r.png",
                              "https://www.youtube.com/watch?v=dkax0LbPZuI"
                          ]'>
                         <img src="https://i.imgur.com/oiVM13r.png" 
-                             alt="Conseption téléphone - projet Baccalauréat">
+                             alt="Projet Baccalauréat - Téléphone 3D"
+                             data-description="Projet Baccalauréat - Conception téléphone 3D avec animation et présentation vidéo complète">
                     </div>
 
                      <div class="gallery-item large" data-category="1" data-order="21" data-has-video="non">
                         <img src="https://i.imgur.com/jyIU6PG.jpeg" 
-                             alt="Paysage avec un trou noir">
+                             alt="Paysage cosmique avec trou noir"
+                             data-description="Paysage cosmique avec trou noir - Exploration des effets spatiaux et de la distorsion gravitationnelle">
                     </div>
 
                     <div class="gallery-item large" data-category="1" data-order="22" data-has-video="non">
                         <img src="https://i.imgur.com/KF3wwYm.jpeg" 
-                             alt="CEntrainement Textures">
+                             alt="Entraînement textures PBR"
+                             data-description="Entraînement textures PBR - Étude des matériaux et techniques de texturage photoréaliste">
                     </div>
                     
                     <div class="gallery-item large" data-category="1" data-order="23" data-has-video="non">
                         <img src="https://i.imgur.com/aS0VZJH.jpeg" 
-                             alt="maraicages">
+                             alt="Paysages marécageux"
+                             data-description="Environnements marécageux 3D - Modélisation d'écosystèmes naturels et végétation procédurale">
                     </div>
 
                     <div class="gallery-item large" data-category="1" data-order="24" data-has-video="non">
                         <img src="https://i.imgur.com/kdvNBHh.jpeg" 
-                             alt="Lune + Displacement">
-                    </div>
-
-                    <div class="gallery-item large" data-category="1" data-order="25" data-has-video="non">
+                             alt="Lune avec displacement mapping"
+                             data-description="Surface lunaire avec displacement mapping - Technique avancée de relief et de géologie spatiale">
+                    </div>                    <div class="gallery-item large" data-category="1" data-order="25" data-has-video="non">
                         <img src="https://i.imgur.com/ynaluMT.png" 
-                             alt="">
+                             alt="Scène d'expérimentation 3D"
+                             data-description="Scène d'expérimentation 3D - Tests de lighting et de composition visuelle avancée">
                     </div>
 
                     <div class="gallery-item large" data-category="1" data-order="26" data-has-video="non">
                         <img src="https://i.imgur.com/UCGzkfR.jpeg" 
-                             alt="Starship + nuages vol">
+                             alt="Starship en vol dans les nuages"
+                             data-description="Starship en vol - Animation de vaisseau spatial avec simulation de nuages et atmosphère">
                     </div>
 
                     <div class="gallery-item large" data-category="1" data-order="27" data-has-video="non"
@@ -322,7 +351,8 @@
                              "https://i.imgur.com/L10rrjj.jpeg"
                          ]'>
                         <img src="https://i.imgur.com/7i4zVDY.jpeg" 
-                             alt="Vaisseau spatiale (Game-Ready)">
+                             alt="Le Colossus - Vaisseau spatial game-ready"
+                             data-description="Le Colossus - Vaisseau spatial game-ready complet avec textures, materials et process de création détaillé">
                     </div>
 
                   <div class="gallery-item medium" data-category="1" data-order="28" data-has-video="non"
@@ -331,7 +361,8 @@
                              "https://i.imgur.com/rIx4Wsw.jpeg"
                          ]'>
                         <img src="https://i.imgur.com/9veRK58.jpeg" 
-                             alt="VFX">
+                             alt="Effets VFX cinématographiques"
+                             data-description="Effets VFX cinématographiques - Compositing et post-production avec intégration 3D/2D">
                     </div>
 
                     <div class="gallery-item medium" data-category="1" data-order="29" data-has-video="non"
@@ -340,7 +371,8 @@
                              "https://i.imgur.com/XhqrpAH.jpeg"
                          ]'>
                         <img src="https://i.imgur.com/kgWAZ3n.png" 
-                             alt="VFX">
+                             alt="Compositing VFX avancé"
+                             data-description="Compositing VFX avancé - Intégration d'éléments 3D dans environnements réels avec color grading">
                     </div>
                     
                     <div class="gallery-item medium" data-category="1" data-order="30" data-has-video="non"
@@ -350,12 +382,14 @@
                              "https://i.imgur.com/APd87TK.png"
                          ]'>
                         <img src="https://i.imgur.com/l8XUTI1.png" 
-                             alt="Level design">
+                             alt="Level design architectural"
+                             data-description="Level design architectural - Conception d'environnements 3D pour jeux vidéo avec différentes variations">
                     </div>
 
                     <div class="gallery-item large" data-category="1" data-order="31" data-has-video="non">
                         <img src="https://i.imgur.com/t8Y441L.jpeg" 
-                             alt="Paysage réaliste">
+                             alt="Paysage photoréaliste"
+                             data-description="Paysage photoréaliste - Environnement naturel avec techniques de rendu avancées et éclairage naturel">
                     </div>
 
                    <div class="gallery-item medium" data-category="1" data-order="32" data-has-video="non"
@@ -364,7 +398,8 @@
                              "https://i.imgur.com/bVVW1vk.jpeg"
                          ]'>
                         <img src="https://i.imgur.com/gxCcinm.png" 
-                             alt="Chaine de machines - Imprimables 3D">
+                             alt="Machines industrielles imprimables 3D"
+                             data-description="Machines industrielles - Modèles 3D techniques optimisés pour l'impression 3D avec assemblages complexes">
                     </div>
 
                     <div class="gallery-item medium" data-category="2" data-order="33" data-has-video="non"
@@ -375,7 +410,8 @@
                              "https://i.imgur.com/m9k6Tso.png"
                          ]'>
                         <img src="https://i.imgur.com/tvdD2dR.png" 
-                             alt="Tournages pour EDF">
+                             alt="Projet EDF - Tournage professionnel"
+                             data-description="Projet EDF - Tournage professionnel et captation d'images techniques pour entreprise énergétique">
                     </div>
 
 
@@ -385,16 +421,18 @@
                              "https://www.youtube.com/watch?v=kCo_sF-JbVk"
                          ]'>
                         <img src="https://i.imgur.com/0T3tOw6.png" 
-                             alt="Montage vidéo - Electromontage Elec">
+                             alt="Electromontage Elec - Vidéo corporate"
+                             data-description="Electromontage Elec - Montage vidéo corporate avec grading et post-production complète">
                     </div>
 
-                    <div class="gallery-item medium" data-category="2" data-order="34" data-has-video="oui"
+                    <div class="gallery-item medium" data-category="2" data-order="35" data-has-video="oui"
                          data-gallery='[
                              "https://i.imgur.com/YfKKP0u.png",
                              "https://www.youtube.com/@LavieDuchef/videos"
                          ]'>
                         <img src="https://i.imgur.com/YfKKP0u.png" 
-                             alt="Tournages et Montage vidéo - La Vie Du Chef">
+                             alt="La Vie Du Chef - Chaîne YouTube"
+                             data-description="La Vie Du Chef - Tournages et montages pour chaîne YouTube culinaire avec animations et effets">
                     </div>
 
 
@@ -464,6 +502,7 @@
 
     <script src="js/translations.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/mobile-test.js"></script>
 </body>
 </html>
 
