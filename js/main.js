@@ -717,7 +717,12 @@ function initLightbox() {
             
             const img = e.target;
             const galleryItem = img.closest('.gallery-item');
-            const description = img.getAttribute('data-description') || img.alt || 'Image du portfolio';
+            
+            // Stocker la référence au projet actuel pour récupérer la description dynamiquement
+            window.currentProject = {
+                galleryItem: galleryItem,
+                img: img
+            };
             
             // Récupérer la galerie
             const galleryData = galleryItem.getAttribute('data-gallery');
@@ -733,22 +738,17 @@ function initLightbox() {
             }
             
             currentImageIndex = 0;
-            openLightbox(description);
+            openLightbox();
         }
     });
     
     // Ouvrir la lightbox
-    function openLightbox(description) {
+    function openLightbox() {
         lightbox.style.display = 'flex';
         document.body.style.overflow = 'hidden';
         isLightboxOpen = true;
         
         loadMedia(currentImageIndex);
-        if (lightboxDescription) {
-            lightboxDescription.textContent = description;
-            // Assurer que la description est visible
-            lightboxDescription.style.display = 'block';
-        }
         updateCounter();
         updateNavigation();
     }
@@ -860,8 +860,21 @@ function initLightbox() {
                 lightboxImageContainer.appendChild(img);
             }
             
+            // Mettre à jour la description du projet actuel
+            updateLightboxDescription();
             updateCounter();
             updateNavigation();
+        }
+    }
+    
+    // Nouvelle fonction pour mettre à jour la description de la lightbox
+    function updateLightboxDescription() {
+        if (lightboxDescription && window.currentProject) {
+            const description = window.currentProject.img.getAttribute('data-description') || 
+                               window.currentProject.img.alt || 
+                               'Image du portfolio';
+            lightboxDescription.textContent = description;
+            lightboxDescription.style.display = 'block';
         }
     }
     
