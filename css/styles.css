@@ -2360,7 +2360,7 @@ body.mobile-test-mode .projects-gallery {
     animation: tooltipFadeIn 0.3s ease forwards;
 }
 
-/* Boutons de traduction en haut à gauche */
+/* Boutons de traduction en haut à droite */
 .header-content {
     position: relative;
 }
@@ -2368,7 +2368,7 @@ body.mobile-test-mode .projects-gallery {
 .language-toggle {
     position: absolute;
     top: 15px;
-    left: 20px;
+    right: 20px;
     display: flex;
     gap: 8px;
     z-index: 100;
