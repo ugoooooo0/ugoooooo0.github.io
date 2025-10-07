@@ -2360,4 +2360,46 @@ body.mobile-test-mode .projects-gallery {
     animation: tooltipFadeIn 0.3s ease forwards;
 }
 
+/* Boutons de traduction en haut à gauche */
+.header-content {
+    position: relative;
+}
+
+.language-toggle {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+}
+
+.lang-btn {
+    background: rgba(100, 255, 218, 0.1);
+    border: 1px solid rgba(100, 255, 218, 0.3);
+    color: #64ffda;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.lang-btn:hover {
+    background: rgba(100, 255, 218, 0.2);
+    border-color: rgba(100, 255, 218, 0.5);
+    transform: translateY(-1px);
+}
+
+.lang-btn.active {
+    background: #64ffda;
+    color: #0f1419;
+    border-color: #64ffda;
+}
+
 
