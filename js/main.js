@@ -4,6 +4,7 @@
 let currentImageIndex = 0;
 let currentGallery = [];
 let isLightboxOpen = false;
+let lightboxDescription = null; // Variable globale pour la description
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Initialisation...');
@@ -92,35 +93,57 @@ function initCarousel() {
                 // Trouver le projet correspondant dans la galerie
                 const galleryItem = document.querySelector(`[data-order="${projectOrder}"]`);
                 if (galleryItem) {
-                    // D'abord s'assurer que l'item est visible (changer de filtre si nécessaire)
-                    const category = galleryItem.getAttribute('data-category');
-                    const activeFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
-                    
-                    // Si le filtre actuel ne correspond pas, changer pour 'all'
-                    if (activeFilter !== 'all' && activeFilter !== category) {
-                        const allButton = document.querySelector('.filter-btn[data-filter="all"]');
-                        if (allButton) {
-                            allButton.click();
-                            // Attendre que le filtre soit appliqué
-                            setTimeout(() => {
-                                const galleryImg = galleryItem.querySelector('img');
-                                if (galleryImg) {
-                                    galleryImg.click();
-                                }
-                            }, 100);
-                            return;
-                        }
-                    }
-                    
-                    // Si déjà visible, ouvrir directement
                     const galleryImg = galleryItem.querySelector('img');
                     if (galleryImg) {
-                        galleryImg.click();
+                        // D'abord s'assurer que l'item est visible (changer de filtre si nécessaire)
+                        const category = galleryItem.getAttribute('data-category');
+                        const activeFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
+                        
+                        // Si le filtre actuel ne correspond pas, changer pour 'all'
+                        if (activeFilter !== 'all' && activeFilter !== category) {
+                            const allButton = document.querySelector('.filter-btn[data-filter="all"]');
+                            if (allButton) {
+                                allButton.click();
+                                // Attendre que le filtre soit appliqué puis ouvrir la lightbox
+                                setTimeout(() => {
+                                    openProjectFromCarousel(galleryItem, galleryImg);
+                                }, 150);
+                                return;
+                            }
+                        }
+                        
+                        // Si déjà visible, ouvrir directement
+                        openProjectFromCarousel(galleryItem, galleryImg);
                     }
                 }
             });
         }
     });
+    
+    // Fonction spéciale pour ouvrir un projet depuis le carousel
+    function openProjectFromCarousel(galleryItem, galleryImg) {
+        // Définir correctement le projet actuel
+        window.currentProject = {
+            galleryItem: galleryItem,
+            img: galleryImg
+        };
+        
+        // Récupérer la galerie
+        const galleryData = galleryItem.getAttribute('data-gallery');
+        if (galleryData) {
+            try {
+                currentGallery = JSON.parse(galleryData);
+            } catch (e) {
+                console.error('Erreur parsing gallery:', e);
+                currentGallery = [galleryImg.src];
+            }
+        } else {
+            currentGallery = [galleryImg.src];
+        }
+        
+        currentImageIndex = 0;
+        openLightbox();
+    }
     
     function updateCarousel() {
         const translateX = -currentSlide * 100;
@@ -701,7 +724,7 @@ function isYouTubeUrl(url) {
 function initLightbox() {
     const lightbox = document.getElementById('lightbox');
     const lightboxImageContainer = document.querySelector('.lightbox-image-container');
-    const lightboxDescription = document.getElementById('lightbox-description');
+    lightboxDescription = document.getElementById('lightbox-description'); // Assigner à la variable globale
     const lightboxClose = document.querySelector('.lightbox-close');
     const lightboxPrev = document.querySelector('.lightbox-prev');
     const lightboxNext = document.querySelector('.lightbox-next');
