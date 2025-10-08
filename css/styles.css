@@ -1,2406 +1,504 @@
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Variables CSS pour le contrôle de taille */
-:root {
-    --section-scale: 100%; /* Contrôle global de la taille (0% à 100%) */
-    --container-width: calc(100% * var(--section-scale) / 100);
-    --font-scale: calc(0.8 + (var(--section-scale) / 100) * 0.4); /* De 0.8x à 1.2x */
-    --padding-scale: calc(20px * var(--section-scale) / 100);
-}
-
-/* Contrôleur de taille */
-.size-controller {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: rgba(15, 20, 25, 0.9);
-    padding: 15px 20px;
-    border-radius: 10px;
-    border: 1px solid rgba(100, 255, 218, 0.3);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 14px;
-    color: #64ffda;
-    backdrop-filter: blur(10px);
-}
-
-.size-controller label {
-    font-weight: 600;
-    min-width: 50px;
-}
-
-.size-controller input[type="range"] {
-    width: 150px;
-    height: 6px;
-    background: rgba(100, 255, 218, 0.2);
-    border-radius: 3px;
-    outline: none;
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-.size-controller input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 18px;
-    height: 18px;
-    background: #64ffda;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.size-controller input[type="range"]::-webkit-slider-thumb:hover {
-    background: #4db6cd;
-    transform: scale(1.1);
-}
-
-.size-controller span {
-    font-weight: bold;
-    min-width: 40px;
-    color: #ffffff;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #0f1419;
-    color: #ffffff;
-    line-height: 1.6;
-    overflow-x: hidden;
-    position: relative;
-}
-
-/* Background interactif avec la souris */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle 50px at var(--mouse-x, 50%) var(--mouse-y, 50%), 
-                rgba(100, 255, 218, 0.1) 0%, 
-                rgba(29, 233, 182, 0.05) 25%, 
-                transparent 50%);
-    pointer-events: none;
-    z-index: 1;
-    transition: opacity 0.3s ease;
-}
-
-body::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        radial-gradient(circle 100px at 20% 30%, rgba(100, 255, 218, 0.03) 0%, transparent 50%),
-        radial-gradient(circle 150px at 80% 70%, rgba(29, 233, 182, 0.02) 0%, transparent 50%),
-        radial-gradient(circle 120px at 60% 20%, rgba(0, 188, 212, 0.02) 0%, transparent 50%);
-    animation: backgroundFloat 20s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 0;
-}
-
-@keyframes backgroundFloat {
-    0%, 100% { transform: translate(0, 0) rotate(0deg); }
-    33% { transform: translate(30px, -30px) rotate(120deg); }
-    66% { transform: translate(-20px, 20px) rotate(240deg); }
-}
-
-/* Conteneur principal */
-.container {
-    max-width: calc(1200px * var(--section-scale) / 100);
-    margin: 0 auto;
-    padding: 0 clamp(10px, 3vw, var(--padding-scale, 20px));
-    position: relative;
-    z-index: 2;
-    transform: scale(var(--section-scale, 100%) / 100);
-    transform-origin: center top;
-    transition: all 0.3s ease;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-/* Header sobre avec animation - Version arrondie */
-header {
-    background: linear-gradient(135deg, rgba(15, 20, 25, 0.95), rgba(26, 31, 54, 0.95));
-    padding: 20px 0;
-    text-align: center;
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(100, 255, 218, 0.2);
-    transition: all 0.4s ease;
-    position: relative;
-    overflow: hidden;
-    margin: 20px; /* Retour aux marges originales */
-    border-radius: 20px; /* Retour aux bords originaux */
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-}
-
-header:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-    border-color: rgba(100, 255, 218, 0.4);
-    background: linear-gradient(135deg, rgba(15, 20, 25, 0.98), rgba(26, 31, 54, 0.98));
-}
-
-/* Styles généraux pour les titres h1 */
-h1 {
-    text-align: center;
-    font-size: 2.2em;
-    background: linear-gradient(45deg, #64ffda, #1de9b6, #00bcd4);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin: 15px 0;
-    font-weight: 700;
-}
-
-/* Header pour la page portfolio - Version arrondie */
-.portfolio-page header {
-    background: linear-gradient(135deg, rgba(15, 20, 25, 0.95), rgba(26, 31, 54, 0.95));
-    padding: 30px 0;
-    position: sticky;
-    top: 20px; /* Retour à la valeur originale */
-    z-index: 100;
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(100, 255, 218, 0.2);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    margin: 20px; /* Retour aux marges originales */
-    border-radius: 20px; /* Retour aux bords originaux */
-    transition: all 0.4s ease;
-}
-
-.portfolio-page header:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-    border-color: rgba(100, 255, 218, 0.4);
-}
-
-/* Ajuster le conteneur pour compenser les marges */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px; /* Réduire le padding pour compenser */
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    z-index: 1;
-}
-
-/* Navigation interactive */
-nav ul {
-    list-style: none;
-    display: flex;
-    justify-content: center;
-    gap: clamp(10px, 3vw, 20px);
-    flex-wrap: wrap;
-    padding: 0 10px;
-}
-
-nav a {
-    color: #ffffff;
-    text-decoration: none;
-    padding: clamp(8px, 2vw, 12px) clamp(12px, 4vw, 24px);
-    border-radius: 8px;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-    white-space: nowrap;
-    font-size: clamp(0.8em, 2vw, 1em);
-}
-
-nav a::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(100, 255, 218, 0.2), transparent);
-    transition: left 0.5s ease;
-}
-
-nav a:hover::before {
-    left: 100%;
-}
-
-nav a:hover {
-    border-color: #64ffda;
-    box-shadow: 0 0 20px rgba(100, 255, 218, 0.3);
-    transform: translateY(-2px);
-}
-
-/* Navigation spéciale pour la page portfolio */
-.portfolio-page nav ul {
-    list-style: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: clamp(15px, 8vw, 120px); /* Espacement adaptatif */
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
-    flex-wrap: wrap; /* Permettre le retour à la ligne si nécessaire */
-    padding: 0 15px;
-}
-
-.portfolio-page nav ul li {
-    flex: none; /* Enlever flex: 1 pour un espacement naturel */
-}
-
-.portfolio-page nav ul li:first-child,
-.portfolio-page nav ul li:nth-child(2),
-.portfolio-page nav ul li:last-child {
-    text-align: center; /* Centrer tout le texte */
-}
-
-/* Styles pour les boutons de filtre */
-.filter-btn {
-    color: #b8c5d1 !important;
-    background: transparent !important;
-    border: none !important;
-    padding: 8px 0 !important;
-    font-size: 1em !important;
-    font-weight: 400 !important;
-    letter-spacing: 1px !important;
-    text-decoration: none !important;
-    position: relative !important;
-    transition: all 0.3s ease !important;
-    cursor: pointer !important;
-}
-
-/* Bouton du milieu (PORTFOLIO) plus gros */
-.filter-btn[data-filter="all"] {
-    font-size: 1.4em !important;
-    font-weight: 600 !important;
-    letter-spacing: 2px !important;
-}
-
-/* Animation de survol */
-.filter-btn::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(45deg, #64ffda, #1de9b6);
-    transition: all 0.3s ease;
-    transform: translateX(-50%);
-}
-
-.filter-btn:hover {
-    color: #64ffda !important;
-    transform: translateY(-2px) !important;
-}
-
-.filter-btn:hover::after {
-    width: 100%;
-}
-
-/* État actif */
-.filter-btn.active {
-    color: #64ffda !important;
-    background: transparent !important;
-}
-
-.filter-btn.active::after {
-    width: 100%;
-}
-
-.filter-btn.active:hover {
-    color: #ffffff !important;
-    transform: translateY(-2px) scale(1.05) !important;
-}
-
-/* Effet de glow pour le bouton actif */
-.filter-btn.active {
-    text-shadow: 0 0 10px rgba(100, 255, 218, 0.5) !important;
-}
-
-/* Réinitialiser les anciens styles de navigation */
-.portfolio-page nav a::before {
-    display: none !important;
-}
-
-/* Sections avec effets de survol */
-.section {
-    background: rgba(26, 31, 54, 0.8);
-    margin: 15px 0;
-    padding: 25px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.4s ease;
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(5px);
-}
-
-.section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #64ffda, #1de9b6, #00bcd4);
-    transform: scaleX(0);
-    transition: transform 0.4s ease;
-}
-
-.section:hover::before {
-    transform: scaleX(1);
-}
-
-.section:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    border-color: rgba(100, 255, 218, 0.3);
-    background: rgba(26, 31, 54, 0.95);
-}
-
-.section h2 {
-    color: #64ffda;
-    margin-bottom: 15px;
-    font-size: 1.6em;
-    transition: color 0.3s ease;
-}
-
-.section:hover h2 {
-    color: #ffffff;
-    text-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
-}
-
-.section p {
-    color: #b8c5d1;
-    transition: color 0.3s ease;
-}
-
-.section:hover p {
-    color: #ffffff;
-}
-
-/* Sections de présentation */
-.presentation-content,
-.cv-content,
-.portfolio-content {
-    display: flex;
-    align-items: center;
-    gap: clamp(15px, 4vw, 25px);
-    min-height: clamp(200px, 40vw, 280px);
-    flex-wrap: wrap;
-}
-
-/* Section présentation */
-.photo-container {
-    flex: 0 0 clamp(200px, 40vw, 300px);
-    min-width: 200px;
-    max-width: 300px;
-}
-
-.profile-photo {
-    width: 100%;
-    height: clamp(200px, 40vw, 300px);
-    object-fit: cover;
-    border-radius: 15px;
-    border: 3px solid #64ffda;
-    box-shadow: 0 10px 30px rgba(100, 255, 218, 0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.profile-photo:hover {
-    transform: scale(1.05);
-    box-shadow: 0 15px 40px rgba(100, 255, 218, 0.5);
-}
-
-.presentation-text {
-    flex: 1;
-    min-width: 250px;
-}
-
-.presentation-text h2 {
-    font-size: clamp(1.5em, 4vw, 2.2em);
-    margin-bottom: 20px;
-    color: #64ffda;
-}
-
-.presentation-text p {
-    font-size: clamp(0.9em, 2.5vw, 1.1em);
-    line-height: 1.8;
-    color: #b8c5d1;
-}
-
-/* Section CV */
-.cv-image-container {
-    flex: 0 0 clamp(140px, 25vw, 180px);
-    min-width: 140px;
-    max-width: 180px;
-}
-
-.cv-image {
-    width: 100%;
-    height: clamp(180px, 35vw, 250px);
-    object-fit: cover;
-    border-radius: 10px;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.cv-image:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-}
-
-.cv-action {
-    flex: 1;
-    min-width: 200px;
-}
-
-/* Section Portfolio */
-.portfolio-image-container {
-    flex: 0 0 clamp(180px, 35vw, 250px);
-    min-width: 180px;
-    max-width: 250px;
-}
-
-.portfolio-image {
-    width: 100%;
-    height: clamp(200px, 40vw, 300px);
-    object-fit: cover;
-    border-radius: 10px;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.portfolio-image:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-}
-
-.portfolio-action {
-    flex: 1;
-    min-width: 200px;
-}
-
-/* Boutons */
-.btn {
-    display: inline-block;
-    padding: 12px 25px;
-    margin-top: 15px;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 1em;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.btn-primary {
-    background: linear-gradient(45deg, #64ffda, #1de9b6);
-    color: #0f1419;
-}
-
-.btn-secondary {
-    background: linear-gradient(45deg, #667eea, #764ba2);
-    color: #ffffff;
-}
-
-.btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s ease;
-}
-
-.btn:hover::before {
-    left: 100%;
-}
-
-.btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-}
-
-/* Animation pour les éléments filtrés */
-.gallery-item {
-    transition: all 0.5s ease, opacity 0.3s ease, transform 0.3s ease;
-    opacity: 1;
-    visibility: visible;
-}
-
-.gallery-item.hidden {
-    opacity: 0;
-    visibility: hidden;
-    transform: scale(0.8);
-    pointer-events: none;
-}
-
-/* Animations au scroll */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.section {
-    animation: fadeIn 0.6s ease forwards;
-}
-
-/* Canvas pour les particules - Réactivé */
-#particles-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-    opacity: 0.8; /* Légère transparence pour que ce ne soit pas trop agressif */
-}
-
-/* Styles spécifiques pour la page Portfolio */
-.hero-section {
-    margin: 20px 0 40px 0;
-}
-
-.hero-image {
-    position: relative;
-    width: 100%;
-    height: 400px;
-    overflow: hidden;
-    border-radius: 0;
-    transition: transform 0.3s ease;
-}
-
-.hero-image:hover {
-    transform: scale(1.02); /* Très léger zoom */
-}
-
-.hero-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: none;
-}
-
-/* Supprimer l'overlay du hero aussi */
-.hero-overlay {
-    display: none !important;
-}
-
-/* Projects Gallery - Layout compact */
-.projects-section {
-    margin: 0 auto;
-    padding: 0;
-    transition: all 0.3s ease;
-    width: 100%;
-    overflow-x: hidden; /* Éviter le débordement horizontal */
-}
-
-.projects-gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(clamp(200px, 30vw, 250px), 1fr));
-    gap: clamp(10px, 2vw, 15px);
-    padding: clamp(20px, 4vw, 40px) clamp(10px, 3vw, 20px);
-    max-width: 1200px;
-    margin: 0 auto;
-    transition: height 0.3s ease, min-height 0.3s ease;
-    min-height: 100px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-/* Quand il y a peu d'éléments visibles, réduire l'espacement */
-.projects-gallery:has(.gallery-item:nth-child(n+1):nth-child(-n+3)) {
-    padding: 20px;
-    min-height: 50px;
-}
-
-/* Grille Masonry avec JavaScript - AUCUN TROU ! */
-.projects-gallery {
-    position: relative;
-    padding: 40px 20px;
-    max-width: 1400px;
-    margin: 0 auto;
-    /* Le JavaScript va gérer le positionnement */
-    transition: height 0.3s ease, min-height 0.3s ease, padding 0.3s ease;
-}
-
-/* Style spécial pour peu d'éléments visibles */
-.projects-gallery.few-items {
-    padding: 20px !important;
-    min-height: 100px !important;
-}
-
-/* Section projets avec espacement réduit quand peu d'éléments */
-.projects-section {
-    transition: margin 0.3s ease;
-}
-
-.projects-section:has(.projects-gallery.few-items) {
-    margin-top: 20px;
-}
-
-/* Items positionnés par JavaScript */
-.gallery-item {
-    position: absolute; /* Positionnement absolu pour masonry */
-    overflow: hidden;
-    border-radius: clamp(8px, 2vw, 12px);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background: rgba(26, 31, 54, 0.5);
-    border: 1px solid rgba(100, 255, 218, 0.1);
-    padding: clamp(6px, 1.5vw, 8px);
-    /* La largeur sera calculée par JavaScript */
-    box-sizing: border-box; /* Important pour les calculs précis */
-    max-width: 100vw; /* Éviter le débordement */
-}
-
-.gallery-item img {
-    width: 100%;
-    height: auto; /* Hauteur automatique pour respecter les proportions */
-    object-fit: cover; /* Changé de contain à cover pour un meilleur rendu */
-    object-position: center;
-    transition: transform 0.3s ease;
-    display: block; /* Évite les espaces sous l'image */
-    border-radius: clamp(6px, 1.5vw, 8px); /* Arrondir les coins de l'image */
-    min-height: clamp(100px, 20vw, 150px); /* Hauteur minimale adaptative */
-    max-height: clamp(300px, 60vw, 500px); /* Hauteur maximale adaptative */
-}
-
-/* Gestion spéciale pour les images très larges (panoramiques) */
-.gallery-item img[src*="panoramic"], 
-.gallery-item img[style*="aspect-ratio"] {
-    max-height: 300px; /* Limiter la hauteur des images panoramiques */
-    object-fit: cover;
-}
-
-.gallery-item:hover {
-    transform: scale(1.02);
-    box-shadow: 0 10px 30px rgba(100, 255, 218, 0.2);
-    border-color: rgba(100, 255, 218, 0.3);
-    z-index: 10; /* S'assurer que l'item au survol est au-dessus */
-}
-
-/* Variations de hauteur pour effet masonry - amélioré */
-.gallery-item:nth-child(3n+1) {
-    grid-row: span 2; /* Plus haut */
-}
-
-.gallery-item:nth-child(5n+2) {
-    grid-row: span 1; /* Hauteur normale */
-}
-
-.gallery-item:nth-child(7n+3) {
-    grid-row: span 3; /* Encore plus haut pour certaines images */
-}
-
-.gallery-item:nth-child(11n+4) {
-    grid-row: span 1; /* Hauteur normale */
-}
-
-.gallery-item:nth-child(13n+5) {
-    grid-row: span 2; /* Plus haut */
-}
-
-/* Styles spécifiques selon le type d'image - SUPPRIMÉS */
-/* Les images gardent maintenant leurs proportions naturelles */
-
-/* Variables pour le masonry JavaScript */
-:root {
-    --masonry-columns: 4;
-    --masonry-gap: 20px;
-}
-
-/* Responsive pour le masonry JavaScript */
-@media (min-width: 1200px) {
-    :root {
-        --masonry-columns: 4;
-        --masonry-gap: 25px;
-    }
-}
-
-@media (min-width: 900px) and (max-width: 1199px) {
-    :root {
-        --masonry-columns: 3;
-        --masonry-gap: 20px;
-    }
-}
-
-@media (min-width: 600px) and (max-width: 899px) {
-    :root {
-        --masonry-columns: 2;
-        --masonry-gap: 18px;
-    }
-}
-
-@media (max-width: 599px) {
-    :root {
-        --masonry-columns: 1;
-        --masonry-gap: 15px;
-    }
-    
-    .projects-gallery {
-        padding: 20px 10px;
-    }
-}
-
-/* Hero section ajustée */
-.hero-section {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto 40px auto;
-}
-
-.hero-image {
-    aspect-ratio: 21/9; /* Plus panoramique pour se démarquer */
-    max-height: 300px;
-}
-
-/* Section Contact - Style original restauré */
-.contact-section {
-    background: rgba(26, 31, 54, 0.8) !important;
-    margin: 30px 0 !important;
-    padding: 40px !important;
-    border-radius: 12px !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    transition: all 0.4s ease !important;
-    position: relative !important;
-    overflow: hidden !important;
-    backdrop-filter: blur(5px) !important;
-}
-
-.contact-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #64ffda, #1de9b6, #00bcd4);
-    transform: scaleX(0);
-    transition: transform 0.4s ease;
-}
-
-.contact-section:hover::before {
-    transform: scaleX(1);
-}
-
-.contact-section:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    border-color: rgba(100, 255, 218, 0.3);
-    background: rgba(26, 31, 54, 0.95);
-}
-
-.contact-section h2 {
-    color: #64ffda !important;
-    margin-bottom: 20px !important;
-    font-size: 1.8em !important;
-    transition: color 0.3s ease !important;
-    text-align: center !important;
-}
-
-.contact-section:hover h2 {
-    color: #ffffff !important;
-    text-shadow: 0 0 10px rgba(100, 255, 218, 0.5) !important;
-}
-
-/* Contact info styles */
-.contact-info {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.contact-info p {
-    color: #b8c5d1;
-    margin: 15px 0;
-    font-size: 1.1em;
-    transition: color 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-}
-
-.contact-section:hover .contact-info p {
-    color: #ffffff;
-}
-
-.contact-info a {
-    color: #64ffda;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    font-weight: 500;
-}
-
-.contact-info a:hover {
-    color: #ffffff;
-    text-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
-    transform: translateX(5px);
-}
-
-/* Styles pour les icônes sociales */
-.social-icon {
-    width: 28px;
-    height: 28px;
-    transition: all 0.3s ease;
-    filter: brightness(1.2);
-    display: inline-block;
-    vertical-align: middle;
-}
-
-.social-icon:hover {
-    transform: scale(1.2) rotate(5deg);
-    filter: brightness(1.5) drop-shadow(0 0 8px rgba(100, 255, 218, 0.6));
-}
-
-/* Animation spéciale pour l'icône YouTube */
-.contact-info p:first-child .social-icon:hover {
-    filter: brightness(1.3) drop-shadow(0 0 8px rgba(255, 0, 0, 0.8));
-    transform: scale(1.2) rotate(-5deg);
-}
-
-/* Animation spéciale pour l'icône LinkedIn */
-.contact-info p:nth-child(2) .social-icon:hover {
-    filter: brightness(1.4) drop-shadow(0 0 8px rgba(0, 119, 181, 0.8));
-    transform: scale(1.2) rotate(5deg);
-}
-
-/* Animation spéciale pour l'icône GitHub */
-.contact-info p:last-child .social-icon:hover {
-    filter: brightness(1.3) drop-shadow(0 0 8px rgba(100, 255, 218, 0.6));
-    transform: scale(1.2) rotate(-5deg);
-}
-
-/* Formulaire de contact */
-.contact-form-container {
-    margin-top: 40px;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.contact-form-container h3 {
-    color: #64ffda;
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 1.5em;
-    letter-spacing: 1px;
-    transition: color 0.3s ease;
-}
-
-.contact-section:hover .contact-form-container h3 {
-    color: #ffffff;
-    text-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
-}
-
-.contact-form {
-    background: rgba(26, 31, 54, 0.6);
-    padding: 30px;
-    border-radius: 12px;
-    border: 1px solid rgba(100, 255, 218, 0.2);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 15px 20px;
-    background: rgba(15, 20, 25, 0.8);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    color: #ffffff;
-    font-size: 1em;
-    font-family: inherit;
-    transition: all 0.3s ease;
-    resize: vertical;
-}
-
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-    color: #b8c5d1;
-    opacity: 0.7;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: #64ffda;
-    box-shadow: 0 0 15px rgba(100, 255, 218, 0.2);
-    background: rgba(15, 20, 25, 0.9);
-}
-
-.contact-form .btn {
-    width: 100%;
-    margin-top: 10px;
-    font-size: 1.1em;
-    padding: 15px 30px;
-}
-
-/* Animation de succès */
-.form-success {
-    background: rgba(100, 255, 218, 0.1) !important;
-    border-color: #64ffda !important;
-    animation: successPulse 0.6s ease;
-}
-
-.form-error {
-    background: rgba(255, 100, 100, 0.1) !important;
-    border-color: #ff6464 !important;
-    animation: errorShake 0.6s ease;
-}
-
-@keyframes successPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.02); }
-}
-
-@keyframes errorShake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
-}
-
-/* Message de statut */
-.status-message {
-    margin-top: 15px;
-    padding: 15px;
-    border-radius: 8px;
-    text-align: center;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-
-.status-message.success {
-    background: rgba(100, 255, 218, 0.1);
-    border: 1px solid #64ffda;
-    color: #64ffda;
-}
-
-.status-message.error {
-    background: rgba(255, 100, 100, 0.1);
-    border: 1px solid #ff6464;
-    color: #ff6464;
-}
-
-/* Header content pour la page portfolio - Version corrigée */
-.portfolio-page .header-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative; /* AJOUT - nécessaire pour le positionnement absolu du bouton */
-    margin-bottom: 25px;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 20px;
-    min-height: 60px; /* Hauteur minimale pour éviter les problèmes */
-}
-
-/* Bouton retour corrigé */
-.back-home-btn {
-    position: absolute;
-    left: clamp(15px, 4vw, 20px);
-    top: 50%;
-    transform: translateY(-50%); /* AJOUT - centrage vertical parfait */
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #b8c5d1 !important;
-    text-decoration: none !important;
-    font-size: clamp(0.75em, 2vw, 0.95em) !important;
-    font-weight: 500 !important;
-    letter-spacing: 0.5px !important;
-    padding: clamp(8px, 2vw, 12px) clamp(12px, 3vw, 20px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    border-radius: 25px !important;
-    transition: all 0.3s ease !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-    backdrop-filter: blur(10px) !important;
-    z-index: 10; /* AJOUT - s'assurer qu'il est au-dessus */
-    cursor: pointer; /* AJOUT - s'assurer que le curseur change */
-    white-space: nowrap; /* Éviter le retour à la ligne */
-    max-width: calc(50vw - 40px); /* Limiter la largeur sur mobile */
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* S'assurer que le hover fonctionne */
-.back-home-btn:hover {
-    color: #64ffda !important;
-    border-color: rgba(100, 255, 218, 0.5) !important;
-    background: rgba(100, 255, 218, 0.1) !important;
-    transform: translateY(-50%) translateX(-3px) !important;
-    box-shadow: 0 0 20px rgba(100, 255, 218, 0.2) !important;
-}
-
-/* Titre avec espace pour le bouton */
-.portfolio-page header h1 {
-    text-align: center;
-    font-size: 2.2em;
-    background: linear-gradient(45deg, #64ffda, #1de9b6, #00bcd4);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin: 0;
-    font-weight: 700;
-    letter-spacing: 2px;
-    position: relative;
-    width: 100%;
-    padding: 0 160px; /* AJOUT - espace pour le bouton à gauche */
-    word-break: break-word;
-    line-height: 1.2;
-}
-
-/* Responsive corrigé */
-@media (max-width: 768px) {
-    .portfolio-page .header-content {
-        flex-direction: column;
-        gap: 15px;
-        margin-bottom: 15px;
-        padding: 0 15px;
-    }
-    
-    .back-home-btn {
-        position: static; /* Retour en position normale sur mobile */
-        transform: none; /* Supprime le transform sur mobile */
-        align-self: flex-start;
-        font-size: 0.85em !important;
-        padding: 8px 14px !important;
-        margin-bottom: 10px;
-    }
-    
-    .back-home-btn:hover {
-        transform: translateY(-2px) !important; /* Seul effet sur mobile */
-    }
-    
-    .portfolio-page header h1 {
-        padding: 0; /* Supprime le padding sur mobile */
-        font-size: 1.8em;
-        line-height: 1.2;
-        text-align: center;
-        word-break: break-word;
-    }
-    
-    .portfolio-page nav ul {
-        gap: clamp(10px, 5vw, 25px) !important;
-        justify-content: center;
-        width: 100%;
-        padding: 10px 15px;
-    }
-}
-
-@media (max-width: 480px) {
-    .portfolio-page header h1 {
-        font-size: 1.4em;
-        margin: 0;
-        padding: 10px 5px;
-    }
-    
-    .portfolio-page nav ul {
-        gap: 8px !important;
-        padding: 8px 10px;
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .filter-btn {
-        font-size: 0.7em !important;
-        padding: 8px 15px !important;
-        letter-spacing: 0.5px !important;
-        margin: 2px 0;
-        min-width: 80px;
-        text-align: center;
-    }
-    
-    .filter-btn[data-filter="all"] {
-        font-size: 0.8em !important;
-        padding: 10px 20px !important;
-        order: -1; /* Met PORTFOLIO en premier */
-    }
-    
-    .portfolio-page .header-content {
-        gap: 10px;
-        padding: 0 10px;
-    }
-    
-    .back-home-btn {
-        font-size: 0.75em !important;
-        padding: 6px 12px !important;
-    }
-}
-
-/* Supprimer l'effet de survol pour les liens de navigation sur index uniquement */
-body:not(.portfolio-page) nav a {
-    color: #b8c5d1 !important;
-    text-decoration: none !important;
-    padding: 10px 20px !important;
-    font-size: 0.9em !important;
-    font-weight: 500 !important;
-    letter-spacing: 1px !important;
-    border-radius: 25px !important;
-    text-transform: uppercase !important;
-    transition: all 0.3s ease !important;
-    border: none !important;
-    background: transparent !important;
-}
-
-/* Effet de survol simple pour index */
-body:not(.portfolio-page) nav a:hover {
-    color: #64ffda !important;
-    background: rgba(100, 255, 218, 0.1) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 5px 15px rgba(100, 255, 218, 0.2) !important;
-}
-
-/* Supprimer complètement les anciens effets ::before pour index */
-body:not(.portfolio-page) nav a::before {
-    display: none !important;
-}
-
-body:not(.portfolio-page) nav a:hover::before {
-    display: none !important;
-}
-
-/* Garder les styles .filter-btn pour la page portfolio uniquement */
-.portfolio-page .filter-btn {
-    color: #b8c5d1 !important;
-    background: transparent !important;
-    border: none !important;
-    padding: 10px 20px !important;
-    font-size: 0.9em !important;
-    font-weight: 500 !important;
-    letter-spacing: 1px !important;
-    text-decoration: none !important;
-    position: relative !important;
-    transition: all 0.3s ease !important;
-    cursor: pointer !important;
-    border-radius: 25px !important;
-    text-transform: uppercase !important;
-}
-
-.portfolio-page .filter-btn[data-filter="all"] {
-    font-size: 1.1em !important;
-    font-weight: 600 !important;
-    padding: 12px 25px !important;
-    background: rgba(100, 255, 218, 0.1) !important;
-    border: 1px solid rgba(100, 255, 218, 0.3) !important;
-}
-
-.portfolio-page .filter-btn:hover {
-    color: #64ffda !important;
-    background: rgba(100, 255, 218, 0.1) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 5px 15px rgba(100, 255, 218, 0.2) !important;
-}
-
-.portfolio-page .filter-btn.active {
-    color: #ffffff !important;
-    background: linear-gradient(45deg, #64ffda, #1de9b6) !important;
-    box-shadow: 0 5px 20px rgba(100, 255, 218, 0.4) !important;
-    text-shadow: none !important;
-}
-
-/* Image de profil redimensionnée - Version carrée avec bords arrondis */
-.profile-image {
-    width: clamp(150px, 35vw, 220px) !important; 
-    height: clamp(150px, 35vw, 220px) !important; 
-    object-fit: cover !important; 
-    border-radius: clamp(10px, 2vw, 15px) !important; 
-    border: 3px solid rgba(100, 255, 218, 0.3) !important;
-    transition: all 0.4s ease !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
-    max-width: 100% !important;
-    max-height: 100% !important;
-}
-
-.profile-image:hover {
-    transform: scale(1.05) !important;
-    border-color: rgba(100, 255, 218, 0.6) !important;
-    box-shadow: 0 15px 40px rgba(100, 255, 218, 0.2) !important;
-}
-
-/* Ajuster le conteneur de l'image */
-.image-content {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    flex: 0 0 auto !important; 
-    margin-left: clamp(0px, 3vw, 20px) !important;
-    max-width: clamp(150px, 35vw, 220px) !important;
-}
-
-/* Responsive pour l'image */
-@media (max-width: 768px) {
-    .presentation-content,
-    .cv-content,
-    .portfolio-content {
-        flex-direction: column !important;
-        text-align: center !important;
-        gap: 20px !important;
-        min-height: auto !important;
-    }
-    
-    .photo-container,
-    .cv-image-container,
-    .portfolio-image-container,
-    .image-content {
-        flex: none !important;
-        margin: 0 auto !important;
-        max-width: 250px !important;
-    }
-    
-    .presentation-text,
-    .cv-action,
-    .portfolio-action {
-        flex: none !important;
-        width: 100% !important;
-        min-width: auto !important;
-    }
-    
-    .profile-image {
-        width: clamp(180px, 45vw, 250px) !important; 
-        height: clamp(180px, 45vw, 250px) !important; 
-        border-radius: 12px !important;
-    }
-    
-    .cv-image,
-    .portfolio-image {
-        height: clamp(200px, 50vw, 280px) !important;
-    }
-    
-    .image-content {
-        margin-left: 0 !important;
-        margin-top: 20px !important;
-    }
-    
-    .section {
-        margin: 10px 0;
-        padding: 20px 15px;
-    }
-    
-    .section h2 {
-        font-size: clamp(1.2em, 4vw, 1.6em);
-    }
-    
-    .section p {
-        font-size: clamp(0.85em, 3vw, 1em);
-    }
-}
-
-@media (max-width: 480px) {
-    .profile-image {
-        width: clamp(120px, 40vw, 180px) !important; 
-        height: clamp(120px, 40vw, 180px) !important; 
-        border-radius: 10px !important; 
-    }
-    
-    .cv-image,
-    .portfolio-image {
-        height: clamp(150px, 40vw, 200px) !important;
-    }
-    
-    .container {
-        padding: 0 10px;
-    }
-    
-    .section {
-        margin: 8px 0;
-        padding: 15px 10px;
-        border-radius: 8px;
-    }
-    
-    .section h2 {
-        font-size: clamp(1em, 5vw, 1.3em);
-        margin-bottom: 10px;
-    }
-    
-    .section p {
-        font-size: clamp(0.8em, 3.5vw, 0.9em);
-        line-height: 1.6;
-    }
-    
-    .btn {
-        font-size: 0.9em;
-        padding: 10px 20px;
-    }
-    
-    .contact-info p {
-        font-size: 0.95em;
-        margin: 10px 0;
-    }
-    
-    .social-icon {
-        width: 24px;
-        height: 24px;
-    }
-    
-    /* Formulaire plus compact sur très petit écran */
-    .contact-form {
-        padding: 20px 15px;
-    }
-    
-    .form-group input,
-    .form-group textarea {
-        padding: 12px 15px;
-        font-size: 0.9em;
-    }
-}
-
-/* Lightbox améliorée - adaptation automatique */
-.lightbox {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    z-index: 9999;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(5px);
-}
-
-.lightbox-content {
-    position: relative;
-    max-width: 95vw;
-    max-height: 95vh;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.lightbox-close {
-    position: absolute;
-    top: -50px;
-    right: 0;
-    color: white;
-    font-size: 35px;
-    cursor: pointer;
-    z-index: 10000;
-    background: rgba(100, 255, 218, 0.2);
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.lightbox-close:hover {
-    color: #64ffda;
-    background: rgba(100, 255, 218, 0.4);
-    transform: scale(1.1);
-}
-
-#lightbox-image {
-    max-width: 90vw;
-    max-height: 80vh;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    border-radius: 12px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-    border: 2px solid rgba(100, 255, 218, 0.2);
-}
-
-/* Adaptation automatique pour images très larges ou très hautes */
-#lightbox-image.wide {
-    max-width: 95vw;
-    max-height: 70vh;
-}
-
-#lightbox-image.tall {
-    max-width: 80vw;
-    max-height: 90vh;
-}
-
-.lightbox-prev,
-.lightbox-next {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(100, 255, 218, 0.2);
-    border: none;
-    color: white;
-    font-size: 28px;
-    padding: 15px 20px;
-    cursor: pointer;
-    border-radius: 12px;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(100, 255, 218, 0.3);
-}
-
-.lightbox-prev {
-    left: -80px;
-}
-
-.lightbox-next {
-    right: -80px;
-}
-
-.lightbox-prev:hover,
-.lightbox-next:hover {
-    background: rgba(100, 255, 218, 0.5);
-    transform: translateY(-50%) scale(1.1);
-}
-
-.lightbox-description {
-    color: white;
-    margin-top: 20px;
-    font-size: 1.2em;
-    max-width: 80%;
-    background: rgba(15, 20, 25, 0.8);
-    padding: 15px 25px;
-    border-radius: 8px;
-    border: 1px solid rgba(100, 255, 218, 0.2);
-}
-
-.lightbox-counter {
-    color: #64ffda;
-    margin-top: 15px;
-    font-size: 1em;
-    font-weight: 600;
-}
-
-/* Responsive lightbox amélioré */
-@media (max-width: 768px) {
-    .lightbox-prev {
-        left: 10px;
-        font-size: 24px;
-        padding: 12px 16px;
-    }
-    
-    .lightbox-next {
-        right: 10px;
-        font-size: 24px;
-        padding: 12px 16px;
-    }
-    
-    .lightbox-close {
-        top: -45px;
-        font-size: 28px;
-        width: 40px;
-        height: 40px;
-    }
-    
-    .lightbox-image-container {
-        max-width: 98vw;
-        max-height: 80vh;
-    }
-    
-    #lightbox-image {
-        max-width: 95vw !important;
-        max-height: 75vh !important;
-    }
-    
-    #lightbox-image.wide {
-        max-width: 98vw !important;
-        max-height: 65vh !important;
-    }
-    
-    #lightbox-image.tall {
-        max-width: 85vw !important;
-        max-height: 85vh !important;
-    }
-    
-    .lightbox-description {
-        font-size: 1em;
-        margin-top: 15px;
-        padding: 12px 20px;
-        max-width: 95%;
-    }
-}
-
-/* S'assurer que les images de galerie sont cliquables */
-.gallery-item img {
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-.gallery-item img:hover {
-    transform: scale(1.05);
-}
-
-/* Surbrillance rouge pour les images avec vidéos YouTube */
-.gallery-item[data-has-video="oui"], 
-.gallery-item.has-video {
-    position: relative;
-    overflow: hidden;
-}
-
-.gallery-item[data-has-video="oui"]::before,
-.gallery-item.has-video::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border: 3px solid #ff4444;
-    border-radius: 10px;
-    box-shadow: 
-        0 0 20px rgba(255, 68, 68, 0.6),
-        inset 0 0 20px rgba(255, 68, 68, 0.1);
-    pointer-events: none;
-    z-index: 2;
-    transition: all 0.3s ease;
-}
-
-.gallery-item[data-has-video="oui"]:hover::before,
-.gallery-item.has-video:hover::before {
-    border-color: #ff6666;
-    box-shadow: 
-        0 0 30px rgba(255, 68, 68, 0.8),
-        inset 0 0 25px rgba(255, 68, 68, 0.2);
-}
-
-/* Icône vidéo pour les images avec YouTube */
-.gallery-item[data-has-video="oui"]::after,
-.gallery-item.has-video::after {
-    content: '▶';
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: rgba(255, 68, 68, 0.9);
-    color: white;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    z-index: 3;
-    pointer-events: none;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-}
-
-/* Animation de pulsation pour attirer l'attention - plus douce */
-@keyframes redGlow {
-    0%, 100% {
-        box-shadow: 0 0 15px rgba(255, 68, 68, 0.4);
-    }
-    50% {
-        box-shadow: 0 0 25px rgba(255, 68, 68, 0.7);
-    }
-}
-
-.gallery-item[data-has-video="oui"],
-.gallery-item.has-video {
-    animation: redGlow 3s ease-in-out infinite; /* Plus lent et plus subtil */
-}
-
-/* Arrêter l'animation au survol */
-.gallery-item[data-has-video="oui"]:hover,
-.gallery-item.has-video:hover {
-    animation: none;
-}
-
-/* Assurer une meilleure stabilité pour les items avec vidéos */
-.gallery-item.has-video {
-    min-height: 200px; /* Hauteur minimale pour éviter les problèmes de layout */
-    transform-origin: center center; /* Origine de transformation centrée */
-}
-
-.gallery-item.has-video img {
-    max-height: 400px; /* Limiter la hauteur pour éviter les débordements */
-    object-fit: cover; /* S'assurer que l'image remplit bien l'espace */
-}
-
-/* Lightbox améliorée pour YouTube */
-.lightbox-video-container {
-    width: 100%;
-    max-width: 800px;
-    aspect-ratio: 16/9;
-    margin: 20px auto;
-}
-
-.lightbox-video-container iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    border-radius: 10px;
-}
-
-.lightbox-image-container {
-    max-width: 95vw;
-    max-height: 85vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    margin: 0 auto;
-}
-
-#lightbox-image {
-    border-radius: 12px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-    border: 2px solid rgba(100, 255, 218, 0.2);
-    transition: all 0.3s ease;
-}
-
-#lightbox-image:hover {
-    border-color: rgba(100, 255, 218, 0.4);
-    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.9);
-}
-
-/* Responsive pour les icônes vidéo */
-@media (max-width: 768px) {
-    .gallery-item[data-has-video="oui"]::after {
-        width: 25px;
-        height: 25px;
-        font-size: 10px;
-        top: 8px;
-        right: 8px;
-    }
-    
-    .gallery-item[data-has-video="oui"]::before {
-        border-width: 2px;
-    }
-}
-
-
-/* Animations pour les messages de statut */
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-@keyframes slideOut {
-    from {
-        transform: translateX(0);
-        opacity: 1;
-    }
-    to {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-}
-
-/* Style pour le bouton désactivé du formulaire */
-.btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none !important;
-}
-
-/* Ajustement du contenu pour éviter le chevauchement avec le chatbot */
-@media (min-width: 3024px) {
-    .container {
-        padding-right: 90px;
-        transition: padding-right 0.4s ease;
-    }
-}
-
-/* Réduire l'espacement sur les écrans plus petits */
-@media (max-width: 3024px) {
-    .container {
-        padding-right: 20px;
-    }
-}
-
-/* Styles pour le sélecteur de langue */
-.language-toggle {
-    display: flex;
-    gap: 5px;
-    background: rgba(15, 20, 25, 0.8);
-    border-radius: 8px;
-    padding: 5px;
-    border: 1px solid rgba(100, 255, 218, 0.2);
-}
-
-.lang-btn {
-    background: transparent;
-    border: none;
-    color: #8892b0;
-    padding: 8px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.lang-btn:hover {
-    color: #64ffda;
-    background: rgba(100, 255, 218, 0.1);
-    transform: translateY(-1px);
-}
-
-.lang-btn.active {
-    color: #64ffda;
-    background: rgba(100, 255, 218, 0.2);
-    border: 1px solid rgba(100, 255, 218, 0.3);
-}
-
-.lang-btn.active:hover {
-    transform: none;
-}
-
-/* Ajustement pour la navigation */
-nav ul {
-    display: flex;
-    align-items: center;
-    gap: 0;
-}
-
-nav ul li:last-child {
-    margin-left: 20px;
-}
-
-/* Animation d'apparition pour les changements de langue */
-[data-translate] {
-    transition: opacity 0.2s ease;
-}
-
-/* Responsive pour le sélecteur de langue */
-@media (max-width: 768px) {
-    .language-toggle {
-        position: fixed;
-        top: 15px;
-        right: 15px;
-        z-index: 1000;
-        background: rgba(15, 20, 25, 0.95);
-        backdrop-filter: blur(10px);
-    }
-    
-    nav ul li:last-child {
-        margin-left: 0;
-        position: absolute;
-        top: -60px;
-        right: 0;
-    }
-}
-
-/* Carousel Featured Projects */
-.featured-projects-section {
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-.featured-projects-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
-}
-
-.featured-title {
-    text-align: center;
-    font-size: 2rem;
-    color: #3498db;
-    margin-bottom: 20px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: all 0.3s ease;
-    pointer-events: none;
-}
-
-.featured-projects-container:hover .featured-title {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.carousel-container {
-    position: relative;
-    max-width: 100%;
-    margin: 0 auto;
-    overflow: hidden;
-    border-radius: 8px;
-}
-
-.carousel-wrapper {
-    overflow: hidden;
-    border-radius: 6px;
-}
-
-.carousel-track {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-}
-
-.carousel-item {
-    min-width: 100%;
-    position: relative;
-    overflow: hidden;
-    aspect-ratio: 21/9;
-    height: 250px;
-}
-
-.carousel-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.carousel-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
-    color: white;
-    padding: 20px 20px 25px;
-    transform: translateY(50%);
-    transition: transform 0.3s ease;
-}
-
-.carousel-item:hover .carousel-overlay {
-    transform: translateY(0);
-}
-
-.carousel-overlay h3 {
-    font-size: 1.2rem;
-    margin: 0 0 5px 0;
-    color: #3498db;
-}
-
-.carousel-overlay p {
-    margin: 0;
-    opacity: 0.9;
-    font-size: 0.9rem;
-}
-
-.carousel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(52, 152, 219, 0.8);
-    border: none;
-    color: white;
-    font-size: 1.8rem;
-    padding: 12px 16px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-    z-index: 2;
-    width: 45px;
-    height: 45px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.carousel-btn:hover {
-    background: rgba(52, 152, 219, 1);
-    transform: translateY(-50%) scale(1.05);
-}
-
-.carousel-btn.prev {
-    left: 10px;
-}
-
-.carousel-btn.next {
-    right: 10px;
-}
-
-.carousel-indicators {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 15px;
-}
-
-.indicator {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    border: 2px solid rgba(52, 152, 219, 0.5);
-    background: transparent;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.indicator.active,
-.indicator:hover {
-    background: #3498db;
-    border-color: #3498db;
-}
-
-/* Responsive Carousel */
-@media (max-width: 768px) {
-    .featured-title {
-        font-size: clamp(1.2em, 4vw, 1.6em);
-    }
-    
-    .featured-projects-section {
-        padding: 15px 10px;
-        margin-bottom: 15px;
-    }
-    
-    .carousel-item {
-        height: clamp(120px, 25vw, 180px);
-    }
-    
-    .carousel-btn {
-        font-size: clamp(1.2em, 3vw, 1.4em);
-        padding: 6px 10px;
-        width: clamp(25px, 8vw, 35px);
-        height: clamp(25px, 8vw, 35px);
-    }
-    
-    .carousel-btn.prev {
-        left: 5px;
-    }
-    
-    .carousel-btn.next {
-        right: 5px;
-    }
-    
-    .carousel-overlay {
-        padding: 8px 12px 8px;
-    }
-    
-    .carousel-overlay h3 {
-        font-size: clamp(0.8em, 3vw, 1em);
-    }
-    
-    .carousel-overlay p {
-        font-size: clamp(0.7em, 2.5vw, 0.8em);
-    }
-}
-
-@media (max-width: 480px) {
-    .featured-projects-section {
-        padding: 10px 5px;
-        margin-bottom: 10px;
-    }
-    
-    .carousel-item {
-        height: clamp(100px, 20vw, 150px);
-    }
-    
-    .carousel-overlay {
-        padding: 5px 8px 5px;
-    }
-    
-    .carousel-overlay h3 {
-        font-size: clamp(0.7em, 2.5vw, 0.8em);
-        margin-bottom: 2px;
-    }
-    
-    .carousel-overlay p {
-        font-size: clamp(0.6em, 2vw, 0.7em);
-        display: none; /* Masquer la description sur très petits écrans */
-    }
-    
-    .carousel-btn {
-        width: clamp(20px, 6vw, 28px);
-        height: clamp(20px, 6vw, 28px);
-        font-size: clamp(1em, 2.5vw, 1.2em);
-        padding: 2px 4px;
-    }
-    
-    .carousel-indicators {
-        margin-top: 8px;
-        gap: 4px;
-    }
-    
-    .indicator {
-        width: 6px;
-        height: 6px;
-    }
-}
-
-/* Media queries pour très petits écrans */
-@media (max-width: 320px) {
-    .container {
-        padding: 0 5px;
-    }
-    
-    header,
-    .portfolio-page header {
-        margin: 5px;
-        padding: 10px 0;
-        border-radius: 8px;
-    }
-    
-    .portfolio-page header h1 {
-        font-size: 1.1em;
-        padding: 0 50px;
-        letter-spacing: 0.5px;
-    }
-    
-    .back-home-btn {
-        padding: 4px 8px !important;
-        font-size: 0.65em !important;
-        left: 8px;
-    }
-    
-    .portfolio-page nav ul {
-        flex-direction: column;
-        gap: 5px !important;
-        padding: 5px;
-    }
-    
-    .filter-btn {
-        font-size: 0.6em !important;
-        padding: 6px 12px !important;
-        margin: 1px 0;
-    }
-    
-    .filter-btn[data-filter="all"] {
-        font-size: 0.7em !important;
-        padding: 8px 16px !important;
-    }
-    
-    .section {
-        padding: 10px 8px;
-        margin: 5px 0;
-    }
-    
-    .profile-image {
-        width: 100px !important;
-        height: 100px !important;
-    }
-    
-    .projects-gallery {
-        grid-template-columns: 1fr;
-        gap: 8px;
-        padding: 15px 5px;
-    }
-    
-    .gallery-item {
-        padding: 4px;
-    }
-    
-    .gallery-item img {
-        min-height: 80px;
-        border-radius: 4px;
-    }
-    
-    .contact-form {
-        padding: 15px 10px;
-    }
-    
-    .carousel-item {
-        height: 80px;
-    }
-    
-    .carousel-btn {
-        width: 20px;
-        height: 20px;
-        font-size: 0.8em;
-    }
-    
-    .carousel-overlay {
-        display: none; /* Masquer l'overlay sur très petits écrans */
-    }
-}
-
-/* Bouton de test mobile */
-.mobile-test-btn {
-    position: fixed;
-    top: 20px;
-    right: 80px;
-    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-    color: white;
-    border: none;
-    padding: 12px 18px;
-    border-radius: 25px;
-    font-size: 0.9em;
-    font-weight: 600;
-    cursor: pointer;
-    z-index: 9999;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-    backdrop-filter: blur(10px);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.mobile-test-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-    background: linear-gradient(45deg, #ff5252, #d63031);
-}
-
-.mobile-test-btn:active {
-    transform: translateY(0);
-}
-
-.mobile-test-btn.active {
-    background: linear-gradient(45deg, #00b894, #00a085);
-    box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
-}
-
-.mobile-test-btn.active:hover {
-    background: linear-gradient(45deg, #00a085, #00796b);
-    box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4);
-}
-
-/* Icône pour le bouton */
-.mobile-test-btn::before {
-    content: '📱';
-    font-size: 1.1em;
-}
-
-.mobile-test-btn.active::before {
-    content: '💻';
-}
-
-/* Mode test mobile - Simulation d'écran mobile */
-body.mobile-test-mode {
-    overflow-x: hidden;
-}
-
-body.mobile-test-mode .container {
-    max-width: 375px !important;
-    margin: 0 auto !important;
-    transform: scale(1) !important;
-    border: 3px solid #ff6b6b;
-    border-radius: 25px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    background: #000;
-    padding: 20px 10px;
-    margin-top: 20px !important;
-    min-height: calc(100vh - 40px);
-    position: relative;
-}
-
-body.mobile-test-mode .container::before {
-    content: 'Mode Test Mobile - iPhone 375px';
-    position: absolute;
-    top: -35px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #ff6b6b;
-    font-size: 0.8em;
-    font-weight: bold;
-    background: rgba(255, 107, 107, 0.1);
-    padding: 5px 15px;
-    border-radius: 15px;
-    border: 1px solid rgba(255, 107, 107, 0.3);
-}
-
-/* Ajustements spécifiques pour le mode test */
-body.mobile-test-mode header,
-body.mobile-test-mode .portfolio-page header {
-    margin: 10px 5px !important;
-    border-radius: 15px !important;
-    padding: 15px 0 !important;
-}
-
-body.mobile-test-mode .portfolio-page nav ul {
-    flex-direction: column !important;
-    gap: 8px !important;
-    padding: 10px !important;
-}
-
-body.mobile-test-mode .filter-btn {
-    font-size: 0.7em !important;
-    padding: 8px 15px !important;
-}
-
-body.mobile-test-mode .portfolio-page header h1 {
-    font-size: 1.4em !important;
-    padding: 0 50px !important;
-}
-
-body.mobile-test-mode .back-home-btn {
-    position: static !important;
-    transform: none !important;
-    margin-bottom: 10px !important;
-    align-self: flex-start !important;
-}
-
-body.mobile-test-mode .presentation-content,
-body.mobile-test-mode .cv-content,
-body.mobile-test-mode .portfolio-content {
-    flex-direction: column !important;
-    text-align: center !important;
-}
-
-body.mobile-test-mode .profile-image {
-    width: 150px !important;
-    height: 150px !important;
-}
-
-body.mobile-test-mode .projects-gallery {
-    grid-template-columns: 1fr !important;
-    gap: 10px !important;
-    padding: 15px 5px !important;
-}
-
-/* Responsive pour le bouton de test */
-@media (max-width: 768px) {
-    .mobile-test-btn {
-        top: 10px;
-        right: 10px;
-        padding: 8px 12px;
-        font-size: 0.8em;
-    }
-}
-
-@media (max-width: 480px) {
-    .mobile-test-btn {
-        display: none; /* Masquer sur vraiment petits écrans */
-    }
-}
-
-/* Tooltips pour aperçu des descriptions */
-.gallery-item {
-    position: relative;
-}
-
-.gallery-item .preview-tooltip {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    right: 10px;
-    background: rgba(0, 0, 0, 0.85);
-    color: #64ffda;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 12px;
-    line-height: 1.3;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.3s ease;
-    pointer-events: none;
-    z-index: 10;
-    border: 1px solid rgba(100, 255, 218, 0.3);
-    backdrop-filter: blur(5px);
-}
-
-.gallery-item:hover .preview-tooltip {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* Style pour les éléments du carousel */
-.carousel-item {
-    position: relative;
-}
-
-.carousel-item .preview-tooltip {
-    position: absolute;
-    bottom: 50px;
-    left: 15px;
-    right: 15px;
-    background: rgba(0, 0, 0, 0.9);
-    color: #64ffda;
-    padding: 10px 15px;
-    border-radius: 10px;
-    font-size: 13px;
-    line-height: 1.4;
-    opacity: 0;
-    transform: translateY(15px);
-    transition: all 0.3s ease;
-    pointer-events: none;
-    z-index: 20;
-    border: 1px solid rgba(100, 255, 218, 0.4);
-    backdrop-filter: blur(8px);
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-}
-
-.carousel-item:hover .preview-tooltip {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* Animation des tooltips */
-@keyframes tooltipFadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.preview-tooltip.show {
-    animation: tooltipFadeIn 0.3s ease forwards;
-}
-
-/* Boutons de traduction en haut à droite */
-.header-content {
-    position: relative;
-}
-
-.language-toggle {
-    position: absolute;
-    top: 60%;
-    transform: translateY(-50%);
-    right: clamp(15px, 4vw, 20px);
-    display: flex;
-    gap: 8px;
-    z-index: 50;
-}
-
-.lang-btn {
-    background: rgba(100, 255, 218, 0.1);
-    border: 1px solid rgba(100, 255, 218, 0.3);
-    color: #64ffda;
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(5px);
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.lang-btn:hover {
-    background: rgba(100, 255, 218, 0.2);
-    border-color: rgba(100, 255, 218, 0.5);
-    transform: translateY(-1px);
-}
-
-.lang-btn.active {
-    background: #64ffda;
-    color: #0f1419;
-    border-color: #64ffda;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Portfolio - Projets</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="portfolio-page">
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <a href="index.html" class="back-home-btn" data-translate="ACCUEIL">
+                    ACCUEIL
+                </a>
+                <h1 data-translate="Ugo RAVARD Artist 3D / 2D">Ugo RAVARD Artist 3D / 2D</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="filter-btn active" data-filter="all" data-translate="ALL">ALL</a></li>
+                    <li><a href="#" class="filter-btn" data-filter="1" data-translate="3D">3D</a></li>
+                    <li><a href="#" class="filter-btn" data-filter="2" data-translate="Tournage/Montage">Tournage/Montage</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Bandeau Carrousel - Meilleurs Projets -->
+            <section class="featured-projects-section">
+                <div class="featured-projects-container">
+                    <h2 class="featured-title" data-translate="Mes Meilleurs Projets">Mes Meilleurs Projets</h2>
+                    
+                    <div class="carousel-container">
+                        <button class="carousel-btn prev" id="carousel-prev">‹</button>
+                        
+                        <div class="carousel-wrapper">
+                            <div class="carousel-track" id="carousel-track">
+                                <!-- 1. Le Colossus -->
+                                <div class="carousel-item" data-project-order="27">
+                                    <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/images/2D%20-%203D/space%20station.png" alt="Le Colossus">
+                                    <div class="carousel-overlay">
+                                        <h3>Le Colossus</h3>
+                                    </div>
+                                </div>
+                                
+                                <!-- 2. Ville avec animation de voiture -->
+                                <div class="carousel-item" data-project-order="3">
+                                    <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/images/2D%20-%203D/city%20blender.png" alt="Ville 3D">
+                                    <div class="carousel-overlay">
+                                        <h3>Ville 3D</h3>
+                                    </div>
+                                </div>
+                                
+                                <!-- 3. Projet Baccalauréat avec téléphone -->
+                                <div class="carousel-item" data-project-order="10">
+                                    <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/images/2D%20-%203D/shoot%201%20tel.png" alt="Projet Baccalauréat">
+                                    <div class="carousel-overlay">
+                                        <h3>Projet Baccalauréat</h3>
+                                    </div>
+                                </div>
+                                
+                                <!-- 4. Projet EDF -->
+                                <div class="carousel-item" data-project-order="20">
+                                    <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/images/Tournages%20-%20Images/" alt="Projet EDF">
+                                    <div class="carousel-overlay">
+                                        <h3>Projet EDF</h3>
+                                    </div>
+                                </div>
+                                
+                                <!-- 5. La Vie du Chef -->
+                                <div class="carousel-item" data-project-order="32">
+                                    <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/images/Tournages%20-%20Images/" alt="La Vie du Chef">
+                                    <div class="carousel-overlay">
+                                        <h3>La Vie du Chef</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="carousel-btn next" id="carousel-next">›</button>
+                    </div>
+                    
+                    <!-- Indicateurs -->
+                    <div class="carousel-indicators" id="carousel-indicators">
+                        <button class="indicator active" data-slide="0"></button>
+                        <button class="indicator" data-slide="1"></button>
+                        <button class="indicator" data-slide="2"></button>
+                        <button class="indicator" data-slide="3"></button>
+                        <button class="indicator" data-slide="4"></button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects Grid -->
+            <section id="projets" class="projects-section">
+                <div class="projects-gallery">
+
+                    <!-- Projet 1 - Capture d'écran (sans sous-images) -->
+                    <div class="gallery-item large" data-category="1" data-order="1" data-has-video="non">
+                        <img src="https://i.imgur.com/rWLNaOi.jpeg" 
+                             alt="Capture d'écran 3D"
+                             data-description="Logiciel : Blender - Temps : ≃ 2h - Capture d'écran d'une scène 3D montrant mes compétences en modélisation et rendu 3D">
+                    </div>
+
+                    <div class="gallery-item medium" data-category="1" data-order="2" data-has-video="non"
+                         data-gallery='[
+                             "https://i.imgur.com/bYcyXZT.jpeg",
+                             "https://i.imgur.com/LMWlFZ1.jpeg"
+                         ]'>
+                        <img src="https://i.imgur.com/bYcyXZT.jpeg" 
+                             alt="Animation route et pluie"
+                             data-description="Logiciel : Blender - Temps : ≃ 8h - Animation 3D d'une route sous la pluie, travail sur les effets atmosphériques et l'ambiance cinématographique">
+                    </div>
+
+                    <!-- Projet 5 - City avec galerie (CONTIENT UNE VIDÉO YOUTUBE) -->
+                    <div class="gallery-item small" data-category="1" data-order="3" data-has-video="oui"
+                         data-gallery='[
+                             "https://i.imgur.com/M526tSA.jpeg",
+                             "https://i.imgur.com/yZC28wu.png",
+                             "https://i.imgur.com/xVpZU7N.jpeg",
+                             "https://i.imgur.com/owVA5LF.png",
+                             "https://www.youtube.com/watch?v=BwSIBaaBu-8"
+                         ]'>
+                        <img src="https://i.imgur.com/M526tSA.jpeg" 
+                             alt="Ville 3D avec animation"
+                             data-description="Logiciel : Blender - Temps : ≃ 25h - Projet d'animation de voiture dans une ville 3D - Modélisation environnementale et animation dynamique avec vidéo complète">
+                    </div>
+
+                    <!-- Projet 6 - GIF Animation (sans sous-images) -->
+                    <div class="gallery-item small" data-category="1" data-order="4" data-has-video="non">
+                        <img src="https://i.imgur.com/LB4dDrC.gif" 
+                             alt="Animation 3D GIF"
+                             data-description="Logiciel : Blender - Temps : ≃ 4h - Animation 3D au format GIF - Démonstration de cycles d'animation fluides et de techniques d'optimisation">
+                    </div>
+
+                    <!-- Projet 7 - Screenshot Gallery (sans sous-images) -->
+                    <div class="gallery-item medium" data-category="1" data-order="5" data-has-video="non">
+                        <img src="https://i.imgur.com/5Nrvako.jpeg" 
+                             alt="Screenshot Gallery"
+                             data-description="Logiciel : Blender - Temps : ≃ 3h - Galerie de captures d'écran montrant différentes étapes de production 3D et techniques de rendu">
+                    </div>
+
+                    <!-- Projet 8 - Toon Scape (sans sous-images) -->
+                    <div class="gallery-item small" data-category="1" data-order="6" data-has-video="non">
+                        <img src="https://i.imgur.com/nYp46XK.png" 
+                             alt="Toon Scape"
+                             data-description="Logiciel : Blender - Temps : ≃ 6h - Paysage en style cartoon - Exploration du rendu stylisé et des techniques de shading non-photoréaliste">
+                    </div>
+
+                    <!-- Projet 9 - Distrib Insta (sans sous-images) -->
+                    <div class="gallery-item small" data-category="1" data-order="7" data-has-video="non">
+                        <img src="https://i.imgur.com/IfFt83t.png" 
+                             alt="Projet cartoon Instagram"
+                             data-description="Logiciel : Photoshop - Temps : ≃ 4h - Design cartoon pour réseaux sociaux - Illustration stylisée et optimisation pour les plateformes digitales">
+                    </div>
+
+                    <!-- Projet 10 - Animation Route avec galerie (1 sous-image) -->
+                    <div class="gallery-item medium" data-category="1" data-order="8" data-has-video="non"
+                         data-gallery='[
+                             "https://i.imgur.com/M385dqA.jpeg",
+                             "https://i.imgur.com/hm5f6K1.jpeg"
+                         ]'>
+                        <img src="https://i.imgur.com/M385dqA.jpeg" 
+                             alt="Route et pluie"
+                             data-description="Logiciel : Blender - Temps : ≃ 12h - Scène d'animation route sous la pluie - Maîtrise des effets de particules et de l'éclairage atmosphérique">
+                    </div>
+
+                    <!-- Projet 11 - Fog and GTR (sans sous-images) -->
+                    <div class="gallery-item small" data-category="1" data-order="9" data-has-video="non">
+                        <img src="https://i.imgur.com/8bP2wNK.png" 
+                             alt="GTR dans le brouillard"
+                             data-description="Logiciel : Blender - Temps : ≃ 15h - Voiture GTR dans un environnement brumeux - Rendu photoréaliste avec effets de volumétrie">
+                    </div>
+
+                    <!-- Projet 12 - Batspace avec galerie (2 sous-images) -->
+                    <div class="gallery-item large" data-category="1" data-order="10" data-has-video="non"
+                         data-gallery='[
+                             "https://i.imgur.com/etJKXxT.jpeg",
+                             "https://i.imgur.com/Na8JoIe.jpeg",
+                             "https://i.imgur.com/jbFweKy.jpeg"
+                         ]'>
+                        <img src="https://i.imgur.com/etJKXxT.jpeg" 
+                             alt="Batspace - Véhicule spatial"
+                             data-description="Logiciel : Blender - Temps : ≃ 18h - Véhicule spatial futuriste - Design conceptuel et modélisation hard-surface avec variations">
+                    </div>
+
+                    <!-- Projet 13 - Correction -->
+                    <div class="gallery-item medium" data-category="1" data-order="11" data-has-video="non"
+                         data-gallery='[
+                             "https://i.imgur.com/An3GRse.png",
+                             "https://i.imgur.com/QLZEImJ.jpeg",
+                             "https://i.imgur.com/JQCLCv4.jpeg",
+                             "https://i.imgur.com/pcCXcri.png"
+                         ]'>
+                        <img src="https://i.imgur.com/An3GRse.png" 
+                             alt="Armure futuriste"
+                             data-description="Logiciel : Blender - Temps : ≃ 22h - Armure futuriste 3D - Modélisation détaillée avec matériaux métalliques et process de création">
+                    </div>
+
+                    <!-- Projet 14 - Apple Vision Pro avec galerie (2 sous-images) -->
+                    <div class="gallery-item small" data-category="1" data-order="12" data-has-video="non"
+                         data-gallery='[
+                             "https://i.imgur.com/PFnuGee.jpeg",
+                             "https://i.imgur.com/QXoDWjd.jpeg",
+                             "https://i.imgur.com/qN0tLs8.jpeg"
+                         ]'>
+                        <img src="https://i.imgur.com/PFnuGee.jpeg" 
+                             alt="Apple Vision Pro 3D"
+                             data-description="Logiciel : Blender - Temps : ≃ 10h - Modélisation Apple Vision Pro - Reproduction fidèle du casque VR avec matériaux réalistes">
+                    </div>
+
+                    <!-- Projet 15 - Correction -->
+                    <div class="gallery-item medium" data-category="1" data-order="13" data-has-video="non"
+                         data-gallery='[
+                             "https://i.imgur.com/jzolHlt.jpeg",
+                             "https://i.imgur.com/MkvQGFh.png"
+                         ]'>
+                        <img src="https://i.imgur.com/jzolHlt.jpeg" 
+                             alt="Scène conceptuelle avec variations"
+                             data-description="Logiciel : Blender - Temps : ≃ 7h - Scène conceptuelle 3D - Exploration artistique avec variations d'éclairage et d'ambiance">
+                    </div>
+
+                    <!-- Projet 17 - Motor Space avec galerie (4 sous-images) -->
+                    <div class="gallery-item large" data-category="1" data-order="14" data-has-video="non"
+                         data-gallery='[
+                            "https://i.imgur.com/JURiEbT.jpeg",
+                             "https://i.imgur.com/JoouOKq.png",
+                             "https://i.imgur.com/GDb3Gb7.png",
+                             "https://i.imgur.com/V93DInL.png",
+                             "https://i.imgur.com/gwwNqEg.png",
+                             "https://i.imgur.com/zTfQAkv.png"
+                         ]'>
+                        <img src="https://i.imgur.com/JURiEbT.jpeg" 
+                             alt="Moto spatiale futuriste"
+                             data-description="Logiciel : Blender - Temps : ≃ 30h - Moto spatiale futuriste - Concept design avec multiples variations et process de création détaillé">
+                    </div>
+
+                    <!-- Projet 18 - Correction -->
+                    <div class="gallery-item medium" data-category="1" data-order="15" data-has-video="non"
+                         data-gallery='[
+                             "https://i.imgur.com/AskS27f.jpeg",
+                             "https://i.imgur.com/MFObaDC.jpeg"
+                         ]'>
+                        <img src="https://i.imgur.com/AskS27f.jpeg" 
+                             alt="Retribution - Scène dramatique"
+                             data-description="Logiciel : Blender - Temps : ≃ 9h - Retribution - Scène dramatique 3D avec éclairage cinématographique et atmosphère sombre">
+                    </div>
+
+                    <!-- Projet 19 - Sci-fi Scene avec galerie (2 sous-images) -->
+                    <div class="gallery-item small" data-category="1" data-order="16" data-has-video="non"
+                         data-gallery='[
+                             "https://i.imgur.com/izVTzPB.jpeg",
+                             "https://i.imgur.com/Q1sF3Hb.jpeg",
+                             "https://i.imgur.com/i3YzyvI.jpeg"
+                         ]'>
+                        <img src="https://i.imgur.com/izVTzPB.jpeg" 
+                             alt="Environnement sci-fi futuriste"
+                             data-description="Logiciel : Blender - Temps : ≃ 16h - Environnement sci-fi futuriste - Architecture avancée et design de science-fiction avec multiples vues">
+                    </div>
+
+                    <!-- Projet 20 - Shoot Tel (sans sous-images) -->
+                    <div class="gallery-item small" data-category="1" data-order="17" data-has-video="non">
+                        <img src="https://i.imgur.com/c4EAy8n.png" 
+                             alt="Shoot photo téléphone stylisé"
+                             data-description="Logiciel : Blender - Temps : ≃ 5h - Shoot photo téléphone stylisé - Mise en scène créative avec lighting studio et rendu propre">
+                    </div>
+
+                    <!-- Projet 22 - Space Station avec galerie (2 sous-images) -->
+                    <div class="gallery-item large" data-category="1" data-order="18" data-has-video="non"
+                         data-gallery='[
+                             "https://i.imgur.com/3Ruqxku.jpeg",
+                             "https://i.imgur.com/6iZj9wI.jpeg",
+                             "https://i.imgur.com/Jv4KLle.jpeg"
+                         ]'>
+                        <img src="https://i.imgur.com/3Ruqxku.jpeg" 
+                             alt="Station spatiale orbitale"
+                             data-description="Logiciel : Blender - Temps : ≃ 20h - Station spatiale orbitale - Complex architectural spatial avec systèmes rotatifs et détails techniques">
+                    </div>
+
+                    <!-- Projet 23 - Correction -->
+                    <div class="gallery-item medium" data-category="1" data-order="19" data-has-video="non"
+                         data-gallery='[
+                             "https://i.imgur.com/K1iwNmq.jpeg",
+                             "https://i.imgur.com/i7mdDi4.png"
+                         ]'>
+                        <img src="https://i.imgur.com/K1iwNmq.jpeg"  
+                             alt="Terra - Planète conceptuelle"
+                             data-description="Logiciel : Blender - Temps : ≃ 11h - Terra - Conception de planète avec écosystème unique et formations géologiques fantastiques">
+                    </div>
+
+                <div class="gallery-item medium" data-category="1" data-order="20" data-has-video="oui"
+                         data-gallery='[
+                             "https://i.imgur.com/oiVM13r.png",
+                             "https://www.youtube.com/watch?v=dkax0LbPZuI"
+                         ]'>
+                        <img src="https://i.imgur.com/oiVM13r.png" 
+                             alt="Projet Baccalauréat - Téléphone 3D"
+                             data-description="Logiciel : Blender - Temps : ≃ 14h - Projet Baccalauréat - Conception téléphone 3D avec animation et présentation vidéo complète">
+                    </div>
+
+                     <div class="gallery-item large" data-category="1" data-order="21" data-has-video="non">
+                        <img src="https://i.imgur.com/jyIU6PG.jpeg" 
+                             alt="Paysage cosmique avec trou noir"
+                             data-description="Logiciel : Blender - Temps : ≃ 8h - Paysage cosmique avec trou noir - Exploration des effets spatiaux et de la distorsion gravitationnelle">
+                    </div>
+
+                    <div class="gallery-item large" data-category="1" data-order="22" data-has-video="non">
+                        <img src="https://i.imgur.com/KF3wwYm.jpeg" 
+                             alt="Entraînement textures PBR"
+                             data-description="Logiciel : Blender - Temps : ≃ 5h - Entraînement textures PBR - Étude des matériaux et techniques de texturage photoréaliste">
+                    </div>
+                    
+                    <div class="gallery-item large" data-category="1" data-order="23" data-has-video="non">
+                        <img src="https://i.imgur.com/aS0VZJH.jpeg" 
+                             alt="Paysages marécageux"
+                             data-description="Logiciel : Blender - Temps : ≃ 12h - Environnements marécageux 3D - Modélisation d'écosystèmes naturels et végétation procédurale">
+                    </div>
+
+                    <div class="gallery-item large" data-category="1" data-order="24" data-has-video="non">
+                        <img src="https://i.imgur.com/kdvNBHh.jpeg" 
+                             alt="Lune avec displacement mapping"
+                             data-description="Logiciel : Blender - Temps : ≃ 6h - Surface lunaire avec displacement mapping - Technique avancée de relief et de géologie spatiale">
+                    </div>                    <div class="gallery-item large" data-category="1" data-order="25" data-has-video="non">
+                        <img src="https://i.imgur.com/ynaluMT.png" 
+                             alt="Scène d'expérimentation 3D"
+                             data-description="Logiciel : Blender - Temps : ≃ 4h - Scène d'expérimentation 3D - Tests de lighting et de composition visuelle avancée">
+                    </div>
+
+                    <div class="gallery-item large" data-category="1" data-order="26" data-has-video="non">
+                        <img src="https://i.imgur.com/UCGzkfR.jpeg" 
+                             alt="Starship en vol dans les nuages"
+                             data-description="Logiciel : Blender - Temps : ≃ 10h - Starship en vol - Animation de vaisseau spatial avec simulation de nuages et atmosphère">
+                    </div>
+
+                    <div class="gallery-item large" data-category="1" data-order="27" data-has-video="non"
+                         data-gallery='[
+                             "https://i.imgur.com/7i4zVDY.jpeg",
+                             "https://i.imgur.com/HFJ4Oy3.png",
+                             "https://i.imgur.com/M7q9GN2.png",
+                             "https://i.imgur.com/IFNszcL.png",
+                             "https://i.imgur.com/5nvpECw.png",
+                             "https://i.imgur.com/yNVsPwr.jpeg",
+                             "https://i.imgur.com/c8okZ8T.jpeg",
+                             "https://i.imgur.com/5PjQr8Y.png",
+                             "https://i.imgur.com/L10rrjj.jpeg"
+                         ]'>
+                        <img src="https://i.imgur.com/7i4zVDY.jpeg" 
+                             alt="Le Colossus - Vaisseau spatial game-ready"
+                             data-description="Logiciel : Blender - Temps : ≃ 45h - Le Colossus - Vaisseau spatial game-ready complet avec textures, materials et process de création détaillé">
+                    </div>
+
+                  <div class="gallery-item medium" data-category="1" data-order="28" data-has-video="non"
+                         data-gallery='[
+                             "https://i.imgur.com/9veRK58.jpeg",
+                             "https://i.imgur.com/rIx4Wsw.jpeg"
+                         ]'>
+                        <img src="https://i.imgur.com/9veRK58.jpeg" 
+                             alt="Effets VFX cinématographiques"
+                             data-description="Logiciel : After Effects + Blender - Temps : ≃ 13h - Effets VFX cinématographiques - Compositing et post-production avec intégration 3D/2D">
+                    </div>
+
+                    <div class="gallery-item medium" data-category="1" data-order="29" data-has-video="non"
+                         data-gallery='[
+                             "https://i.imgur.com/kgWAZ3n.png",
+                             "https://i.imgur.com/XhqrpAH.jpeg"
+                         ]'>
+                        <img src="https://i.imgur.com/kgWAZ3n.png" 
+                             alt="Compositing VFX avancé"
+                             data-description="Logiciel : After Effects + Blender - Temps : ≃ 11h - Compositing VFX avancé - Intégration d'éléments 3D dans environnements réels avec color grading">
+                    </div>
+                    
+                    <div class="gallery-item medium" data-category="1" data-order="30" data-has-video="non"
+                         data-gallery='[
+                             "https://i.imgur.com/l8XUTI1.png",
+                             "https://i.imgur.com/WCtLyf8.png",
+                             "https://i.imgur.com/APd87TK.png"
+                         ]'>
+                        <img src="https://i.imgur.com/l8XUTI1.png" 
+                             alt="Level design architectural"
+                             data-description="Logiciel : Blender - Temps : ≃ 15h - Level design architectural - Conception d'environnements 3D pour jeux vidéo avec différentes variations">
+                    </div>
+
+                    <div class="gallery-item large" data-category="1" data-order="31" data-has-video="non">
+                        <img src="https://i.imgur.com/t8Y441L.jpeg" 
+                             alt="Paysage photoréaliste"
+                             data-description="Logiciel : Blender - Temps : ≃ 14h - Paysage photoréaliste - Environnement naturel avec techniques de rendu avancées et éclairage naturel">
+                    </div>
+
+                   <div class="gallery-item medium" data-category="1" data-order="32" data-has-video="non"
+                         data-gallery='[
+                             "https://i.imgur.com/gxCcinm.png",
+                             "https://i.imgur.com/bVVW1vk.jpeg"
+                         ]'>
+                        <img src="https://i.imgur.com/gxCcinm.png" 
+                             alt="Machines industrielles imprimables 3D"
+                             data-description="Logiciel : Blender - Temps : ≃ 18h - Machines industrielles - Modèles 3D techniques optimisés pour l'impression 3D avec assemblages complexes">
+                    </div>
+
+                    <div class="gallery-item medium" data-category="2" data-order="33" data-has-video="non"
+                         data-gallery='[
+                             "https://i.imgur.com/tvdD2dR.png",
+                             "https://i.imgur.com/JQn1Zpc.png",
+                             "https://i.imgur.com/6Pq71c5.jpeg",
+                             "https://i.imgur.com/m9k6Tso.png"
+                         ]'>
+                        <img src="https://i.imgur.com/tvdD2dR.png" 
+                             alt="Projet EDF - Tournage professionnel"
+                             data-description="Logiciel : Premiere Pro - Temps : ≃ 16h - Projet EDF - Tournage professionnel et captation d'images techniques pour entreprise énergétique">
+                    </div>
+
+
+                   <div class="gallery-item medium" data-category="2" data-order="34" data-has-video="oui"
+                         data-gallery='[
+                             "https://i.imgur.com/0T3tOw6.png",
+                             "https://www.youtube.com/watch?v=kCo_sF-JbVk"
+                         ]'>
+                        <img src="https://i.imgur.com/0T3tOw6.png" 
+                             alt="Electromontage Elec - Vidéo corporate"
+                             data-description="Logiciel : Premiere Pro + After Effects - Temps : ≃ 12h - Electromontage Elec - Montage vidéo corporate avec grading et post-production complète">
+                    </div>
+
+                    <div class="gallery-item medium" data-category="2" data-order="35" data-has-video="oui"
+                         data-gallery='[
+                             "https://i.imgur.com/YfKKP0u.png",
+                             "https://www.youtube.com/@LavieDuchef/videos"
+                         ]'>
+                        <img src="https://i.imgur.com/YfKKP0u.png" 
+                             alt="La Vie Du Chef - Chaîne YouTube"
+                             data-description="Logiciel : Premiere Pro + After Effects - Temps : ≃ 20h - La Vie Du Chef - Tournages et montages pour chaîne YouTube culinaire avec animations et effets">
+                    </div>
+
+
+                </div>
+            </section>
+
+            <!-- Section Contact -->
+            <section id="contact" class="section contact-section">
+                <h2 data-translate="CONTACT">CONTACT</h2>
+                <div class="contact-info">
+                    <p>
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2ZmMDAwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIzLjQ5OCA2LjE4NmMtLjI4NS0xLjA3Ni0xLjEyNS0xLjkyMy0yLjE5OC0yLjIwN0MxOS40MyAzLjU0IDEyIDMuNTQgMTIgMy41NHMtNy40MyAwLTkuMyAuNDM5Yy0xLjA3My4yODQtMS45MTMgMS4xMzEtMi4xOTggMi4yMDdDMCA4LjA3NCAwIDEyIDAgMTJzMCAzLjkyNi40NTggNS44MTRjLjI4NSAxLjA3NiAxLjEyNSAxLjkyMyAyLjE5OCAyLjIwN0M0LjU3IDIwLjQ2IDEyIDIwLjQ2IDEyIDIwLjQ2czcuNDMgMCA5LjMtLjQzOWMxLjA3My0uMjg0IDEuOTEzLTEuMTMxIDIuMTk4LTIuMjA3QzI0IDE1LjkyNiAyNCAxMiAyNCAxMnMwLTMuOTI2LS41MDItNS44MTRaIi8+CjxwYXRoIGQ9Im05LjU0NSAxNS41NjggNC43MjgtMi41NjgtNC43MjgtMi41Njh2NS4xMzZaIiBmaWxsPSIjZmZmZmZmIi8+Cjwvc3ZnPgo=" 
+                             alt="YouTube" class="social-icon">
+                        <a href="https://www.youtube.com/@Ugoravard" target="_blank">YouTube</a>
+                    </p>
+                    <p>
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwNzdiNSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwLjQ0NyAyMC40NTJIMTYuODkzVjE0Ljg4M2MwLTEuMzI4LS4wMjctMy4wMzctMS44NTItMy4wMzctMS44NTMgMC0yLjEzNiAxLjQ0NS0yLjEzNiAyLjkzOXY1LjY2N0g5LjM1MVY5aDMuNDE0djEuNTYxaC4wNDdjLjQ3My0uODk2IDEuNjM3LTEuODQgMy4zNy0xLjg0IDMuNjAxIDAgNC4yNjcgMi4zNyA0LjI2NyA1LjQ1NXY2Ljc3NnpNNS4zMzcgNy40MzNhMi4wNjIgMi4wNjIgMCAxIDEtLjAwMS00LjEyNSAyLjA2MyAyLjA2MyAwIDAgMSAuMDAxIDQuMTI1ek0zLjU1OSAyMC40NTJINC4xMTRWOUgzLjU1OXYxMS40NTJaTTIyLjIyNSAwSDEuNzcxQy43OTIgMCAwIC43NzQgMCAxLjcyOXYyMC41NDJDMCAyMy4yMjcuNzkyIDI0IDEuNzcxIDI0aDIwLjQ1NDJDI4MjMuMjA4IDI0IDI0IDIzLjIyNyAyNCAyMi4yNzFWMS43MjlDMjQgLjc3NCAyMy4yMDggMCAyMi4yMjUgMHoiLz4KPC9zdmc+Cg==" 
+                             alt="LinkedIn" class="social-icon">
+                        <a href="https://www.linkedin.com/in/ugo-ravard-42b408349" target="_blank">LinkedIn</a>
+                    </p>
+                    <p>
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzMzMzMzMyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIC4yOTdjLTYuNjMgMC0xMiA1LjM3My0xMiAxMiAwIDUuMzAzIDMuNDM4IDkuOCA4LjIwNSAxMS4zODcuNi4xMTMuODItLjI1OC44Mi0uNTc3IDAtLjI4NS0uMDEtMS4wNC0uMDE1LTIuMDQtMy4zMzguNzI0LTQuMDQyLTEuNjEtNC4wNDItMS42MS0uNTQ2LTEuMzg3LTEuMzMzLTEuNzU2LTEuMzMzLTEuNzU2LTEuMDg5LS43NDQuMDgzLS43MjkuMDgzLS43MjkgMS4yMDUuMDg0IDEuODM5IDEuMjM3IDEuODM5IDEuMjM3IDEuMDcgMS44MzQgMi44MDcgMS4zMDQgMy40OTIuOTk3LjEwNy0uNzc1LjQxOC0xLjMwNS43NjItMS42MDQtMi42NjUtLjMwNS01LjQ2Ny0xLjMzNC01LjQ2Ny01LjkzMSAwLTEuMzExLjQ2OS0yLjM4MSAxLjIzNi0zLjIyMS0uMTI0LS4zMDMtLjUzNS0xLjUyNC4xMTctMy4xNzYgMCAwIDEuMDA4LS4zMjIgMy4zIDEuMjMuOTU3LS4yNjYgMS45ODMtLjM5OSAzLjAwMy0uNDA0IDEuMDIuMDA1IDIuMDQ3LjEzOCAzLjAwNi40MDQgMi4yOTEtMS41NTIgMy4yOTctMS4yMyAzLjI5Ny0xLjIzLjY1MyAxLjY1My4yNDIgMi44NzQuMTE4IDMuMTc2Ljc3LjA0IDEuMjM1IDEuOTExIDEuMjM1IDMuMjIxIDAgNC42MDktMi44MDcgNS42MjQtNS40NzkgNS45MjEuNDMuMzcyLjgyMyAxLjEwMi44MjMgMi4yMjJ2My4yOTNjMCAuMzE5LjIxNi42OTQuODI1LjU3NkMyMC41NjUgMjIuMDkyIDI0IDE3LjU5MiAyNCAxMi4yOTdjMC02LjYyNy01LjM3My0xMi0xMi0xMiIvPgo8L3N2Zz4K" 
+                             alt="GitHub" class="social-icon">
+                        <a href="https://github.com/ugoooooo0" target="_blank">GitHub</a>
+                    </p>
+                </div>
+
+                <!-- Formulaire de contact -->
+                <div class="contact-form-container">
+                    <h3 data-translate="Envoyez-moi un message">Envoyez-moi un message</h3>
+                    <form id="contact-form" class="contact-form">
+                        <div class="form-group">
+                            <input type="text" id="name" name="name" placeholder="Votre nom" data-translate="Votre nom" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" name="email" placeholder="Votre email" data-translate="Votre email" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" name="message" placeholder="Votre message..." data-translate="Votre message..." rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" data-translate="📩 Envoyer le message">
+                            📩 Envoyer le message
+                        </button>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Lightbox Modal améliorée -->
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox-content">
+            <span class="lightbox-close">&times;</span>
+            <div class="lightbox-navigation">
+                <button class="lightbox-prev">‹</button>
+                <button class="lightbox-next">›</button>
+            </div>
+            <div class="lightbox-image-container">
+                <img id="lightbox-image" src="" alt="">
+            </div>
+            <div id="lightbox-description" class="lightbox-description"></div>
+            <div class="lightbox-counter">
+                <span id="current-image">1</span> / <span id="total-images">1</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/translations.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/mobile-test.js"></script>
+</body>
+</html>
 
 
