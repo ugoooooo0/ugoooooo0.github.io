@@ -105,6 +105,11 @@ function initCarousel() {
                             setTimeout(() => {
                                 const galleryImg = galleryItem.querySelector('img');
                                 if (galleryImg) {
+                                    // Définir window.currentProject avant d'ouvrir la lightbox
+                                    window.currentProject = {
+                                        galleryItem: galleryItem,
+                                        img: galleryImg
+                                    };
                                     galleryImg.click();
                                 }
                             }, 100);
@@ -115,6 +120,11 @@ function initCarousel() {
                     // Si déjà visible, ouvrir directement
                     const galleryImg = galleryItem.querySelector('img');
                     if (galleryImg) {
+                        // Définir window.currentProject avant d'ouvrir la lightbox
+                        window.currentProject = {
+                            galleryItem: galleryItem,
+                            img: galleryImg
+                        };
                         galleryImg.click();
                     }
                 }
@@ -1003,6 +1013,13 @@ function initLightbox() {
     galleryItems.forEach(img => {
         img.addEventListener('click', function() {
             const galleryItem = this.closest('.gallery-item');
+            
+            // Définir window.currentProject pour récupérer la description
+            window.currentProject = {
+                galleryItem: galleryItem,
+                img: this
+            };
+            
             const galleryData = galleryItem.getAttribute('data-gallery');
             
             if (galleryData) {
@@ -1095,12 +1112,14 @@ function loadMedia(index) {
         // C'est une image
         image.src = mediaUrl;
         
-        // Mettre à jour la description
+        // Mettre à jour la description en utilisant la fonction existante
         const description = document.getElementById('lightbox-description');
-        const galleryItem = document.querySelector(`img[src="${currentGallery[0]}"]`)?.closest('.gallery-item');
-        if (description && galleryItem) {
-            const desc = galleryItem.querySelector('img').getAttribute('data-description') || '';
+        if (description && window.currentProject) {
+            const desc = window.currentProject.img.getAttribute('data-description') || 
+                        window.currentProject.img.alt || 
+                        'Image du portfolio';
             description.textContent = desc;
+            description.style.display = 'block';
         }
     }
     
