@@ -396,10 +396,11 @@ nav a:hover {
 .cv-content,
 .portfolio-content {
     display: flex;
-    align-items: center;
-    gap: clamp(15px, 4vw, 25px);
+    align-items: flex-start;
+    gap: clamp(25px, 5vw, 40px);
     min-height: clamp(200px, 40vw, 280px);
     flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 /* Section présentation */
@@ -424,9 +425,11 @@ nav a:hover {
     box-shadow: 0 15px 40px rgba(100, 255, 218, 0.5);
 }
 
-.presentation-text {
+.text-content {
     flex: 1;
-    min-width: 250px;
+    min-width: 300px;
+    order: 1;
+    padding-right: 20px;
 }
 
 .presentation-text h2 {
@@ -1250,11 +1253,12 @@ body:not(.portfolio-page) nav a:hover::before {
 /* Ajuster le conteneur de l'image */
 .image-content {
     display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
+    justify-content: flex-end !important;
+    align-items: flex-start !important;
     flex: 0 0 auto !important; 
-    margin-left: clamp(0px, 3vw, 20px) !important;
-    max-width: clamp(150px, 35vw, 220px) !important;
+    margin-left: auto !important;
+    max-width: clamp(180px, 40vw, 250px) !important;
+    order: 2;
 }
 
 /* Responsive pour l'image */
@@ -2376,6 +2380,22 @@ body.mobile-test-mode .projects-gallery {
     text-shadow: 0 0 5px rgba(100, 255, 218, 0.5);
 }
 
+/* Style pour indiquer que les logiciels sont cliquables */
+.software-item[data-url] {
+    cursor: pointer !important;
+    position: relative;
+}
+
+.software-item[data-url]:hover::after {
+    content: '🔗';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 12px;
+    opacity: 0.8;
+    z-index: 10;
+}
+
 /* Bouton "Voir plus" */
 .show-more-container {
     text-align: center;
@@ -2518,14 +2538,16 @@ body.mobile-test-mode .projects-gallery {
 .software-secondary.show .software-item:nth-child(4) { animation-delay: 0.4s; }
 .software-secondary.show .software-item:nth-child(5) { animation-delay: 0.5s; }
 
-/* Badges de présentation */
+/* Badges de présentation - positionnés en bas de la section */
 .presentation-badges {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: clamp(15px, 4vw, 25px);
-    margin: 25px 0 20px 0;
+    margin: 30px auto 0 auto;
     flex-wrap: wrap;
+    max-width: 800px;
+    padding: 20px;
 }
 
 .badge-item {
