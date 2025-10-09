@@ -2386,96 +2386,7 @@ body.mobile-test-mode .projects-gallery {
     z-index: 10;
 }
 
-/* Système de scroll avec flèches */
-.software-secondary-container {
-    margin-top: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    position: relative;
-    padding: 0 20px;
-}
-
-.software-secondary-wrapper {
-    flex: 1;
-    max-width: calc(100% - 100px);
-    overflow: hidden;
-    position: relative;
-}
-
-.software-secondary {
-    display: flex;
-    gap: 2rem;
-    transition: transform 0.3s ease;
-    padding: 0.5rem 0;
-    min-width: fit-content;
-}
-
-.scroll-btn {
-    background: linear-gradient(45deg, rgba(100, 255, 218, 0.1), rgba(29, 233, 182, 0.1));
-    border: 2px solid rgba(100, 255, 218, 0.3);
-    color: #64ffda;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    z-index: 10;
-    flex-shrink: 0;
-}
-
-.scroll-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(100, 255, 218, 0.2), transparent);
-    transition: left 0.5s ease;
-}
-
-.scroll-btn:hover::before {
-    left: 100%;
-}
-
-.scroll-btn:hover {
-    background: linear-gradient(45deg, rgba(100, 255, 218, 0.2), rgba(29, 233, 182, 0.2));
-    border-color: rgba(100, 255, 218, 0.6);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(100, 255, 218, 0.2);
-}
-
-.scroll-btn:active {
-    transform: translateY(0px) scale(0.95);
-}
-
-.scroll-btn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.scroll-btn:disabled:hover {
-    background: linear-gradient(45deg, rgba(100, 255, 218, 0.1), rgba(29, 233, 182, 0.1));
-    border-color: rgba(100, 255, 218, 0.3);
-    transform: none;
-    box-shadow: none;
-}
-
-.scroll-btn span {
-    line-height: 1;
-}
-
-/* Les logiciels secondaires sont maintenant toujours visibles dans le scroll */
+/* Tous les logiciels maintenant dans la même grille */
 
 /* Responsive pour les logiciels */
 @media (max-width: 768px) {
@@ -2492,7 +2403,6 @@ body.mobile-test-mode .projects-gallery {
     
     .software-item {
         padding: 15px 10px;
-        flex: 0 0 auto;
     }
     
     .software-item img {
@@ -2503,25 +2413,6 @@ body.mobile-test-mode .projects-gallery {
     
     .software-item span {
         font-size: 0.85em;
-    }
-    
-    .software-secondary-container {
-        padding: 0 10px;
-        gap: 0.5rem;
-    }
-    
-    .software-secondary-wrapper {
-        max-width: calc(100% - 70px);
-    }
-    
-    .scroll-btn {
-        width: 35px;
-        height: 35px;
-        font-size: 1rem;
-    }
-    
-    .software-secondary {
-        gap: 1rem;
     }
 }
 
