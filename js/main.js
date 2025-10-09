@@ -36,6 +36,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 2000);
     }
     
+    // Gestion de la section logiciels (sur la page d'accueil)
+    initSoftwareSection();
+    
     // Gestion du contrôleur de taille
     initSizeController();
 });
