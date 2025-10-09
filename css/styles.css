@@ -449,29 +449,35 @@ nav a:hover {
 .presentation-text-container {
     position: relative;
     cursor: pointer;
-    transition: all 0.3s ease;
+    display: inline-block;
+    width: 100%;
 }
 
 .presentation-text {
     transition: filter 0.3s ease;
     margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 1;
 }
 
 .presentation-overlay {
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(15, 20, 25, 0.95);
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 20, 25, 0.9);
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0;
-    transform: scale(0.9);
-    transition: all 0.3s ease;
-    border-radius: 10px;
-    backdrop-filter: blur(5px);
+    visibility: hidden;
+    transform: scale(0.95);
+    transition: all 0.4s ease;
+    border-radius: 12px;
+    backdrop-filter: blur(8px);
+    z-index: 10;
+    pointer-events: none;
 }
 
 .overlay-text {
@@ -485,12 +491,14 @@ nav a:hover {
 }
 
 .presentation-text-container:hover .presentation-text {
-    filter: blur(3px);
+    filter: blur(4px);
 }
 
 .presentation-text-container:hover .presentation-overlay {
     opacity: 1;
+    visibility: visible;
     transform: scale(1);
+    pointer-events: auto;
 }
 
 @keyframes pulse {
