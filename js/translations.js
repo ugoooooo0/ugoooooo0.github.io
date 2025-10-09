@@ -29,6 +29,9 @@ class TranslationSystem {
                 'École CNAM Enjmin': 'École CNAM Enjmin',
                 'Super gentil :)': 'Super gentil :)',
                 
+                // Effet hover présentation
+                'TRAVAILLONS ENSEMBLE !': 'TRAVAILLONS ENSEMBLE !',
+                
                 // Section CV
                 'Mon CV': 'Mon CV',
                 'cv-description': 'Découvrez mon parcours, mes compétences et mes expériences professionnelles.',
@@ -121,6 +124,9 @@ class TranslationSystem {
                 '5 ans d\'expérience': '5 years experience',
                 'École CNAM Enjmin': 'CNAM Enjmin School',
                 'Super gentil :)': 'Super nice :)',
+                
+                // Effet hover présentation
+                'TRAVAILLONS ENSEMBLE !': 'LET\'S WORK TOGETHER!',
                 
                 // Section CV
                 'Mon CV': 'My CV',
