@@ -2756,12 +2756,13 @@ body.mobile-test-mode .projects-gallery {
    PAGE CONDITIONS GÉNÉRALES - DESIGN SOBRE
 ======================================== */
 
-/* Style gouvernemental sobre */
+/* Style gouvernemental sobre - MODE CLAIR */
 .conditions-page {
     background: #ffffff;
     color: #333333;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
+    transition: all 0.3s ease;
 }
 
 .conditions-page .container {
@@ -2769,28 +2770,63 @@ body.mobile-test-mode .projects-gallery {
 }
 
 .conditions-page header {
-    background: #1e1e2e;
+    background: #ffffff;
     border-bottom: 3px solid #0066cc;
     margin-bottom: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .conditions-page h1 {
-    color: #ffffff;
+    color: #1e1e2e;
     font-size: 1.8rem;
     font-weight: 600;
 }
 
-.conditions-page nav a {
+.conditions-page nav a,
+.conditions-page nav button {
     color: #ffffff;
     background: #0066cc;
     padding: 8px 16px;
     border-radius: 4px;
     text-decoration: none;
     font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
 }
 
-.conditions-page nav a:hover {
+.conditions-page nav a:hover,
+.conditions-page nav button:hover {
     background: #0052a3;
+}
+
+/* MODE SOMBRE */
+.conditions-page.dark-theme {
+    background: #2d2d2d;
+    color: #e0e0e0;
+}
+
+.conditions-page.dark-theme .container {
+    background: #2d2d2d;
+}
+
+.conditions-page.dark-theme header {
+    background: #1a1a1a;
+    border-bottom: 3px solid #4a90e2;
+}
+
+.conditions-page.dark-theme h1 {
+    color: #ffffff;
+}
+
+.conditions-page.dark-theme nav a,
+.conditions-page.dark-theme nav button {
+    background: #4a90e2;
+}
+
+.conditions-page.dark-theme nav a:hover,
+.conditions-page.dark-theme nav button:hover {
+    background: #357abd;
 }
 
 .conditions-section {
@@ -2840,11 +2876,6 @@ body.mobile-test-mode .projects-gallery {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.condition-item:hover {
-    background: #f8f9fa;
-    transform: none;
-}
-
 .condition-item h3 {
     color: #1e1e2e;
     font-size: 1.4rem;
@@ -2881,12 +2912,49 @@ body.mobile-test-mode .projects-gallery {
 .condition-item a {
     color: #0066cc;
     text-decoration: underline;
-    transition: color 0.2s ease;
 }
 
-.condition-item a:hover {
-    color: #0052a3;
-    text-decoration: underline;
+/* Styles mode sombre pour les articles */
+.conditions-page.dark-theme .conditions-content {
+    background: #3a3a3a;
+    border: 1px solid #555555;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.conditions-page.dark-theme .conditions-intro h2 {
+    color: #ffffff;
+    border-bottom-color: #4a90e2;
+}
+
+.conditions-page.dark-theme .last-updated {
+    color: #b0b0b0;
+    background: #404040;
+    border: 1px solid #555555;
+}
+
+.conditions-page.dark-theme .condition-item {
+    background: #3a3a3a;
+    border-left-color: #4a90e2;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.conditions-page.dark-theme .condition-item h3 {
+    color: #ffffff;
+    border-bottom-color: #555555;
+}
+
+.conditions-page.dark-theme .condition-item p,
+.conditions-page.dark-theme .condition-item ul,
+.conditions-page.dark-theme .condition-item li {
+    color: #e0e0e0;
+}
+
+.conditions-page.dark-theme .condition-item strong {
+    color: #ffffff;
+}
+
+.conditions-page.dark-theme .condition-item a {
+    color: #4a90e2;
 }
 
 .contact-urgence {
@@ -2941,12 +3009,39 @@ body.mobile-test-mode .projects-gallery {
     font-size: 1rem;
     font-weight: 500;
     display: inline-block;
-    transition: background 0.2s ease;
 }
 
-.conditions-page .btn:hover {
-    background: #0052a3;
+/* Styles mode sombre pour contact et footer */
+.conditions-page.dark-theme .contact-urgence {
+    background: #4a4a00;
+    border-color: #666600;
+}
+
+.conditions-page.dark-theme .contact-urgence h3,
+.conditions-page.dark-theme .contact-urgence p {
+    color: #ffff99;
+}
+
+.conditions-page.dark-theme .contact-urgence a {
+    color: #4a90e2;
+}
+
+.conditions-page.dark-theme .conditions-footer {
+    background: #404040;
+    border-color: #555555;
+}
+
+.conditions-page.dark-theme .conditions-footer p {
     color: #ffffff;
+}
+
+.conditions-page.dark-theme .btn {
+    background: #4a90e2;
+}
+
+.conditions-page.dark-theme .footer {
+    background: #1a1a1a;
+    border-top-color: #4a90e2;
 }
 
 .conditions-page .footer {
