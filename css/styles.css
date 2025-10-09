@@ -401,6 +401,7 @@ nav a:hover {
     min-height: clamp(200px, 40vw, 280px);
     flex-wrap: wrap;
     justify-content: space-between;
+    flex-direction: row;
 }
 
 /* Section présentation */
@@ -1258,7 +1259,7 @@ body:not(.portfolio-page) nav a:hover::before {
     flex: 0 0 auto !important; 
     margin-left: auto !important;
     max-width: clamp(180px, 40vw, 250px) !important;
-    order: 2;
+    order: 2 !important;
 }
 
 /* Responsive pour l'image */
@@ -1270,6 +1271,17 @@ body:not(.portfolio-page) nav a:hover::before {
         text-align: center !important;
         gap: 20px !important;
         min-height: auto !important;
+    }
+    
+    .text-content {
+        order: 2 !important;
+        padding-right: 0 !important;
+    }
+    
+    .image-content {
+        order: 1 !important;
+        margin-left: 0 !important;
+        justify-content: center !important;
     }
     
     .photo-container,
@@ -2396,27 +2408,53 @@ body.mobile-test-mode .projects-gallery {
     z-index: 10;
 }
 
-/* Bouton "Voir plus" */
-.show-more-container {
-    text-align: center;
+/* Système de scroll avec flèches */
+.software-secondary-container {
     margin-top: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    position: relative;
+    padding: 0 20px;
 }
 
-.show-more-btn {
+.software-secondary-wrapper {
+    flex: 1;
+    max-width: calc(100% - 100px);
+    overflow: hidden;
+    position: relative;
+}
+
+.software-secondary {
+    display: flex;
+    gap: 2rem;
+    transition: transform 0.3s ease;
+    padding: 0.5rem 0;
+    min-width: fit-content;
+}
+
+.scroll-btn {
     background: linear-gradient(45deg, rgba(100, 255, 218, 0.1), rgba(29, 233, 182, 0.1));
     border: 2px solid rgba(100, 255, 218, 0.3);
     color: #64ffda;
-    padding: 12px 30px;
-    border-radius: 25px;
-    font-size: 1em;
-    font-weight: 600;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: bold;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    z-index: 10;
+    flex-shrink: 0;
 }
 
-.show-more-btn::before {
+.scroll-btn::before {
     content: '';
     position: absolute;
     top: 0;
@@ -2427,36 +2465,39 @@ body.mobile-test-mode .projects-gallery {
     transition: left 0.5s ease;
 }
 
-.show-more-btn:hover::before {
+.scroll-btn:hover::before {
     left: 100%;
 }
 
-.show-more-btn:hover {
+.scroll-btn:hover {
     background: linear-gradient(45deg, rgba(100, 255, 218, 0.2), rgba(29, 233, 182, 0.2));
     border-color: rgba(100, 255, 218, 0.6);
     transform: translateY(-2px);
     box-shadow: 0 10px 25px rgba(100, 255, 218, 0.2);
 }
 
-.show-more-btn.expanded {
-    background: linear-gradient(45deg, #64ffda, #1de9b6);
-    color: #0f1419;
-    border-color: #64ffda;
+.scroll-btn:active {
+    transform: translateY(0px) scale(0.95);
 }
 
-/* Animation pour l'apparition des logiciels secondaires */
-.software-secondary {
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: all 0.5s ease;
+.scroll-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none;
 }
 
-.software-secondary.show {
-    opacity: 1;
-    max-height: 500px;
-    margin-bottom: 20px;
+.scroll-btn:disabled:hover {
+    background: linear-gradient(45deg, rgba(100, 255, 218, 0.1), rgba(29, 233, 182, 0.1));
+    border-color: rgba(100, 255, 218, 0.3);
+    transform: none;
+    box-shadow: none;
 }
+
+.scroll-btn span {
+    line-height: 1;
+}
+
+/* Les logiciels secondaires sont maintenant toujours visibles dans le scroll */
 
 /* Responsive pour les logiciels */
 @media (max-width: 768px) {
@@ -2473,6 +2514,7 @@ body.mobile-test-mode .projects-gallery {
     
     .software-item {
         padding: 15px 10px;
+        flex: 0 0 auto;
     }
     
     .software-item img {
@@ -2485,9 +2527,23 @@ body.mobile-test-mode .projects-gallery {
         font-size: 0.85em;
     }
     
-    .show-more-btn {
-        padding: 10px 25px;
-        font-size: 0.95em;
+    .software-secondary-container {
+        padding: 0 10px;
+        gap: 0.5rem;
+    }
+    
+    .software-secondary-wrapper {
+        max-width: calc(100% - 70px);
+    }
+    
+    .scroll-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+    
+    .software-secondary {
+        gap: 1rem;
     }
 }
 
