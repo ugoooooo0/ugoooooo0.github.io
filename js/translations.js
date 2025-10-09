@@ -32,14 +32,6 @@ class TranslationSystem {
                 // Effet hover présentation
                 'TRAVAILLONS ENSEMBLE !': 'TRAVAILLONS ENSEMBLE !',
                 
-                // Système de like
-                'Merci pour votre like ! 💖': 'Merci pour votre like ! 💖',
-                'Laissez-nous un petit message (optionnel)': 'Laissez-nous un petit message (optionnel)',
-                'Votre prénom': 'Votre prénom',
-                'Votre nom': 'Votre nom',
-                'Votre commentaire (optionnel)...': 'Votre commentaire (optionnel)...',
-                '✨ Envoyer mon like': '✨ Envoyer mon like',
-                
                 // Section CV
                 'Mon CV': 'Mon CV',
                 'cv-description': 'Découvrez mon parcours, mes compétences et mes expériences professionnelles.',
@@ -135,14 +127,6 @@ class TranslationSystem {
                 
                 // Effet hover présentation
                 'TRAVAILLONS ENSEMBLE !': 'LET\'S WORK TOGETHER!',
-                
-                // Système de like
-                'Merci pour votre like ! 💖': 'Thank you for your like! 💖',
-                'Laissez-nous un petit message (optionnel)': 'Leave us a little message (optional)',
-                'Votre prénom': 'Your first name',
-                'Votre nom': 'Your last name',
-                'Votre commentaire (optionnel)...': 'Your comment (optional)...',
-                '✨ Envoyer mon like': '✨ Send my like',
                 
                 // Section CV
                 'Mon CV': 'My CV',
