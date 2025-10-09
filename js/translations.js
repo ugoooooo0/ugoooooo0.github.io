@@ -7,57 +7,12 @@ class TranslationSystem {
             fr: {
                 // Navigation principale
                 'PORTFOLIO UGO RAVARD': 'PORTFOLIO UGO RAVARD',
-                'Artiste 3D & Designer': 'Artiste 3D & Designer',
-                'ACCUEIL': 'ACCUEIL',
-                'À PROPOS': 'À PROPOS',
                 'PRÉSENTATION': 'PRÉSENTATION',
                 'PORTFOLIO': 'PORTFOLIO',
-                'COMPÉTENCES': 'COMPÉTENCES',
                 'CV': 'CV',
                 'CONTACT': 'CONTACT',
+                'ACCUEIL': 'ACCUEIL',
                 'MON PORTFOLIO': 'MON PORTFOLIO',
-                
-                // Section Hero
-                'Ugo Ravard': 'Ugo Ravard',
-                'Artiste 3D & Créateur Digital': 'Artiste 3D & Créateur Digital',
-                'hero-description': 'Passionné par la création numérique, je donne vie à des univers extraordinaires à travers la 3D, l\'animation et le design visuel.',
-                '🎨 Découvrir mon travail': '🎨 Découvrir mon travail',
-                '💬 Me contacter': '💬 Me contacter',
-                'Années d\'expérience': 'Années d\'expérience',
-                'Projets réalisés': 'Projets réalisés',
-                'Créativité': 'Créativité',
-                
-                // Section À propos
-                'À propos de moi': 'À propos de moi',
-                'about-text-1': 'Je m\'appelle Ugo Ravard, j\'ai 18 ans et je suis passionné par la création numérique et la 3D depuis plusieurs années. J\'aime donner vie à des idées à travers la modélisation, l\'animation et la conception visuelle.',
-                'about-text-2': 'Actuellement étudiant au CNAM Enjmin, une école reconnue en France dans le domaine du jeu vidéo et de la création numérique, je développe mes compétences artistiques et techniques pour bâtir une carrière dans l\'industrie créative.',
-                'about-text-3': 'Ce portfolio rassemble mes travaux et projets, reflets de mon univers et de mon évolution artistique. Chaque création raconte une histoire et témoigne de ma passion pour l\'art numérique.',
-                'Formation': 'Formation',
-                'CNAM Enjmin - École du jeu vidéo': 'CNAM Enjmin - École du jeu vidéo',
-                'Expérience': 'Expérience',
-                '5 ans de création 3D': '5 ans de création 3D',
-                'Spécialités': 'Spécialités',
-                '3D • Animation • Design': '3D • Animation • Design',
-                
-                // Section Compétences
-                'Mes Compétences': 'Mes Compétences',
-                'skills-description': 'Les outils et technologies que je maîtrise pour donner vie à mes créations',
-                
-                // Section CV
-                'Mon Parcours': 'Mon Parcours',
-                'cv-intro': 'Découvrez mon parcours, mes expériences et mes réalisations à travers mon CV détaillé.',
-                'Cursus spécialisé en jeu vidéo': 'Cursus spécialisé en jeu vidéo',
-                'Expériences': 'Expériences',
-                'Projets personnels et collaboratifs': 'Projets personnels et collaboratifs',
-                'Réalisations': 'Réalisations',
-                'Portfolio de créations 3D': 'Portfolio de créations 3D',
-                '📄 Télécharger mon CV': '📄 Télécharger mon CV',
-                'Cliquez pour voir': 'Cliquez pour voir',
-                
-                // Section Contact
-                'Travaillons Ensemble': 'Travaillons Ensemble',
-                'contact-intro': 'Vous avez un projet en tête ? N\'hésitez pas à me contacter !',
-                'Mes réseaux': 'Mes réseaux',
                 
                 // Filtres portfolio
                 '2D/3D': '2D/3D',
@@ -146,57 +101,12 @@ class TranslationSystem {
             en: {
                 // Navigation principale
                 'PORTFOLIO UGO RAVARD': 'UGO RAVARD PORTFOLIO',
-                'Artiste 3D & Designer': '3D Artist & Designer',
-                'ACCUEIL': 'HOME',
-                'À PROPOS': 'ABOUT',
                 'PRÉSENTATION': 'ABOUT',
-                'PORTFOLIO': 'PORTFOLIO',
-                'COMPÉTENCES': 'SKILLS',
-                'CV': 'RESUME',
+                'PORTFOLIO': 'PORTFOLIO', 
+                'CV': 'CV',
                 'CONTACT': 'CONTACT',
+                'ACCUEIL': 'HOME',
                 'MON PORTFOLIO': 'MY PORTFOLIO',
-                
-                // Section Hero
-                'Ugo Ravard': 'Ugo Ravard',
-                'Artiste 3D & Créateur Digital': '3D Artist & Digital Creator',
-                'hero-description': 'Passionate about digital creation, I bring extraordinary worlds to life through 3D, animation and visual design.',
-                '🎨 Découvrir mon travail': '🎨 Discover my work',
-                '💬 Me contacter': '💬 Contact me',
-                'Années d\'expérience': 'Years of experience',
-                'Projets réalisés': 'Projects completed',
-                'Créativité': 'Creativity',
-                
-                // Section À propos
-                'À propos de moi': 'About me',
-                'about-text-1': 'My name is Ugo Ravard, I am 18 years old and I have been passionate about digital creation and 3D for several years. I love bringing ideas to life through modeling, animation and visual design.',
-                'about-text-2': 'Currently studying at CNAM Enjmin, a renowned school in France in the field of video games and digital creation, I am developing my artistic and technical skills to build a career in the creative industry.',
-                'about-text-3': 'This portfolio brings together my work and projects, reflections of my universe and my artistic evolution. Each creation tells a story and reflects my passion for digital art.',
-                'Formation': 'Education',
-                'CNAM Enjmin - École du jeu vidéo': 'CNAM Enjmin - Video Game School',
-                'Expérience': 'Experience',
-                '5 ans de création 3D': '5 years of 3D creation',
-                'Spécialités': 'Specialties',
-                '3D • Animation • Design': '3D • Animation • Design',
-                
-                // Section Compétences
-                'Mes Compétences': 'My Skills',
-                'skills-description': 'The tools and technologies I master to bring my creations to life',
-                
-                // Section CV
-                'Mon Parcours': 'My Journey',
-                'cv-intro': 'Discover my background, experiences and achievements through my detailed resume.',
-                'Cursus spécialisé en jeu vidéo': 'Specialized video game curriculum',
-                'Expériences': 'Experiences',
-                'Projets personnels et collaboratifs': 'Personal and collaborative projects',
-                'Réalisations': 'Achievements',
-                'Portfolio de créations 3D': '3D creations portfolio',
-                '📄 Télécharger mon CV': '📄 Download my resume',
-                'Cliquez pour voir': 'Click to view',
-                
-                // Section Contact
-                'Travaillons Ensemble': 'Let\'s Work Together',
-                'contact-intro': 'Do you have a project in mind? Don\'t hesitate to contact me!',
-                'Mes réseaux': 'My networks',
                 
                 // Filtres portfolio
                 '2D/3D': '2D/3D',
