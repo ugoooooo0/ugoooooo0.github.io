@@ -36,6 +36,11 @@ class TranslationSystem {
                 'Votre message...': 'Votre message...',
                 '📩 Envoyer le message': '📩 Envoyer le message',
                 
+                // Section Logiciels
+                'Logiciels & Outils': 'Logiciels & Outils',
+                'logiciels-description': 'Les outils que j\'utilise pour donner vie à mes créations',
+                'Voir plus ⌄': 'Voir plus ⌄',
+                
                 // Footer
                 'footer-text': '© 2024 Ugo Ravard - Tous droits réservés',
                 
@@ -118,6 +123,11 @@ class TranslationSystem {
                 'Votre email': 'Your email',
                 'Votre message...': 'Your message...',
                 '📩 Envoyer le message': '📩 Send message',
+                
+                // Section Logiciels
+                'Logiciels & Outils': 'Software & Tools',
+                'logiciels-description': 'The tools I use to bring my creations to life',
+                'Voir plus ⌄': 'Show more ⌄',
                 
                 // Footer
                 'footer-text': '© 2024 Ugo Ravard - All rights reserved',
