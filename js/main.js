@@ -41,34 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Gestion du contrôleur de taille
     initSizeController();
-    
-    // Gestion du changement de langue
-    initLanguageToggle();
 });
-
-// Gestion du bouton de changement de langue
-function initLanguageToggle() {
-    const languageBtn = document.getElementById('language-toggle');
-    if (!languageBtn) return;
-    
-    // Récupérer la langue actuelle
-    let currentLang = getCurrentLanguage();
-    updateLanguageButton(currentLang);
-    
-    languageBtn.addEventListener('click', function() {
-        // Basculer entre FR et EN
-        currentLang = currentLang === 'fr' ? 'en' : 'fr';
-        setLanguage(currentLang);
-        updateLanguageButton(currentLang);
-    });
-}
-
-function updateLanguageButton(lang) {
-    const currentLangSpan = document.getElementById('current-lang');
-    if (currentLangSpan) {
-        currentLangSpan.textContent = lang.toUpperCase();
-    }
-}
 
 // Carrousel des projets vedettes
 let currentSlide = 0;
