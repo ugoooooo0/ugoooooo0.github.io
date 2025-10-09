@@ -445,6 +445,69 @@ nav a:hover {
     color: #b8c5d1;
 }
 
+/* Effet hover sur le texte de présentation */
+.presentation-text-container {
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.presentation-text {
+    transition: filter 0.3s ease;
+    margin-bottom: 1.5rem;
+}
+
+.presentation-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 20, 25, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 0.3s ease;
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+}
+
+.overlay-text {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: bold;
+    color: #64ffda;
+    text-align: center;
+    text-shadow: 0 0 20px rgba(100, 255, 218, 0.5);
+    letter-spacing: 2px;
+    animation: pulse 2s infinite;
+}
+
+.presentation-text-container:hover .presentation-text {
+    filter: blur(3px);
+}
+
+.presentation-text-container:hover .presentation-overlay {
+    opacity: 1;
+    transform: scale(1);
+}
+
+@keyframes pulse {
+    0% { 
+        transform: scale(1);
+        text-shadow: 0 0 20px rgba(100, 255, 218, 0.5);
+    }
+    50% { 
+        transform: scale(1.05);
+        text-shadow: 0 0 30px rgba(100, 255, 218, 0.8);
+    }
+    100% { 
+        transform: scale(1);
+        text-shadow: 0 0 20px rgba(100, 255, 218, 0.5);
+    }
+}
+
 /* Section CV */
 .cv-image-container {
     flex: 0 0 clamp(140px, 25vw, 180px);
@@ -1276,6 +1339,13 @@ body:not(.portfolio-page) nav a:hover::before {
     .text-content {
         order: 2 !important;
         padding-right: 0 !important;
+    }
+    
+    /* Adaptation mobile pour l'effet hover */
+    .overlay-text {
+        font-size: clamp(1.2rem, 6vw, 2rem) !important;
+        letter-spacing: 1px !important;
+        padding: 0 10px;
     }
     
     .image-content {
