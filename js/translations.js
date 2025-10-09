@@ -51,6 +51,7 @@ class TranslationSystem {
                 
                 // Footer
                 'footer-text': '© 2024 Ugo Ravard - Tous droits réservés',
+                'Conditions générales d\'utilisation': 'Conditions générales d\'utilisation',
                 
                 // Carrousel des projets vedettes
                 'Mes Meilleurs Projets': 'Mes Meilleurs Projets',
@@ -147,6 +148,7 @@ class TranslationSystem {
                 
                 // Footer
                 'footer-text': '© 2024 Ugo Ravard - All rights reserved',
+                'Conditions générales d\'utilisation': 'Terms and Conditions',
                 
                 // Carrousel des projets vedettes
                 'Mes Meilleurs Projets': 'My Best Projects',
