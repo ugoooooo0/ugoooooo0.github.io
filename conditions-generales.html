@@ -19,6 +19,7 @@
                 <ul>
                     <li><a href="index.html" class="filter-btn">← RETOUR ACCUEIL</a></li>
                     <li><button id="langToggle" class="filter-btn">🇬🇧 EN</button></li>
+                    <li><button id="themeToggle" class="filter-btn">🌙 Sombre</button></li>
                 </ul>
             </nav>
         </header>
@@ -148,5 +149,29 @@
     </div>
 
     <script src="js/translations.js"></script>
+    <script>
+        // Gestion du thème clair/sombre
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // Charger le thème sauvegardé
+        const savedTheme = localStorage.getItem('conditions-theme') || 'light';
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-theme');
+            themeToggle.textContent = '☀️ Clair';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-theme');
+            
+            if (body.classList.contains('dark-theme')) {
+                themeToggle.textContent = '☀️ Clair';
+                localStorage.setItem('conditions-theme', 'dark');
+            } else {
+                themeToggle.textContent = '🌙 Sombre';
+                localStorage.setItem('conditions-theme', 'light');
+            }
+        });
+    </script>
 </body>
 </html>
