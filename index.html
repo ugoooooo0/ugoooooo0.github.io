@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎨 Ugo - Bienvenue dans ma dimension !</title>
+    <link rel="icon" type="image/png" href="https://i.imgur.com/GqiNMlW.png">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -193,11 +194,36 @@
         </footer>
     </div>
 
+    <!-- Système de Like -->
+    <div class="like-system">
+        <button class="like-btn" id="like-btn" title="J'aime ce portfolio !">
+            <span class="heart-icon">🤍</span>
+            <span class="like-count" id="like-count">0</span>
+        </button>
+    </div>
+
+    <!-- Modal de commentaire -->
+    <div class="like-modal" id="like-modal">
+        <div class="like-modal-content">
+            <button class="like-modal-close" id="like-modal-close">&times;</button>
+            <h3 data-translate="Merci pour votre like ! 💖">Merci pour votre like ! 💖</h3>
+            <p data-translate="Laissez-nous un petit message (optionnel)">Laissez-nous un petit message (optionnel)</p>
+            
+            <form class="like-form" id="like-form">
+                <input type="text" placeholder="Votre prénom" data-translate-placeholder="Votre prénom" name="firstName" required>
+                <input type="text" placeholder="Votre nom" data-translate-placeholder="Votre nom" name="lastName" required>
+                <textarea placeholder="Votre commentaire (optionnel)..." data-translate-placeholder="Votre commentaire (optionnel)..." name="comment" rows="3"></textarea>
+                
+                <button type="submit" data-translate="✨ Envoyer mon like">✨ Envoyer mon like</button>
+            </form>
+        </div>
+    </div>
 
     <script src="js/particles.js"></script>
     <script src="js/translations.js"></script>
     <script src="js/main.js"></script>
     <script src="js/software.js"></script>
     <script src="js/mobile-test.js"></script>
+    <script src="js/like-system.js"></script>
 </body>
 </html>
