@@ -1,4 +1,4 @@
-// Gestion de la section logiciels
+// Gestion de la section logiciels (tous dans la même grille)
 function initSoftwareSection() {
     // Gestion des clics sur les logiciels pour ouvrir leur site
     const softwareItems = document.querySelectorAll('.software-item[data-url]');
