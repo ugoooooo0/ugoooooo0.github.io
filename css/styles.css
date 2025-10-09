@@ -2777,7 +2777,7 @@ body.mobile-test-mode .projects-gallery {
 }
 
 .conditions-page h1 {
-    color: #1e1e2e;
+    color: #000000;
     font-size: 1.8rem;
     font-weight: 600;
 }
@@ -2795,15 +2795,10 @@ body.mobile-test-mode .projects-gallery {
     font-family: inherit;
 }
 
-.conditions-page nav a:hover,
-.conditions-page nav button:hover {
-    background: #0052a3;
-}
-
 /* MODE SOMBRE */
 .conditions-page.dark-theme {
     background: #2d2d2d;
-    color: #e0e0e0;
+    color: #ffffff;
 }
 
 .conditions-page.dark-theme .container {
@@ -2812,7 +2807,7 @@ body.mobile-test-mode .projects-gallery {
 
 .conditions-page.dark-theme header {
     background: #1a1a1a;
-    border-bottom: 3px solid #4a90e2;
+    border-bottom: 3px solid #0066cc;
 }
 
 .conditions-page.dark-theme h1 {
@@ -2821,12 +2816,7 @@ body.mobile-test-mode .projects-gallery {
 
 .conditions-page.dark-theme nav a,
 .conditions-page.dark-theme nav button {
-    background: #4a90e2;
-}
-
-.conditions-page.dark-theme nav a:hover,
-.conditions-page.dark-theme nav button:hover {
-    background: #357abd;
+    background: #0066cc;
 }
 
 .conditions-section {
@@ -2846,7 +2836,7 @@ body.mobile-test-mode .projects-gallery {
 }
 
 .conditions-intro h2 {
-    color: #1e1e2e;
+    color: #000000;
     font-size: 2.2rem;
     font-weight: 700;
     margin-bottom: 10px;
@@ -2857,7 +2847,7 @@ body.mobile-test-mode .projects-gallery {
 
 .last-updated {
     text-align: center;
-    color: #666666;
+    color: #000000;
     font-style: italic;
     font-size: 0.95rem;
     margin-bottom: 40px;
@@ -2873,11 +2863,11 @@ body.mobile-test-mode .projects-gallery {
     background: #ffffff;
     border-left: 4px solid #0066cc;
     border-radius: 0;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e9ecef;
 }
 
 .condition-item h3 {
-    color: #1e1e2e;
+    color: #000000;
     font-size: 1.4rem;
     font-weight: 600;
     margin-bottom: 20px;
@@ -2887,14 +2877,14 @@ body.mobile-test-mode .projects-gallery {
 }
 
 .condition-item p {
-    color: #333333;
+    color: #000000;
     line-height: 1.7;
     margin-bottom: 16px;
     text-align: justify;
 }
 
 .condition-item ul {
-    color: #333333;
+    color: #000000;
     padding-left: 25px;
     margin: 20px 0;
 }
@@ -2905,37 +2895,36 @@ body.mobile-test-mode .projects-gallery {
 }
 
 .condition-item strong {
-    color: #1e1e2e;
+    color: #000000;
     font-weight: 600;
 }
 
 .condition-item a {
-    color: #0066cc;
+    color: #000000;
     text-decoration: underline;
 }
 
 /* Styles mode sombre pour les articles */
 .conditions-page.dark-theme .conditions-content {
-    background: #3a3a3a;
+    background: #2d2d2d;
     border: 1px solid #555555;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .conditions-page.dark-theme .conditions-intro h2 {
     color: #ffffff;
-    border-bottom-color: #4a90e2;
+    border-bottom-color: #555555;
 }
 
 .conditions-page.dark-theme .last-updated {
-    color: #b0b0b0;
-    background: #404040;
+    color: #ffffff;
+    background: #3a3a3a;
     border: 1px solid #555555;
 }
 
 .conditions-page.dark-theme .condition-item {
-    background: #3a3a3a;
-    border-left-color: #4a90e2;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    background: #2d2d2d;
+    border-left-color: #0066cc;
+    border-color: #555555;
 }
 
 .conditions-page.dark-theme .condition-item h3 {
@@ -2946,7 +2935,7 @@ body.mobile-test-mode .projects-gallery {
 .conditions-page.dark-theme .condition-item p,
 .conditions-page.dark-theme .condition-item ul,
 .conditions-page.dark-theme .condition-item li {
-    color: #e0e0e0;
+    color: #ffffff;
 }
 
 .conditions-page.dark-theme .condition-item strong {
@@ -2954,7 +2943,7 @@ body.mobile-test-mode .projects-gallery {
 }
 
 .conditions-page.dark-theme .condition-item a {
-    color: #4a90e2;
+    color: #ffffff;
 }
 
 .contact-urgence {
@@ -2967,7 +2956,7 @@ body.mobile-test-mode .projects-gallery {
 }
 
 .contact-urgence h3 {
-    color: #856404;
+    color: #000000;
     margin-bottom: 15px;
     font-weight: 600;
     border: none;
@@ -2975,11 +2964,11 @@ body.mobile-test-mode .projects-gallery {
 }
 
 .contact-urgence p {
-    color: #856404;
+    color: #000000;
 }
 
 .contact-urgence a {
-    color: #0066cc;
+    color: #000000;
     font-weight: 600;
 }
 
@@ -2993,7 +2982,7 @@ body.mobile-test-mode .projects-gallery {
 }
 
 .conditions-footer p {
-    color: #1e1e2e;
+    color: #000000;
     font-weight: 600;
     margin-bottom: 20px;
     font-size: 1.1rem;
@@ -3013,21 +3002,21 @@ body.mobile-test-mode .projects-gallery {
 
 /* Styles mode sombre pour contact et footer */
 .conditions-page.dark-theme .contact-urgence {
-    background: #4a4a00;
-    border-color: #666600;
+    background: #3a3a3a;
+    border-color: #555555;
 }
 
 .conditions-page.dark-theme .contact-urgence h3,
 .conditions-page.dark-theme .contact-urgence p {
-    color: #ffff99;
+    color: #ffffff;
 }
 
 .conditions-page.dark-theme .contact-urgence a {
-    color: #4a90e2;
+    color: #ffffff;
 }
 
 .conditions-page.dark-theme .conditions-footer {
-    background: #404040;
+    background: #3a3a3a;
     border-color: #555555;
 }
 
@@ -3036,12 +3025,12 @@ body.mobile-test-mode .projects-gallery {
 }
 
 .conditions-page.dark-theme .btn {
-    background: #4a90e2;
+    background: #0066cc;
 }
 
 .conditions-page.dark-theme .footer {
     background: #1a1a1a;
-    border-top-color: #4a90e2;
+    border-top-color: #0066cc;
 }
 
 .conditions-page .footer {
