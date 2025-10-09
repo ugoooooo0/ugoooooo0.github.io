@@ -2239,6 +2239,285 @@ body.mobile-test-mode .projects-gallery {
     animation: tooltipFadeIn 0.3s ease forwards;
 }
 
+/* Section Logiciels & Outils */
+.logiciels-section {
+    background: rgba(26, 31, 54, 0.8);
+    margin: 25px 0;
+    padding: 30px 25px;
+    border-radius: 15px;
+    border: 1px solid rgba(100, 255, 218, 0.2);
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.logiciels-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #64ffda, #1de9b6, #00bcd4);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.logiciels-section:hover::before {
+    transform: scaleX(1);
+}
+
+.logiciels-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border-color: rgba(100, 255, 218, 0.4);
+    background: rgba(26, 31, 54, 0.95);
+}
+
+.logiciels-section h2 {
+    color: #64ffda;
+    text-align: center;
+    font-size: 1.8em;
+    margin-bottom: 10px;
+    transition: color 0.3s ease;
+}
+
+.logiciels-section:hover h2 {
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
+}
+
+.logiciels-section p {
+    color: #b8c5d1;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.1em;
+    transition: color 0.3s ease;
+}
+
+.logiciels-section:hover p {
+    color: #ffffff;
+}
+
+/* Grille des logiciels */
+.software-grid {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.software-important,
+.software-secondary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.software-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 15px;
+    background: rgba(15, 20, 25, 0.6);
+    border: 2px solid rgba(100, 255, 218, 0.2);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.software-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(100, 255, 218, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.software-item:hover::before {
+    left: 100%;
+}
+
+.software-item:hover {
+    transform: translateY(-5px) scale(1.05);
+    border-color: rgba(100, 255, 218, 0.5);
+    box-shadow: 0 15px 30px rgba(100, 255, 218, 0.2);
+    background: rgba(15, 20, 25, 0.8);
+}
+
+.software-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease;
+    filter: brightness(1.1);
+}
+
+.software-item:hover img {
+    transform: scale(1.1);
+    filter: brightness(1.3) drop-shadow(0 0 10px rgba(100, 255, 218, 0.3));
+}
+
+.software-item span {
+    font-size: 0.95em;
+    font-weight: 600;
+    color: #b8c5d1;
+    transition: color 0.3s ease;
+    text-align: center;
+}
+
+.software-item:hover span {
+    color: #64ffda;
+    text-shadow: 0 0 5px rgba(100, 255, 218, 0.5);
+}
+
+/* Bouton "Voir plus" */
+.show-more-container {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.show-more-btn {
+    background: linear-gradient(45deg, rgba(100, 255, 218, 0.1), rgba(29, 233, 182, 0.1));
+    border: 2px solid rgba(100, 255, 218, 0.3);
+    color: #64ffda;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.show-more-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(100, 255, 218, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.show-more-btn:hover::before {
+    left: 100%;
+}
+
+.show-more-btn:hover {
+    background: linear-gradient(45deg, rgba(100, 255, 218, 0.2), rgba(29, 233, 182, 0.2));
+    border-color: rgba(100, 255, 218, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(100, 255, 218, 0.2);
+}
+
+.show-more-btn.expanded {
+    background: linear-gradient(45deg, #64ffda, #1de9b6);
+    color: #0f1419;
+    border-color: #64ffda;
+}
+
+/* Animation pour l'apparition des logiciels secondaires */
+.software-secondary {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.5s ease;
+}
+
+.software-secondary.show {
+    opacity: 1;
+    max-height: 500px;
+    margin-bottom: 20px;
+}
+
+/* Responsive pour les logiciels */
+@media (max-width: 768px) {
+    .logiciels-section {
+        padding: 25px 20px;
+        margin: 20px 0;
+    }
+    
+    .software-important,
+    .software-secondary {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 15px;
+    }
+    
+    .software-item {
+        padding: 15px 10px;
+    }
+    
+    .software-item img {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 8px;
+    }
+    
+    .software-item span {
+        font-size: 0.85em;
+    }
+    
+    .show-more-btn {
+        padding: 10px 25px;
+        font-size: 0.95em;
+    }
+}
+
+@media (max-width: 480px) {
+    .logiciels-section {
+        padding: 20px 15px;
+    }
+    
+    .software-important,
+    .software-secondary {
+        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+        gap: 12px;
+    }
+    
+    .software-item {
+        padding: 12px 8px;
+    }
+    
+    .software-item img {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .software-item span {
+        font-size: 0.8em;
+    }
+}
+
+/* Animation d'apparition pour les éléments de logiciels */
+@keyframes softwareAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.software-secondary.show .software-item {
+    animation: softwareAppear 0.4s ease forwards;
+}
+
+.software-secondary.show .software-item:nth-child(1) { animation-delay: 0.1s; }
+.software-secondary.show .software-item:nth-child(2) { animation-delay: 0.2s; }
+.software-secondary.show .software-item:nth-child(3) { animation-delay: 0.3s; }
+.software-secondary.show .software-item:nth-child(4) { animation-delay: 0.4s; }
+.software-secondary.show .software-item:nth-child(5) { animation-delay: 0.5s; }
+
 /* Boutons de traduction en haut à droite */
 .header-content {
     position: relative;
