@@ -2753,140 +2753,218 @@ body.mobile-test-mode .projects-gallery {
 }
 
 /* ========================================
-   PAGE CONDITIONS GÉNÉRALES
+   PAGE CONDITIONS GÉNÉRALES - DESIGN SOBRE
 ======================================== */
 
+/* Style gouvernemental sobre */
+.conditions-page {
+    background: #ffffff;
+    color: #333333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+}
+
+.conditions-page .container {
+    background: #ffffff;
+}
+
+.conditions-page header {
+    background: #1e1e2e;
+    border-bottom: 3px solid #0066cc;
+    margin-bottom: 0;
+}
+
+.conditions-page h1 {
+    color: #ffffff;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.conditions-page nav a {
+    color: #ffffff;
+    background: #0066cc;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.conditions-page nav a:hover {
+    background: #0052a3;
+}
+
 .conditions-section {
-    max-width: 1000px;
+    max-width: 900px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 40px 20px;
+    background: #ffffff;
 }
 
 .conditions-content {
-    background: rgba(15, 20, 25, 0.9);
-    border: 2px solid rgba(100, 255, 218, 0.3);
-    border-radius: 20px;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
     padding: 40px;
-    margin: 20px 0;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    margin: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .conditions-intro h2 {
-    color: #64ffda;
-    font-size: 2rem;
+    color: #1e1e2e;
+    font-size: 2.2rem;
+    font-weight: 700;
     margin-bottom: 10px;
     text-align: center;
+    border-bottom: 3px solid #0066cc;
+    padding-bottom: 15px;
 }
 
 .last-updated {
     text-align: center;
-    color: #b8c5d1;
+    color: #666666;
     font-style: italic;
-    margin-bottom: 30px;
-    padding: 10px;
-    background: rgba(100, 255, 218, 0.1);
-    border-radius: 10px;
+    font-size: 0.95rem;
+    margin-bottom: 40px;
+    padding: 12px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
 }
 
 .condition-item {
-    margin: 30px 0;
+    margin: 35px 0;
     padding: 25px;
-    background: rgba(255, 255, 255, 0.02);
-    border-left: 4px solid #64ffda;
-    border-radius: 10px;
-    transition: all 0.3s ease;
+    background: #ffffff;
+    border-left: 4px solid #0066cc;
+    border-radius: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .condition-item:hover {
-    background: rgba(100, 255, 218, 0.05);
-    transform: translateX(5px);
+    background: #f8f9fa;
+    transform: none;
 }
 
 .condition-item h3 {
-    color: #64ffda;
-    font-size: 1.3rem;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    color: #1e1e2e;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: block;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 10px;
 }
 
 .condition-item p {
-    color: #b8c5d1;
+    color: #333333;
     line-height: 1.7;
-    margin-bottom: 15px;
+    margin-bottom: 16px;
+    text-align: justify;
 }
 
 .condition-item ul {
-    color: #b8c5d1;
-    padding-left: 20px;
-    margin: 15px 0;
+    color: #333333;
+    padding-left: 25px;
+    margin: 20px 0;
 }
 
 .condition-item li {
-    margin: 8px 0;
+    margin: 10px 0;
     line-height: 1.6;
 }
 
 .condition-item strong {
-    color: #64ffda;
-    font-weight: bold;
+    color: #1e1e2e;
+    font-weight: 600;
 }
 
 .condition-item a {
-    color: #64ffda;
-    text-decoration: none;
-    border-bottom: 1px dotted #64ffda;
-    transition: all 0.3s ease;
+    color: #0066cc;
+    text-decoration: underline;
+    transition: color 0.2s ease;
 }
 
 .condition-item a:hover {
-    color: #ffffff;
-    border-bottom-color: #ffffff;
-    text-shadow: 0 0 5px rgba(100, 255, 218, 0.5);
+    color: #0052a3;
+    text-decoration: underline;
 }
 
 .contact-urgence {
-    background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 159, 67, 0.1));
-    border: 2px solid rgba(255, 107, 107, 0.3);
-    border-radius: 15px;
-    padding: 20px;
-    margin: 30px 0;
+    background: #fff3cd;
+    border: 2px solid #ffc107;
+    border-radius: 6px;
+    padding: 25px;
+    margin: 40px 0;
     text-align: center;
 }
 
 .contact-urgence h3 {
-    color: #ff6b6b;
+    color: #856404;
     margin-bottom: 15px;
+    font-weight: 600;
+    border: none;
+    padding: 0;
 }
 
 .contact-urgence p {
-    color: #ffffff;
+    color: #856404;
 }
 
 .contact-urgence a {
-    color: #ff6b6b;
-    font-weight: bold;
+    color: #0066cc;
+    font-weight: 600;
 }
 
 .conditions-footer {
     text-align: center;
-    margin-top: 40px;
+    margin-top: 50px;
     padding: 30px;
-    background: linear-gradient(135deg, rgba(100, 255, 218, 0.1), rgba(29, 233, 182, 0.1));
-    border-radius: 15px;
-    border: 2px solid rgba(100, 255, 218, 0.3);
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
 }
 
 .conditions-footer p {
-    color: #64ffda;
-    font-weight: bold;
+    color: #1e1e2e;
+    font-weight: 600;
     margin-bottom: 20px;
     font-size: 1.1rem;
 }
 
-/* Responsive pour les conditions */
+.conditions-page .btn {
+    background: #0066cc;
+    color: #ffffff;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    display: inline-block;
+    transition: background 0.2s ease;
+}
+
+.conditions-page .btn:hover {
+    background: #0052a3;
+    color: #ffffff;
+}
+
+.conditions-page .footer {
+    background: #1e1e2e;
+    color: #ffffff;
+    border-top: 3px solid #0066cc;
+}
+
+.conditions-page .footer-content {
+    justify-content: center;
+}
+
+.conditions-page .footer-link {
+    color: #ffffff;
+    border-color: #ffffff;
+}
+
+/* Responsive pour design sobre */
 @media (max-width: 768px) {
     .conditions-content {
         padding: 25px 20px;
@@ -2898,17 +2976,15 @@ body.mobile-test-mode .projects-gallery {
     }
     
     .condition-item h3 {
-        font-size: 1.1rem;
-    }
-    
-    .footer-content {
-        flex-direction: column;
-        text-align: center;
-        gap: 10px;
+        font-size: 1.2rem;
     }
     
     .conditions-intro h2 {
-        font-size: 1.5rem;
+        font-size: 1.8rem;
+    }
+    
+    .conditions-section {
+        padding: 20px 15px;
     }
 }
 
