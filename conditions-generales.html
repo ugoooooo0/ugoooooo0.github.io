@@ -1,505 +1,176 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚀 Galerie d'Ugo - Mes créations interdimensionnelles</title>
+    <title>📋 Conditions Générales d'Utilisation - Ugo Ravard</title>
     <link rel="icon" type="image/png" href="https://i.imgur.com/GqiNMlW.png">
     <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="portfolio-page">
+<body class="conditions-page">
+    <!-- Pas de particules pour un design sobre -->
+    
     <div class="container">
         <header>
             <div class="header-content">
-                <a href="index.html" class="back-home-btn" data-translate="ACCUEIL">
-                    ACCUEIL
-                </a>
-                <h1 data-translate="Ugo RAVARD Artist 3D / 2D">Ugo RAVARD Artist 3D / 2D</h1>
+                <h1>CONDITIONS GÉNÉRALES D'UTILISATION</h1>
             </div>
             <nav>
                 <ul>
-                    <li><a href="#" class="filter-btn active" data-filter="all" data-translate="ALL">ALL</a></li>
-                    <li><a href="#" class="filter-btn" data-filter="1" data-translate="3D">3D</a></li>
-                    <li><a href="#" class="filter-btn" data-filter="2" data-translate="Tournage/Montage">Tournage/Montage</a></li>
+                    <li><a href="index.html" class="filter-btn">← RETOUR ACCUEIL</a></li>
+                    <li><button id="themeToggle" class="filter-btn">🌙 Sombre</button></li>
                 </ul>
             </nav>
         </header>
-
+        
         <main>
-            <!-- Bandeau Carrousel - Meilleurs Projets -->
-            <section class="featured-projects-section">
-                <div class="featured-projects-container">
-                    <h2 class="featured-title" data-translate="Mes Meilleurs Projets">Mes Meilleurs Projets</h2>
-                    
-                    <div class="carousel-container">
-                        <button class="carousel-btn prev" id="carousel-prev">‹</button>
-                        
-                        <div class="carousel-wrapper">
-                            <div class="carousel-track" id="carousel-track">
-                                <!-- 1. Le Colossus -->
-                                <div class="carousel-item" data-project-order="27">
-                                    <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/images/2D%20-%203D/space%20station.png" alt="Le Colossus">
-                                    <div class="carousel-overlay">
-                                        <h3>Le Colossus</h3>
-                                    </div>
-                                </div>
-                                
-                                <!-- 2. Ville avec animation de voiture -->
-                                <div class="carousel-item" data-project-order="3">
-                                    <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/images/2D%20-%203D/city%20blender.png" alt="Ville 3D">
-                                    <div class="carousel-overlay">
-                                        <h3>Ville 3D</h3>
-                                    </div>
-                                </div>
-                                
-                                <!-- 3. Projet Baccalauréat avec téléphone -->
-                                <div class="carousel-item" data-project-order="10">
-                                    <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/images/2D%20-%203D/shoot%201%20tel.png" alt="Projet Baccalauréat">
-                                    <div class="carousel-overlay">
-                                        <h3>Projet Baccalauréat</h3>
-                                    </div>
-                                </div>
-                                
-                                <!-- 4. Projet EDF -->
-                                <div class="carousel-item" data-project-order="20">
-                                    <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/images/Tournages%20-%20Images/" alt="Projet EDF">
-                                    <div class="carousel-overlay">
-                                        <h3>Projet EDF</h3>
-                                    </div>
-                                </div>
-                                
-                                <!-- 5. La Vie du Chef -->
-                                <div class="carousel-item" data-project-order="32">
-                                    <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/images/Tournages%20-%20Images/" alt="La Vie du Chef">
-                                    <div class="carousel-overlay">
-                                        <h3>La Vie du Chef</h3>
-                                    </div>
-                                </div>
-                            </div>
+            <section class="section conditions-section">
+                <div class="conditions-content">
+                    <div class="conditions-intro">
+                        <h2>Conditions Générales d'Utilisation du Portfolio</h2>
+                        <p class="last-updated">Dernière mise à jour : 9 octobre 2024</p>
+                    </div>
+
+                    <div class="conditions-main">
+                        <article class="condition-item">
+                            <h3>1. Propriété Intellectuelle et Droits d'Auteur</h3>
+                            <p>Tous les contenus présents sur ce portfolio, incluant mais ne se limitant pas aux :</p>
+                            <ul>
+                                <li>Créations 3D, modélisations et animations</li>
+                                <li>Images, photographies et rendus</li>
+                                <li>Vidéos, montages et effets visuels</li>
+                                <li>Projets personnels et travaux créatifs</li>
+                                <li>Textes, descriptions et présentation</li>
+                                <li>Code source et développements techniques</li>
+                            </ul>
+                            <p><strong>Sont la propriété exclusive d'Ugo RAVARD</strong> et sont protégés par les dispositions du Code de la propriété intellectuelle française (articles L.111-1 et suivants) ainsi que par les conventions internationales relatives aux droits d'auteur.</p>
+                        </article>
+
+                        <article class="condition-item">
+                            <h3>2. Interdictions Formelles</h3>
+                            <p>Il est strictement interdit, sans autorisation écrite préalable de l'auteur :</p>
+                            <ul>
+                                <li><strong>Reproduction :</strong> Toute copie, duplication ou reproduction des œuvres</li>
+                                <li><strong>Distribution :</strong> Diffusion, partage ou mise à disposition du public</li>
+                                <li><strong>Modification :</strong> Altération, transformation ou adaptation des créations</li>
+                                <li><strong>Utilisation commerciale :</strong> Exploitation à des fins lucratives</li>
+                                <li><strong>Représentation :</strong> Présentation publique ou diffusion sur d'autres supports</li>
+                                <li><strong>Extraction :</strong> Téléchargement ou sauvegarde des contenus multimédias</li>
+                            </ul>
+                            <p>Ces interdictions s'appliquent à tous supports et par tous moyens, numériques ou physiques.</p>
+                        </article>
+
+                        <article class="condition-item">
+                            <h3>3. Utilisation Autorisée</h3>
+                            <p>L'accès à ce portfolio est autorisé uniquement pour :</p>
+                            <ul>
+                                <li>La consultation personnelle et privée des œuvres</li>
+                                <li>L'évaluation professionnelle dans le cadre de recrutement</li>
+                                <li>La découverte du travail artistique d'Ugo RAVARD</li>
+                                <li>Le partage du lien du portfolio (pas des contenus eux-mêmes)</li>
+                            </ul>
+                        </article>
+
+                        <article class="condition-item">
+                            <h3>4. Sanctions et Recours Légaux</h3>
+                            <p>Conformément aux articles L.335-2 et suivants du Code de la propriété intellectuelle, toute violation des présentes conditions constitue une contrefaçon passible :</p>
+                            <ul>
+                                <li>D'une amende pouvant aller jusqu'à 300 000 euros</li>
+                                <li>D'un emprisonnement de trois ans maximum</li>
+                                <li>De dommages et intérêts au profit de l'auteur</li>
+                                <li>De la saisie des objets contrefaisants</li>
+                            </ul>
+                            <p>Ugo RAVARD se réserve le droit d'engager toute action en justice nécessaire pour faire valoir ses droits.</p>
+                        </article>
+
+                        <article class="condition-item">
+                            <h3>5. Demandes d'Autorisation</h3>
+                            <p>Pour toute utilisation spécifique des œuvres présentées, veuillez prendre contact :</p>
+                            <ul>
+                                <li>Email : <a href="mailto:ugo.ravard47@gmail.com">ugo.ravard47@gmail.com</a></li>
+                                <li>LinkedIn : <a href="https://www.linkedin.com/in/ugo-ravard-42b408349" target="_blank">Profil LinkedIn d'Ugo RAVARD</a></li>
+                            </ul>
+                            <p>Toute autorisation sera accordée par écrit et pourra être soumise à conditions.</p>
+                        </article>
+
+                        <article class="condition-item">
+                            <h3>6. Protection des Données</h3>
+                            <p>Conformément au Règlement Général sur la Protection des Données (RGPD) et à la loi Informatique et Libertés :</p>
+                            <ul>
+                                <li>Aucune donnée personnelle n'est collectée automatiquement</li>
+                                <li>Les communications via le formulaire de contact sont traitées uniquement pour répondre aux demandes</li>
+                                <li>Aucune donnée n'est transmise à des tiers sans consentement</li>
+                                <li>Vous disposez d'un droit d'accès, de rectification et de suppression de vos données</li>
+                            </ul>
+                        </article>
+
+                        <article class="condition-item">
+                            <h3>7. Responsabilités et Limitation</h3>
+                            <p>Ce portfolio est fourni "en l'état". Ugo RAVARD :</p>
+                            <ul>
+                                <li>S'efforce de maintenir l'exactitude des informations présentées</li>
+                                <li>Ne garantit pas la disponibilité permanente du site</li>
+                                <li>N'est pas responsable des dommages liés à l'utilisation du site</li>
+                                <li>Se réserve le droit de modifier le contenu sans préavis</li>
+                            </ul>
+                        </article>
+
+                        <article class="condition-item">
+                            <h3>8. Droit Applicable et Juridiction</h3>
+                            <p>Les présentes conditions sont régies par le droit français. En cas de litige, et après tentative de résolution amiable, les tribunaux français seront seuls compétents.</p>
+                            <p>Conformément à l'article L.111-1 du Code de consommation, les consommateurs peuvent recourir à une médiation conventionnelle ou à tout autre mode alternatif de règlement des différends.</p>
+                        </article>
+
+                        <article class="condition-item">
+                            <h3>9. Évolution des Conditions</h3>
+                            <p>Ces conditions peuvent être mises à jour pour refléter les évolutions légales ou techniques. La date de dernière modification est indiquée en haut de cette page. L'utilisation continue du portfolio vaut acceptation des nouvelles conditions.</p>
+                        </article>
+
+                        <div class="contact-urgence">
+                            <h3>Signalement de Violation</h3>
+                            <p>Si vous constatez une utilisation non autorisée des œuvres d'Ugo RAVARD, merci de le signaler immédiatement à : <a href="mailto:ugo.ravard47@gmail.com">ugo.ravard47@gmail.com</a></p>
                         </div>
-                        
-                        <button class="carousel-btn next" id="carousel-next">›</button>
-                    </div>
-                    
-                    <!-- Indicateurs -->
-                    <div class="carousel-indicators" id="carousel-indicators">
-                        <button class="indicator active" data-slide="0"></button>
-                        <button class="indicator" data-slide="1"></button>
-                        <button class="indicator" data-slide="2"></button>
-                        <button class="indicator" data-slide="3"></button>
-                        <button class="indicator" data-slide="4"></button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Projects Grid -->
-            <section id="projets" class="projects-section">
-                <div class="projects-gallery">
-
-                    <!-- Projet 1 - Capture d'écran (sans sous-images) -->
-                    <div class="gallery-item large" data-category="1" data-order="1" data-has-video="non">
-                        <img src="https://i.imgur.com/rWLNaOi.jpeg" 
-                             alt="Capture d'écran 3D"
-                             data-description="Logiciel : Blender - Temps : ≃ 2h - Eoliennes au dessus des nuages">
                     </div>
 
-                    <div class="gallery-item medium" data-category="1" data-order="2" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/bYcyXZT.jpeg",
-                             "https://i.imgur.com/LMWlFZ1.jpeg"
-                         ]'>
-                        <img src="https://i.imgur.com/bYcyXZT.jpeg" 
-                             alt="Animation route et pluie"
-                             data-description="Logiciel : Blender - Temps : ≃ 10h - projet de ville futuriste">
+                    <div class="conditions-footer">
+                        <p><strong>En naviguant sur ce portfolio, vous reconnaissez avoir lu, compris et accepté l'ensemble de ces conditions générales d'utilisation.</strong></p>
+                        <a href="index.html" class="btn btn-primary">← Retour au Portfolio</a>
                     </div>
-
-                    <!-- Projet 5 - City avec galerie (CONTIENT UNE VIDÉO YOUTUBE) -->
-                    <div class="gallery-item small" data-category="1" data-order="3" data-has-video="oui"
-                         data-gallery='[
-                             "https://i.imgur.com/M526tSA.jpeg",
-                             "https://i.imgur.com/yZC28wu.png",
-                             "https://i.imgur.com/xVpZU7N.jpeg",
-                             "https://i.imgur.com/owVA5LF.png",
-                             "https://www.youtube.com/watch?v=BwSIBaaBu-8"
-                         ]'>
-                        <img src="https://i.imgur.com/M526tSA.jpeg" 
-                             alt="Ville 3D avec animation"
-                             data-description="Logiciel : Blender - Temps : ≃ 35h - Projet d'animation de voiture dans une ville 3D - Modélisation et animation avec vidéo complète">
-                    </div>
-
-                    <!-- Projet 6 - GIF Animation (sans sous-images) -->
-                    <div class="gallery-item small" data-category="1" data-order="4" data-has-video="non">
-                        <img src="https://i.imgur.com/LB4dDrC.gif" 
-                             alt="Animation 3D GIF"
-                             data-description="Logiciel : Blender - Temps : ≃ 5h - Animation 3D au format GIF - loop d'animation - Projet d'examin d'entrée dans ma liscence">
-                    </div>
-
-                    <!-- Projet 7 - Screenshot Gallery (sans sous-images) -->
-                    <div class="gallery-item medium" data-category="1" data-order="5" data-has-video="non">
-                        <img src="https://i.imgur.com/5Nrvako.jpeg" 
-                             alt="Screenshot Gallery"
-                             data-description="Logiciel : Blender - Temps : ≃ 8h - Model d'un astraunaute dans une nébuleuse volumétrique">
-                    </div>
-
-                    <!-- Projet 8 - Toon Scape (sans sous-images) -->
-                    <div class="gallery-item small" data-category="1" data-order="6" data-has-video="non">
-                        <img src="https://i.imgur.com/nYp46XK.png" 
-                             alt="Toon Scape"
-                             data-description="Logiciel : Blender - Temps : ≃ 6h - Paysage en style cartoon - ispiré des oevres Ghibli">
-                    </div>
-
-                    <!-- Projet 9 - Distrib Insta (sans sous-images) -->
-                    <div class="gallery-item small" data-category="1" data-order="7" data-has-video="non">
-                        <img src="https://i.imgur.com/IfFt83t.png" 
-                             alt="Projet cartoon Instagram"
-                             data-description="Logiciel : Photoshop - Temps : ≃ 4h - Design cartoon d'un distributeur">
-                    </div>
-
-                    <!-- Projet 10 - Animation Route avec galerie (1 sous-image) -->
-                    <div class="gallery-item medium" data-category="1" data-order="8" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/M385dqA.jpeg",
-                             "https://i.imgur.com/hm5f6K1.jpeg"
-                         ]'>
-                        <img src="https://i.imgur.com/M385dqA.jpeg" 
-                             alt="Route et pluie"
-                             data-description="Logiciel : Blender - Temps : ≃ 10h - Scène d'animation route sous la pluie - effets de particules, textures dynamiques et de l'éclairage atmosphérique">
-                    </div>
-
-                    <!-- Projet 11 - Fog and GTR (sans sous-images) -->
-                    <div class="gallery-item small" data-category="1" data-order="9" data-has-video="non">
-                        <img src="https://i.imgur.com/8bP2wNK.png" 
-                             alt="GTR dans le brouillard"
-                             data-description="Logiciel : Blender - Temps : ≃ 15h - Voiture GTR dans un environnement brumeux - Rendu photoréaliste avec effets de volumétrie">
-                    </div>
-
-                    <!-- Projet 12 - Batspace avec galerie (2 sous-images) -->
-                    <div class="gallery-item large" data-category="1" data-order="10" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/etJKXxT.jpeg",
-                             "https://i.imgur.com/Na8JoIe.jpeg",
-                             "https://i.imgur.com/jbFweKy.jpeg"
-                         ]'>
-                        <img src="https://i.imgur.com/etJKXxT.jpeg" 
-                             alt="Batspace - Véhicule spatial"
-                             data-description="Logiciel : Blender - Temps : ≃ 12h - ||The Batspace|| Véhicule spatial futuriste - Design conceptuel et modélisation">
-                    </div>
-
-                    <!-- Projet 13 - Correction -->
-                    <div class="gallery-item medium" data-category="1" data-order="11" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/An3GRse.png",
-                             "https://i.imgur.com/QLZEImJ.jpeg",
-                             "https://i.imgur.com/JQCLCv4.jpeg",
-                             "https://i.imgur.com/pcCXcri.png"
-                         ]'>
-                        <img src="https://i.imgur.com/An3GRse.png" 
-                             alt="Armure futuriste"
-                             data-description="Logiciel : Blender - Temps : ≃ 15h - Armure futuriste 3D - Modélisation et matériaux détaillée (projet pour un particulier sur Fiverr) ">
-                    </div>
-
-                    <!-- Projet 14 - Apple Vision Pro avec galerie (2 sous-images) -->
-                    <div class="gallery-item small" data-category="1" data-order="12" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/PFnuGee.jpeg",
-                             "https://i.imgur.com/QXoDWjd.jpeg",
-                             "https://i.imgur.com/qN0tLs8.jpeg"
-                         ]'>
-                        <img src="https://i.imgur.com/PFnuGee.jpeg" 
-                             alt="Apple Vision Pro 3D"
-                             data-description="Logiciel : Blender - Temps : ≃ 10h - Modélisation Apple Vision Pro - Reproduction fidèle du casque avec matériaux réalistes">
-                    </div>
-
-                    <!-- Projet 15 - Correction -->
-                    <div class="gallery-item medium" data-category="1" data-order="13" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/jzolHlt.jpeg",
-                             "https://i.imgur.com/MkvQGFh.png"
-                         ]'>
-                        <img src="https://i.imgur.com/jzolHlt.jpeg" 
-                             alt="Scène conceptuelle avec variations"
-                             data-description="Logiciel : Blender - Temps : ≃ 25h - Scène conceptuelle 3D - Base terestre Rendue sur Twinmotion">
-                    </div>
-
-                    <!-- Projet 17 - Motor Space avec galerie (4 sous-images) -->
-                    <div class="gallery-item large" data-category="1" data-order="14" data-has-video="non"
-                         data-gallery='[
-                            "https://i.imgur.com/JURiEbT.jpeg",
-                             "https://i.imgur.com/JoouOKq.png",
-                             "https://i.imgur.com/GDb3Gb7.png",
-                             "https://i.imgur.com/V93DInL.png",
-                             "https://i.imgur.com/gwwNqEg.png",
-                             "https://i.imgur.com/zTfQAkv.png"
-                         ]'>
-                        <img src="https://i.imgur.com/JURiEbT.jpeg" 
-                             alt="Moto spatiale futuriste"
-                             data-description="Logiciel : Blender - Temps : ≃ 10h - Moto spatiale futuriste - Concept design inspiré de la saga Star Wars">
-                    </div>
-
-                    <!-- Projet 18 - Correction -->
-                    <div class="gallery-item medium" data-category="1" data-order="15" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/AskS27f.jpeg",
-                             "https://i.imgur.com/MFObaDC.jpeg"
-                         ]'>
-                        <img src="https://i.imgur.com/AskS27f.jpeg" 
-                             alt="Retribution - Scène dramatique"
-                             data-description="Logiciel : Blender - Temps : ≃ 15h - ||Retribution|| - Reproduction du vaisseau mer du jeu Star Citizen à partir d'une image 2D">
-                    </div>
-
-                    <!-- Projet 19 - Sci-fi Scene avec galerie (2 sous-images) -->
-                    <div class="gallery-item small" data-category="1" data-order="16" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/izVTzPB.jpeg",
-                             "https://i.imgur.com/Q1sF3Hb.jpeg",
-                             "https://i.imgur.com/i3YzyvI.jpeg"
-                         ]'>
-                        <img src="https://i.imgur.com/izVTzPB.jpeg" 
-                             alt="Environnement sci-fi futuriste"
-                             data-description="Logiciel : Blender - Temps : ≃ 10h - Environnement sci-fi futuriste - Consept design d'architecture futuriste (Medelisation, shading, lightning, Compositing, Rendu)">
-                    </div>
-
-                    <!-- Projet 20 - Shoot Tel (sans sous-images) -->
-                    <div class="gallery-item small" data-category="1" data-order="17" data-has-video="non">
-                        <img src="https://i.imgur.com/c4EAy8n.png" 
-                             alt="Shoot photo téléphone stylisé"
-                             data-description="Logiciel : Blender - Temps : ≃ 5h - Mise en scène avec lighting studio et rendu">
-                    </div>
-
-                    <!-- Projet 22 - Space Station avec galerie (2 sous-images) -->
-                    <div class="gallery-item large" data-category="1" data-order="18" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/3Ruqxku.jpeg",
-                             "https://i.imgur.com/6iZj9wI.jpeg",
-                             "https://i.imgur.com/Jv4KLle.jpeg"
-                         ]'>
-                        <img src="https://i.imgur.com/3Ruqxku.jpeg" 
-                             alt="Station spatiale orbitale"
-                             data-description="Logiciel : Blender - Temps : ≃ 10h - Epave d'une station orbitale - Level design, composition, lightning et rendu photoréaliste">
-                    </div>
-
-                    <!-- Projet 23 - Correction -->
-                    <div class="gallery-item medium" data-category="1" data-order="19" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/K1iwNmq.jpeg",
-                             "https://i.imgur.com/i7mdDi4.png"
-                         ]'>
-                        <img src="https://i.imgur.com/K1iwNmq.jpeg"  
-                             alt="Terra - Planète conceptuelle"
-                             data-description="Logiciel : Blender - Temps : ≃ 5h - Terra - Conception de planète (matétériaux type nodals)">
-                    </div>
-
-                <div class="gallery-item medium" data-category="1" data-order="20" data-has-video="oui"
-                         data-gallery='[
-                             "https://i.imgur.com/oiVM13r.png",
-                             "https://www.youtube.com/watch?v=dkax0LbPZuI"
-                         ]'>
-                        <img src="https://i.imgur.com/oiVM13r.png" 
-                             alt="Projet Baccalauréat - Téléphone 3D"
-                             data-description="Logiciel : Blender - Temps : ≃ 35h - Projet Baccalauréat - Conception téléphone 3D avec animation et présentation vidéo complète">
-                    </div>
-
-                     <div class="gallery-item large" data-category="1" data-order="21" data-has-video="non">
-                        <img src="https://i.imgur.com/jyIU6PG.jpeg" 
-                             alt="Paysage cosmique avec trou noir"
-                             data-description="Logiciel : Blender - Temps : ≃ 5h - Paysage cosmique avec trou noir - Exploration des effets spatiaux et de la distorsion gravitationnelle">
-                    </div>
-
-                    <div class="gallery-item large" data-category="1" data-order="22" data-has-video="non">
-                        <img src="https://i.imgur.com/KF3wwYm.jpeg" 
-                             alt="Entraînement textures PBR"
-                             data-description="Logiciel : Blender - Temps : ≃ 6h - Entraînement textures PBR - Étude des matériaux et techniques de texturage photoréaliste">
-                    </div>
-                    
-                    <div class="gallery-item large" data-category="1" data-order="23" data-has-video="non">
-                        <img src="https://i.imgur.com/aS0VZJH.jpeg" 
-                             alt="Paysages marécageux"
-                             data-description="Logiciel : Blender - Temps : ≃ 10h - Environnements marécageux 3D">
-                    </div>
-
-                    <div class="gallery-item large" data-category="1" data-order="24" data-has-video="non">
-                        <img src="https://i.imgur.com/kdvNBHh.jpeg" 
-                             alt="Lune avec displacement mapping"
-                             data-description="Logiciel : Blender - Temps : ≃ 6h - Surface lunaire avec displacement mapping">
-                    </div>                    <div class="gallery-item large" data-category="1" data-order="25" data-has-video="non">
-                        <img src="https://i.imgur.com/ynaluMT.png" 
-                             alt="Scène d'expérimentation 3D"
-                             data-description="Logiciel : Blender - Temps : ≃ 4h - Scène d'expérimentation 3D - Tests de lighting et de composition">
-                    </div>
-
-                    <div class="gallery-item large" data-category="1" data-order="26" data-has-video="non">
-                        <img src="https://i.imgur.com/UCGzkfR.jpeg" 
-                             alt="Starship en vol dans les nuages"
-                             data-description="Logiciel : Blender - Temps : ≃ 6h - ||Starship|| - nuages volumétriques et atmosphère réaliste">
-                    </div>
-
-                    <div class="gallery-item large" data-category="1" data-order="27" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/7i4zVDY.jpeg",
-                             "https://i.imgur.com/HFJ4Oy3.png",
-                             "https://i.imgur.com/M7q9GN2.png",
-                             "https://i.imgur.com/IFNszcL.png",
-                             "https://i.imgur.com/5nvpECw.png",
-                             "https://i.imgur.com/yNVsPwr.jpeg",
-                             "https://i.imgur.com/c8okZ8T.jpeg",
-                             "https://i.imgur.com/5PjQr8Y.png",
-                             "https://i.imgur.com/L10rrjj.jpeg"
-                         ]'>
-                        <img src="https://i.imgur.com/7i4zVDY.jpeg" 
-                             alt="Le Colossus - Vaisseau spatial game-ready"
-                             data-description="Logiciel : Blender - Temps : ≃ 60h - ||Le Colossus|| - Vaisseau spatial game-ready complet (Exterieur + intérieur) avec textures, materials et process de création">
-                    </div>
-
-                  <div class="gallery-item medium" data-category="1" data-order="28" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/9veRK58.jpeg",
-                             "https://i.imgur.com/rIx4Wsw.jpeg"
-                         ]'>
-                        <img src="https://i.imgur.com/9veRK58.jpeg" 
-                             alt="Effets VFX cinématographiques"
-                             data-description="Logiciel : After Effects + Blender - Temps : ≃ 8h -Entrainement VFX / tracking">
-                    </div>
-
-                    <div class="gallery-item medium" data-category="1" data-order="29" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/kgWAZ3n.png",
-                             "https://i.imgur.com/XhqrpAH.jpeg"
-                         ]'>
-                        <img src="https://i.imgur.com/kgWAZ3n.png" 
-                             alt="Compositing VFX avancé"
-                             data-description="Logiciel : After Effects + Blender - Temps : ≃ 8h - Entrainement VFX / tracking + lightning">
-                    </div>
-                    
-                    <div class="gallery-item medium" data-category="1" data-order="30" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/l8XUTI1.png",
-                             "https://i.imgur.com/WCtLyf8.png",
-                             "https://i.imgur.com/APd87TK.png"
-                         ]'>
-                        <img src="https://i.imgur.com/l8XUTI1.png" 
-                             alt="Level design architectural"
-                             data-description="Logiciel : Blender - Temps : ≃ 20h - Level design architectural - Conception d'environnements sur Gaea, modélisation sur Blender et rendu sur Unreal Engine 5">
-                    </div>
-
-                    <div class="gallery-item large" data-category="1" data-order="31" data-has-video="non">
-                        <img src="https://i.imgur.com/t8Y441L.jpeg" 
-                             alt="Paysage photoréaliste"
-                             data-description="Logiciel : Blender - Temps : ≃ 15h - Paysage photoréaliste - Environnement naturel + Entrainemet de matériaux proceduraux">
-                    </div>
-
-                   <div class="gallery-item medium" data-category="1" data-order="32" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/gxCcinm.png",
-                             "https://i.imgur.com/bVVW1vk.jpeg"
-                         ]'>
-                        <img src="https://i.imgur.com/gxCcinm.png" 
-                             alt="Machines industrielles imprimables 3D"
-                             data-description="Logiciel : Blender - Temps : ≃ 50h - Machines industrielles - Modèles 3D techniques ispirés du jeu Satisfactory - pour un particulier sur Fiverr">
-                    </div>
-
-                    <div class="gallery-item medium" data-category="2" data-order="33" data-has-video="non"
-                         data-gallery='[
-                             "https://i.imgur.com/tvdD2dR.png",
-                             "https://i.imgur.com/JQn1Zpc.png",
-                             "https://i.imgur.com/6Pq71c5.jpeg",
-                             "https://i.imgur.com/m9k6Tso.png"
-                         ]'>
-                        <img src="https://i.imgur.com/tvdD2dR.png" 
-                             alt="Projet EDF - Tournage professionnel"
-                             data-description="Logiciel : Final Cut - Temps : 6 Semaines - Projet EDF - Multiples tournage Pour EDF sud ouest (tournages sur Bordeaux, Toulouse, Anglet)">
-                    </div>
-
-
-                   <div class="gallery-item medium" data-category="2" data-order="34" data-has-video="oui"
-                         data-gallery='[
-                             "https://i.imgur.com/0T3tOw6.png",
-                             "https://www.youtube.com/watch?v=kCo_sF-JbVk"
-                         ]'>
-                        <img src="https://i.imgur.com/0T3tOw6.png" 
-                             alt="Electromontage Elec - Vidéo corporate"
-                             data-description="Logiciel : Final Cut Pro + After Effects - Temps : ≃ 24h - Electromontage Elec - Tournages, post producion et VFX">
-                    </div>
-
-                    <div class="gallery-item medium" data-category="2" data-order="35" data-has-video="oui"
-                         data-gallery='[
-                             "https://i.imgur.com/YfKKP0u.png",
-                             "https://www.youtube.com/@LavieDuchef/videos"
-                         ]'>
-                        <img src="https://i.imgur.com/YfKKP0u.png" 
-                             alt="La Vie Du Chef - Chaîne YouTube"
-                             data-description="Logiciel : Final cut pro + After Effects - Temps : ≃ 50h - La Vie Du Chef - Tournages et montages pour l'émission YouTube ||La vie du chef||">
-                    </div>
-
-
-                </div>
-            </section>
-
-            <!-- Section Contact -->
-            <section id="contact" class="section contact-section">
-                <h2 data-translate="CONTACT">CONTACT</h2>
-                <div class="contact-info">
-                    <p>
-                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2ZmMDAwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIzLjQ5OCA2LjE4NmMtLjI4NS0xLjA3Ni0xLjEyNS0xLjkyMy0yLjE5OC0yLjIwN0MxOS40MyAzLjU0IDEyIDMuNTQgMTIgMy41NHMtNy40MyAwLTkuMyAuNDM5Yy0xLjA3My4yODQtMS45MTMgMS4xMzEtMi4xOTggMi4yMDdDMCA4LjA3NCAwIDEyIDAgMTJzMCAzLjkyNi40NTggNS44MTRjLjI4NSAxLjA3NiAxLjEyNSAxLjkyMyAyLjE5OCAyLjIwN0M0LjU3IDIwLjQ2IDEyIDIwLjQ2IDEyIDIwLjQ2czcuNDMgMCA5LjMtLjQzOWMxLjA3My0uMjg0IDEuOTEzLTEuMTMxIDIuMTk4LTIuMjA3QzI0IDE1LjkyNiAyNCAxMiAyNCAxMnMwLTMuOTI2LS41MDItNS44MTRaIi8+CjxwYXRoIGQ9Im05LjU0NSAxNS41NjggNC43MjgtMi41NjgtNC43MjgtMi41Njh2NS4xMzZaIiBmaWxsPSIjZmZmZmZmIi8+Cjwvc3ZnPgo=" 
-                             alt="YouTube" class="social-icon">
-                        <a href="https://www.youtube.com/@Ugoravard" target="_blank">YouTube</a>
-                    </p>
-                    <p>
-                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwNzdiNSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwLjQ0NyAyMC40NTJIMTYuODkzVjE0Ljg4M2MwLTEuMzI4LS4wMjctMy4wMzctMS44NTItMy4wMzctMS44NTMgMC0yLjEzNiAxLjQ0NS0yLjEzNiAyLjkzOXY1LjY2N0g5LjM1MVY5aDMuNDE0djEuNTYxaC4wNDdjLjQ3My0uODk2IDEuNjM3LTEuODQgMy4zNy0xLjg0IDMuNjAxIDAgNC4yNjcgMi4zNyA0LjI2NyA1LjQ1NXY2Ljc3NnpNNS4zMzcgNy40MzNhMi4wNjIgMi4wNjIgMCAxIDEtLjAwMS00LjEyNSAyLjA2MyAyLjA2MyAwIDAgMSAuMDAxIDQuMTI1ek0zLjU1OSAyMC40NTJINC4xMTRWOUgzLjU1OXYxMS40NTJaTTIyLjIyNSAwSDEuNzcxQy43OTIgMCAwIC43NzQgMCAxLjcyOXYyMC41NDJDMCAyMy4yMjcuNzkyIDI0IDEuNzcxIDI0aDIwLjQ1NDJDI4MjMuMjA4IDI0IDI0IDIzLjIyNyAyNCAyMi4yNzFWMS43MjlDMjQgLjc3NCAyMy4yMDggMCAyMi4yMjUgMHoiLz4KPC9zdmc+Cg==" 
-                             alt="LinkedIn" class="social-icon">
-                        <a href="https://www.linkedin.com/in/ugo-ravard-42b408349" target="_blank">LinkedIn</a>
-                    </p>
-                    <p>
-                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzMzMzMzMyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIC4yOTdjLTYuNjMgMC0xMiA1LjM3My0xMiAxMiAwIDUuMzAzIDMuNDM4IDkuOCA4LjIwNSAxMS4zODcuNi4xMTMuODItLjI1OC44Mi0uNTc3IDAtLjI4NS0uMDEtMS4wNC0uMDE1LTIuMDQtMy4zMzguNzI0LTQuMDQyLTEuNjEtNC4wNDItMS42MS0uNTQ2LTEuMzg3LTEuMzMzLTEuNzU2LTEuMzMzLTEuNzU2LTEuMDg5LS43NDQuMDgzLS43MjkuMDgzLS43MjkgMS4yMDUuMDg0IDEuODM5IDEuMjM3IDEuODM5IDEuMjM3IDEuMDcgMS44MzQgMi44MDcgMS4zMDQgMy40OTIuOTk3LjEwNy0uNzc1LjQxOC0xLjMwNS43NjItMS42MDQtMi42NjUtLjMwNS01LjQ2Ny0xLjMzNC01LjQ2Ny01LjkzMSAwLTEuMzExLjQ2OS0yLjM4MSAxLjIzNi0zLjIyMS0uMTI0LS4zMDMtLjUzNS0xLjUyNC4xMTctMy4xNzYgMCAwIDEuMDA4LS4zMjIgMy4zIDEuMjMuOTU3LS4yNjYgMS45ODMtLjM5OSAzLjAwMy0uNDA0IDEuMDIuMDA1IDIuMDQ3LjEzOCAzLjAwNi40MDQgMi4yOTEtMS41NTIgMy4yOTctMS4yMyAzLjI5Ny0xLjIzLjY1MyAxLjY1My4yNDIgMi44NzQuMTE4IDMuMTc2Ljc3LjA0IDEuMjM1IDEuOTExIDEuMjM1IDMuMjIxIDAgNC42MDktMi44MDcgNS42MjQtNS40NzkgNS45MjEuNDMuMzcyLjgyMyAxLjEwMi44MjMgMi4yMjJ2My4yOTNjMCAuMzE5LjIxNi42OTQuODI1LjU3NkMyMC41NjUgMjIuMDkyIDI0IDE3LjU5MiAyNCAxMi4yOTdjMC02LjYyNy01LjM3My0xMi0xMi0xMiIvPgo8L3N2Zz4K" 
-                             alt="GitHub" class="social-icon">
-                        <a href="https://github.com/ugoooooo0" target="_blank">GitHub</a>
-                    </p>
-                </div>
-
-                <!-- Formulaire de contact -->
-                <div class="contact-form-container">
-                    <h3 data-translate="Envoyez-moi un message">Envoyez-moi un message</h3>
-                    <form id="contact-form" class="contact-form">
-                        <div class="form-group">
-                            <input type="text" id="name" name="name" placeholder="Votre nom" data-translate="Votre nom" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" id="email" name="email" placeholder="Votre email" data-translate="Votre email" required>
-                        </div>
-                        <div class="form-group">
-                            <textarea id="message" name="message" placeholder="Votre message..." data-translate="Votre message..." rows="5" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary" data-translate="📩 Envoyer le message">
-                            📩 Envoyer le message
-                        </button>
-                    </form>
                 </div>
             </section>
         </main>
-    </div>
-
-    <!-- Lightbox Modal améliorée -->
-    <div id="lightbox" class="lightbox">
-        <div class="lightbox-content">
-            <span class="lightbox-close">&times;</span>
-            <div class="lightbox-navigation">
-                <button class="lightbox-prev">‹</button>
-                <button class="lightbox-next">›</button>
+        
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2024 Ugo Ravard - Tous droits réservés</p>
             </div>
-            <div class="lightbox-image-container">
-                <img id="lightbox-image" src="" alt="">
-            </div>
-            <div id="lightbox-description" class="lightbox-description"></div>
-            <div class="lightbox-counter">
-                <span id="current-image">1</span> / <span id="total-images">1</span>
-            </div>
-        </div>
+        </footer>
     </div>
 
     <script src="js/translations.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/mobile-test.js"></script>
+    <script>
+        // Gestion du thème clair/sombre
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // Charger le thème sauvegardé
+        const savedTheme = localStorage.getItem('conditions-theme') || 'light';
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-theme');
+            themeToggle.textContent = '☀️ Clair';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-theme');
+            
+            if (body.classList.contains('dark-theme')) {
+                themeToggle.textContent = '☀️ Clair';
+                localStorage.setItem('conditions-theme', 'dark');
+            } else {
+                themeToggle.textContent = '🌙 Sombre';
+                localStorage.setItem('conditions-theme', 'light');
+            }
+        });
+    </script>
 </body>
 </html>
-
-
