@@ -584,9 +584,34 @@ nav a:hover {
     overflow: hidden;
 }
 
+.btn.btn-primary {
+    overflow: visible;
+}
+
 .btn-primary {
     background: linear-gradient(45deg, #64ffda, #1de9b6);
     color: #0f1419;
+    position: relative;
+    z-index: 1;
+    overflow: visible !important;
+}
+
+.btn-primary::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    background: linear-gradient(45deg, 
+        #ff0040, #ff8c00, #ffff00, #40ff00, 
+        #00ffff, #0080ff, #8000ff, #ff0040);
+    background-size: 400% 400%;
+    border-radius: 12px;
+    z-index: -1;
+    animation: rgb-glow 2s linear infinite;
+    opacity: 0.9;
+    pointer-events: none;
 }
 
 .btn-secondary {
@@ -3082,6 +3107,19 @@ body.mobile-test-mode .projects-gallery {
     background: #64ffda;
     color: #0f1419;
     border-color: #64ffda;
+}
+
+/* Animation RGB pour le bouton portfolio */
+@keyframes rgb-glow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 
