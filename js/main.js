@@ -8,9 +8,6 @@ let isLightboxOpen = false;
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Initialisation...');
     
-    // Appliquer l'effet RGB au bouton portfolio
-    initRGBPortfolioButton();
-    
     // Gestion du formulaire de contact
     initContactForm();
     
@@ -1182,57 +1179,6 @@ function initPreviewTooltips() {
                 }
             }
         }
-    });
-}
-
-// Fonction pour appliquer l'effet RGB au bouton portfolio
-function initRGBPortfolioButton() {
-    // Rechercher tous les boutons qui contiennent "VOIR MON PORTFOLIO"
-    const portfolioButtons = document.querySelectorAll('a, button, .btn');
-    
-    portfolioButtons.forEach(button => {
-        const text = button.textContent || button.innerText || '';
-        const dataTranslate = button.getAttribute('data-translate') || '';
-        
-        // Si le bouton contient "VOIR MON PORTFOLIO" ou "VIEW MY PORTFOLIO"
-        if (text.includes('🎨 VOIR MON PORTFOLIO') || 
-            text.includes('🎨 VIEW MY PORTFOLIO') ||
-            dataTranslate.includes('VOIR MON PORTFOLIO') ||
-            dataTranslate.includes('VIEW MY PORTFOLIO')) {
-            
-            // Ajouter la classe RGB
-            button.classList.add('rgb-btn');
-            console.log('Effet RGB appliqué au bouton portfolio:', button);
-        }
-    });
-    
-    // Observer les changements de DOM pour les boutons ajoutés dynamiquement
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            mutation.addedNodes.forEach(function(node) {
-                if (node.nodeType === 1) { // Element node
-                    const buttons = node.querySelectorAll ? node.querySelectorAll('a, button, .btn') : [];
-                    buttons.forEach(button => {
-                        const text = button.textContent || button.innerText || '';
-                        const dataTranslate = button.getAttribute('data-translate') || '';
-                        
-                        if (text.includes('🎨 VOIR MON PORTFOLIO') || 
-                            text.includes('🎨 VIEW MY PORTFOLIO') ||
-                            dataTranslate.includes('VOIR MON PORTFOLIO') ||
-                            dataTranslate.includes('VIEW MY PORTFOLIO')) {
-                            
-                            button.classList.add('rgb-btn');
-                            console.log('Effet RGB appliqué dynamiquement au bouton portfolio:', button);
-                        }
-                    });
-                }
-            });
-        });
-    });
-    
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
     });
 }
 
