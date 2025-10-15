@@ -595,20 +595,12 @@ nav a:hover {
 a[data-translate*="VOIR MON PORTFOLIO"],
 .btn[data-translate*="VOIR MON PORTFOLIO"] {
     position: relative;
-    background: linear-gradient(270deg, 
-        #ff0000, #ff7f00, #ffff00, #00ff00, 
-        #0000ff, #4b0082, #9400d3, #ff0000);
-    background-size: 400% 100%;
-    animation: rgb-shift 2s linear infinite;
-    color: #ffffff !important;
+    background: linear-gradient(45deg, #64ffda, #1de9b6) !important;
+    color: #0f1419 !important;
     font-weight: bold;
-    text-shadow: 0 0 10px rgba(0,0,0,0.8);
     border: none;
-    box-shadow: 
-        0 0 20px rgba(255, 255, 255, 0.3),
-        0 0 40px rgba(255, 0, 255, 0.2),
-        0 0 60px rgba(0, 255, 255, 0.2);
     overflow: hidden;
+    z-index: 1;
 }
 
 .portfolio-btn::before,
@@ -617,18 +609,19 @@ a[data-translate*="VOIR MON PORTFOLIO"]::before,
 .btn[data-translate*="VOIR MON PORTFOLIO"]::before {
     content: '';
     position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
     background: linear-gradient(270deg, 
         #ff0000, #ff7f00, #ffff00, #00ff00, 
         #0000ff, #4b0082, #9400d3, #ff0000);
     background-size: 400% 100%;
     animation: rgb-shift 2s linear infinite;
-    border-radius: 10px;
+    border-radius: 12px;
     z-index: -1;
-    filter: blur(8px);
+    filter: blur(12px);
+    opacity: 0.8;
 }
 
 .portfolio-btn:hover,
@@ -636,11 +629,16 @@ a[data-translate*="VOIR MON PORTFOLIO"]::before,
 a[data-translate*="VOIR MON PORTFOLIO"]:hover,
 .btn[data-translate*="VOIR MON PORTFOLIO"]:hover {
     transform: scale(1.05) translateY(-2px);
-    box-shadow: 
-        0 0 30px rgba(255, 255, 255, 0.5),
-        0 0 60px rgba(255, 0, 255, 0.4),
-        0 0 90px rgba(0, 255, 255, 0.4);
-    animation: rgb-shift 1.5s linear infinite, pulse-rgb 0.5s ease-in-out infinite alternate;
+    background: linear-gradient(45deg, #4db6cd, #17a2b8) !important;
+}
+
+.portfolio-btn:hover::before,
+.rgb-btn:hover::before,
+a[data-translate*="VOIR MON PORTFOLIO"]:hover::before,
+.btn[data-translate*="VOIR MON PORTFOLIO"]:hover::before {
+    animation: rgb-shift 1.2s linear infinite;
+    filter: blur(15px);
+    opacity: 1;
 }
 
 @keyframes rgb-shift {
@@ -703,13 +701,7 @@ a[data-translate*="VOIR MON PORTFOLIO"]:hover,
     }
 }
 
-/* Version améliorée du bouton portfolio avec effet continu */
-.portfolio-btn,
-.rgb-btn,
-a[data-translate*="VOIR MON PORTFOLIO"],
-.btn[data-translate*="VOIR MON PORTFOLIO"] {
-    animation: rgb-shift 2s linear infinite, rgb-glow 3s ease-in-out infinite;
-}
+/* Suppression des animations sur le bouton lui-même - seulement sur la lueur */
 
 .btn-secondary {
     background: linear-gradient(45deg, #667eea, #764ba2);
