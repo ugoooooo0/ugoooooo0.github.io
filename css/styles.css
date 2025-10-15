@@ -589,6 +589,24 @@ nav a:hover {
     color: #0f1419;
 }
 
+/* Classe spécifique pour le bouton portfolio avec contour RGB */
+.btn-portfolio {
+    background: linear-gradient(45deg, #64ffda, #1de9b6);
+    color: #0f1419;
+    border: 4px solid;
+    border-image: linear-gradient(45deg, #ff0080, #00ff80, #8000ff, #ff0080) 1;
+    border-radius: 15px;
+    animation: rgb-border 3s linear infinite;
+}
+
+@keyframes rgb-border {
+    0% { border-image: linear-gradient(45deg, #ff0080, #00ff80, #8000ff, #ff0080) 1; }
+    25% { border-image: linear-gradient(45deg, #00ff80, #8000ff, #ff8000, #00ff80) 1; }
+    50% { border-image: linear-gradient(45deg, #8000ff, #ff8000, #0080ff, #8000ff) 1; }
+    75% { border-image: linear-gradient(45deg, #ff8000, #0080ff, #ff0080, #ff8000) 1; }
+    100% { border-image: linear-gradient(45deg, #ff0080, #00ff80, #8000ff, #ff0080) 1; }
+}
+
 .btn-secondary {
     background: linear-gradient(45deg, #667eea, #764ba2);
     color: #ffffff;
