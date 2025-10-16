@@ -764,6 +764,9 @@ nav a:hover {
     /* La largeur sera calculée par JavaScript */
     box-sizing: border-box; /* Important pour les calculs précis */
     max-width: 100vw; /* Éviter le débordement */
+    /* Amélioration pour éviter les bugs d'encadrement */
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
 }
 
 .gallery-item img {
@@ -776,6 +779,10 @@ nav a:hover {
     border-radius: clamp(6px, 1.5vw, 8px); /* Arrondir les coins de l'image */
     min-height: clamp(100px, 20vw, 150px); /* Hauteur minimale adaptative */
     max-height: clamp(300px, 60vw, 500px); /* Hauteur maximale adaptative */
+    /* Correction des bugs de format */
+    backface-visibility: hidden;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: optimize-contrast;
 }
 
 /* Gestion spéciale pour les images très larges (panoramiques) */
@@ -783,6 +790,35 @@ nav a:hover {
 .gallery-item img[style*="aspect-ratio"] {
     max-height: 300px; /* Limiter la hauteur des images panoramiques */
     object-fit: cover;
+    aspect-ratio: auto; /* Forcer le ratio automatique */
+}
+
+/* Correction des bugs d'encadrement - force le bon affichage */
+.gallery-item img {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    will-change: transform;
+}
+
+/* S'assurer que les images se chargent correctement */
+.gallery-item img:not([src]), 
+.gallery-item img[src=""], 
+.gallery-item img[src$="/"] {
+    background: rgba(100, 255, 218, 0.1);
+    position: relative;
+}
+
+.gallery-item img:not([src])::after, 
+.gallery-item img[src=""]::after,
+.gallery-item img[src$="/"]::after {
+    content: "🖼️ Image manquante";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(100, 255, 218, 0.7);
+    font-size: 14px;
+    text-align: center;
 }
 
 .gallery-item:hover {
@@ -1975,13 +2011,23 @@ nav ul li:last-child {
     overflow: hidden;
     aspect-ratio: 21/9;
     height: 250px;
+    /* Corrections pour les bugs de format */
+    border-radius: 8px;
+    background: rgba(26, 31, 54, 0.2);
+    backface-visibility: hidden;
 }
 
 .carousel-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     display: block;
+    border-radius: 8px;
+    /* Amélioration du rendu */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: optimize-contrast;
+    backface-visibility: hidden;
 }
 
 .carousel-btn {
@@ -2053,6 +2099,7 @@ nav ul li:last-child {
     
     .carousel-item {
         height: clamp(120px, 25vw, 180px);
+        aspect-ratio: 16/9; /* Ratio fixe pour mobile */
     }
     
     .carousel-btn {
@@ -2079,6 +2126,7 @@ nav ul li:last-child {
     
     .carousel-item {
         height: clamp(100px, 20vw, 150px);
+        aspect-ratio: 16/9; /* Ratio fixe pour très petits écrans */
     }
 
     
@@ -2104,6 +2152,16 @@ nav ul li:last-child {
 @media (max-width: 320px) {
     .container {
         padding: 0 5px;
+    }
+    
+    .carousel-item {
+        height: 100px;
+        aspect-ratio: 16/9;
+        border-radius: 4px;
+    }
+    
+    .carousel-item img {
+        border-radius: 4px;
     }
     
     header,
