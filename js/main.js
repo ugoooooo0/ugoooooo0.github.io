@@ -776,21 +776,10 @@ function initLightbox() {
             lightboxImageContainer.innerHTML = '';
             
             if (isYouTubeUrl(mediaUrl)) {
-                // C'est une vidéo YouTube
-                const embedUrl = getYouTubeEmbedUrl(mediaUrl);
-                if (embedUrl) {
-                    const videoContainer = document.createElement('div');
-                    videoContainer.className = 'lightbox-video-container';
-                    
-                    const iframe = document.createElement('iframe');
-                    iframe.src = embedUrl;
-                    iframe.allowFullscreen = true;
-                    iframe.title = 'Vidéo YouTube';
-                    iframe.style.cssText = 'width: 100%; height: 100%; border: none; border-radius: 10px;';
-                    
-                    videoContainer.appendChild(iframe);
-                    lightboxImageContainer.appendChild(videoContainer);
-                }
+                // C'est une vidéo YouTube - ouvrir dans un nouvel onglet
+                window.open(mediaUrl, '_blank');
+                closeLightbox();
+                return;
             } else {
                 // C'est une image - avec détection automatique des dimensions
                 const img = document.createElement('img');
@@ -1103,13 +1092,8 @@ function loadMedia(index) {
     }
     
     if (mediaUrl.includes('youtube.com') || mediaUrl.includes('youtu.be')) {
-        // C'est une vidéo YouTube - redirection
-        let embedUrl = mediaUrl;
-        if (mediaUrl.includes('watch?v=')) {
-            const videoId = mediaUrl.split('watch?v=')[1].split('&')[0];
-            embedUrl = `https://www.youtube.com/embed/${videoId}`;
-        }
-        window.open(embedUrl, '_blank');
+        // C'est une vidéo YouTube - ouvrir dans un nouvel onglet
+        window.open(mediaUrl, '_blank');
         closeLightbox();
     } else {
         // C'est une image
