@@ -1768,7 +1768,7 @@ body:not(.portfolio-page) nav a:hover::before {
     justify-content: flex-start;
     background: linear-gradient(135deg, #ff5555, #dd3333);
     box-shadow: 0 6px 20px rgba(255, 68, 68, 0.5);
-    transform: translateX(-5px) scale(1.02);
+    transform: translateX(-2px) scale(1.02);
     border-color: rgba(255, 255, 255, 0.4);
 }
 
@@ -1859,7 +1859,7 @@ body:not(.portfolio-page) nav a:hover::before {
         padding: 0 12px 0 10px;
         font-size: 11px;
         border-radius: 16px;
-        transform: translateX(-3px) scale(1.01);
+        transform: translateX(-1px) scale(1.01);
     }
     
     .gallery-item[data-has-video="oui"]::before,
