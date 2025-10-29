@@ -2475,12 +2475,61 @@ body.mobile-test-mode .projects-gallery {
     color: #ffffff;
 }
 
-/* Grille des logiciels */
+/* Grille des logiciels par catégories */
 .software-grid {
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
 }
 
+/* Catégories de logiciels */
+.software-category {
+    background: rgba(15, 20, 25, 0.3);
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid rgba(100, 255, 218, 0.1);
+    transition: all 0.4s ease;
+}
+
+.software-category:hover {
+    border-color: rgba(100, 255, 218, 0.3);
+    background: rgba(15, 20, 25, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(100, 255, 218, 0.1);
+}
+
+.category-title {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: #64ffda;
+    margin-bottom: 20px;
+    text-align: center;
+    letter-spacing: 1px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.category-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(45deg, #64ffda, #1de9b6);
+    border-radius: 2px;
+}
+
+.software-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 20px;
+}
+
+/* Ancien styles conservés */
 .software-important,
 .software-secondary {
     display: grid;
@@ -2579,6 +2628,20 @@ body.mobile-test-mode .projects-gallery {
         margin: 20px 0;
     }
     
+    .software-grid {
+        gap: 20px;
+    }
+    
+    .software-category {
+        padding: 20px 15px;
+    }
+    
+    .category-title {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+    }
+    
+    .software-items,
     .software-important,
     .software-secondary {
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -2605,6 +2668,20 @@ body.mobile-test-mode .projects-gallery {
         padding: 20px 15px;
     }
     
+    .software-grid {
+        gap: 15px;
+    }
+    
+    .software-category {
+        padding: 15px 12px;
+    }
+    
+    .category-title {
+        font-size: 1em;
+        margin-bottom: 12px;
+    }
+    
+    .software-items,
     .software-important,
     .software-secondary {
         grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
