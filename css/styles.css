@@ -1808,6 +1808,36 @@ body:not(.portfolio-page) nav a:hover::before {
         inset 0 0 25px rgba(255, 68, 68, 0.2);
 }
 
+/* Surbrillance jaune pour les images avec jeux */
+.gallery-item[data-has-game="oui"] {
+    position: relative;
+    overflow: hidden;
+}
+
+.gallery-item[data-has-game="oui"]::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 3px solid #ffdd44;
+    border-radius: 10px;
+    box-shadow: 
+        0 0 20px rgba(255, 221, 68, 0.6),
+        inset 0 0 20px rgba(255, 221, 68, 0.1);
+    pointer-events: none;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.gallery-item[data-has-game="oui"]:hover::before {
+    border-color: #ffee66;
+    box-shadow: 
+        0 0 30px rgba(255, 221, 68, 0.8),
+        inset 0 0 25px rgba(255, 221, 68, 0.2);
+}
+
 /* Icône vidéo avec effet de déroulement au survol */
 .gallery-item[data-has-video="oui"]::after,
 .gallery-item.has-video::after {
@@ -1845,6 +1875,45 @@ body:not(.portfolio-page) nav a:hover::before {
     justify-content: flex-start;
     background: linear-gradient(135deg, #ff5555, #dd3333);
     box-shadow: 0 6px 20px rgba(255, 68, 68, 0.5);
+    transform: translateX(-2px) scale(1.02);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Icône de jeu avec effet de déroulement au survol */
+.gallery-item[data-has-game="oui"]::after {
+    content: '🎮';
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: linear-gradient(135deg, #ffdd44, #cc9900);
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 5;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(255, 221, 68, 0.3);
+    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    overflow: hidden;
+    white-space: nowrap;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(2px);
+}
+
+/* Animation de déroulement au survol pour les jeux */
+.gallery-item[data-has-game="oui"]:hover::after {
+    content: '🎮 jeu';
+    width: 85px;
+    border-radius: 20px;
+    padding: 0 15px 0 12px;
+    justify-content: flex-start;
+    background: linear-gradient(135deg, #ffee55, #ddaa00);
+    box-shadow: 0 6px 20px rgba(255, 221, 68, 0.5);
     transform: translateX(-2px) scale(1.02);
     border-color: rgba(255, 255, 255, 0.4);
 }
@@ -1941,6 +2010,28 @@ body:not(.portfolio-page) nav a:hover::before {
     
     .gallery-item[data-has-video="oui"]::before,
     .gallery-item.has-video::before {
+        border-width: 2px;
+    }
+    
+    /* Version responsive mobile pour l'icône jeu */
+    .gallery-item[data-has-game="oui"]::after {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+        top: 8px;
+        right: 8px;
+        border-width: 1px;
+    }
+    
+    .gallery-item[data-has-game="oui"]:hover::after {
+        width: 70px;
+        padding: 0 12px 0 10px;
+        font-size: 11px;
+        border-radius: 16px;
+        transform: translateX(-1px) scale(1.01);
+    }
+    
+    .gallery-item[data-has-game="oui"]::before {
         border-width: 2px;
     }
 }
@@ -3241,6 +3332,34 @@ body.mobile-test-mode .projects-gallery {
     background: #64ffda;
     color: #0f1419;
     border-color: #64ffda;
+}
+
+/* Bouton jouer dans la lightbox */
+.lightbox-game-button {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.btn-game {
+    display: inline-block;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #1a1a1a !important;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    border: 2px solid #FFD700;
+}
+
+.btn-game:hover {
+    background: linear-gradient(135deg, #FFA500, #FF8C00);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 165, 0, 0.4);
+    text-decoration: none;
+    color: #1a1a1a !important;
 }
 
 
