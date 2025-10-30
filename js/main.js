@@ -1,1168 +1,3365 @@
-// main.js file for the portfolio website
 
-// Variables globales pour la lightbox
-let currentImageIndex = 0;
-let currentGallery = [];
-let isLightboxOpen = false;
-
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Initialisation...');
-    
-    // Gestion du formulaire de contact
-    initContactForm();
-    
-    // Gestion de la lightbox (si on est sur portfolio.html)
-    if (document.querySelector('.portfolio-page')) {
-        console.log('Page portfolio détectée');
-        
-        // Initialiser le carrousel
-        initCarousel();
-        
-        initFilters();
-        initLightbox();
-        
-        // Pré-traitement des images pour améliorer le layout
-        preprocessImages();
-        
-        // Ajouter les tooltips de prévisualisation
-        initPreviewTooltips();
-        
-        // Initialiser le masonry après chargement des images
-        initMasonry();
-        
-        // Correction spéciale pour les images avec vidéos après 2 secondes
-        setTimeout(() => {
-            fixVideoImagePositioning();
-        }, 2000);
-    }
-    
-    // Gestion de la section logiciels (sur la page d'accueil)
-    initSoftwareSection();
-    
-    // Gestion du contrôleur de taille
-    initSizeController();
-});
-
-// Carrousel des projets vedettes
-let currentSlide = 0;
-let carouselInterval;
-const CAROUSEL_AUTO_DELAY = 5000;
-
-function initCarousel() {
-    const track = document.getElementById('carousel-track');
-    const prevBtn = document.getElementById('carousel-prev');
-    const nextBtn = document.getElementById('carousel-next');
-    const indicators = document.querySelectorAll('.indicator');
-    const carouselItems = document.querySelectorAll('.carousel-item');
-    
-    if (!track || !prevBtn || !nextBtn) return;
-    
-    // Associer les images aux projets en utilisant data-order
-    carouselItems.forEach(item => {
-        const projectOrder = item.dataset.projectOrder;
-        const img = item.querySelector('img');
-        const titleEl = item.querySelector('.carousel-overlay h3');
-        const descEl = item.querySelector('.carousel-overlay p');
-        
-        if (projectOrder && img) {
-            // Trouver le projet correspondant dans la galerie
-            const galleryItem = document.querySelector(`[data-order="${projectOrder}"]`);
-            if (galleryItem) {
-                const galleryImg = galleryItem.querySelector('img');
-                if (galleryImg) {
-                    // Utiliser l'image de couverture du projet
-                    img.src = galleryImg.src;
-                    img.alt = galleryImg.alt;
-                    
-                    // Remplir avec les vraies descriptions de la galerie ET les sauvegarder
-                    const originalTitle = galleryImg.alt || `Projet ${projectOrder}`;
-                    const originalDescription = galleryImg.getAttribute('data-description') || 'Description du projet';
-                    
-                    if (titleEl) {
-                        titleEl.textContent = originalTitle;
-                        titleEl.setAttribute('data-original-title', originalTitle); // Sauvegarde
-                    }
-                    if (descEl) {
-                        descEl.textContent = originalDescription;
-                        descEl.setAttribute('data-original-description', originalDescription); // Sauvegarde
-                    }
-                }
-            }
-            
-            // Ajouter le clic pour ouvrir dans la lightbox
-            item.style.cursor = 'pointer';
-            item.addEventListener('click', () => {
-                // Trouver le projet correspondant dans la galerie
-                const galleryItem = document.querySelector(`[data-order="${projectOrder}"]`);
-                if (galleryItem) {
-                    // D'abord s'assurer que l'item est visible (changer de filtre si nécessaire)
-                    const category = galleryItem.getAttribute('data-category');
-                    const activeFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
-                    
-                    // Si le filtre actuel ne correspond pas, changer pour 'all'
-                    if (activeFilter !== 'all' && activeFilter !== category) {
-                        const allButton = document.querySelector('.filter-btn[data-filter="all"]');
-                        if (allButton) {
-                            allButton.click();
-                            // Attendre que le filtre soit appliqué
-                            setTimeout(() => {
-                                const galleryImg = galleryItem.querySelector('img');
-                                if (galleryImg) {
-                                    // Définir window.currentProject avant d'ouvrir la lightbox
-                                    window.currentProject = {
-                                        galleryItem: galleryItem,
-                                        img: galleryImg
-                                    };
-                                    galleryImg.click();
-                                }
-                            }, 100);
-                            return;
-                        }
-                    }
-                    
-                    // Si déjà visible, ouvrir directement
-                    const galleryImg = galleryItem.querySelector('img');
-                    if (galleryImg) {
-                        // Définir window.currentProject avant d'ouvrir la lightbox
-                        window.currentProject = {
-                            galleryItem: galleryItem,
-                            img: galleryImg
-                        };
-                        galleryImg.click();
-                    }
-                }
-            });
-        }
-    });
-    
-    function updateCarousel() {
-        const translateX = -currentSlide * 100;
-        track.style.transform = `translateX(${translateX}%)`;
-        
-        // Mettre à jour les indicateurs
-        indicators.forEach((indicator, index) => {
-            indicator.classList.toggle('active', index === currentSlide);
-        });
-    }
-    
-    function nextSlide() {
-        currentSlide = (currentSlide + 1) % carouselItems.length;
-        updateCarousel();
-    }
-    
-    function prevSlide() {
-        currentSlide = (currentSlide - 1 + carouselItems.length) % carouselItems.length;
-        updateCarousel();
-    }
-    
-    function goToSlide(index) {
-        currentSlide = index;
-        updateCarousel();
-    }
-    
-    // Événements
-    nextBtn.addEventListener('click', () => {
-        nextSlide();
-        resetAutoPlay();
-    });
-    
-    prevBtn.addEventListener('click', () => {
-        prevSlide();
-        resetAutoPlay();
-    });
-    
-    indicators.forEach((indicator, index) => {
-        indicator.addEventListener('click', () => {
-            goToSlide(index);
-            resetAutoPlay();
-        });
-    });
-    
-    // Auto-play
-    function startAutoPlay() {
-        carouselInterval = setInterval(nextSlide, CAROUSEL_AUTO_DELAY);
-    }
-    
-    function stopAutoPlay() {
-        clearInterval(carouselInterval);
-    }
-    
-    function resetAutoPlay() {
-        stopAutoPlay();
-        startAutoPlay();
-    }
-    
-    // Pause sur hover
-    const carouselContainer = document.querySelector('.carousel-container');
-    if (carouselContainer) {
-        carouselContainer.addEventListener('mouseenter', stopAutoPlay);
-        carouselContainer.addEventListener('mouseleave', startAutoPlay);
-    }
-    
-    // Démarrer l'auto-play
-    startAutoPlay();
-    updateCarousel();
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-// Fonction pour préprocesser les images et améliorer le layout
-function preprocessImages() {
-    const items = document.querySelectorAll('.gallery-item');
-    
-    items.forEach(item => {
-        const img = item.querySelector('img');
-        const hasVideo = item.getAttribute('data-has-video') === 'oui';
-        
-        if (img) {
-            // Appliquer des classes CSS spéciales selon le contenu
-            if (hasVideo) {
-                item.classList.add('has-video');
-                console.log('Item avec vidéo détecté:', img.alt);
-            }
-            
-            // Optimiser le chargement des images
-            img.loading = 'eager'; // Chargement prioritaire pour améliorer le layout
-            
-            // Gérer les erreurs d'image
-            img.onerror = function() {
-                console.warn('Erreur de chargement pour:', this.src);
-                this.style.height = '200px'; // Hauteur par défaut en cas d'erreur
-                this.style.backgroundColor = 'rgba(100, 255, 218, 0.1)';
-                this.alt = 'Image non disponible';
-            };
-        }
-    });
+/* Variables CSS pour le contrôle de taille */
+:root {
+    --section-scale: 100%; /* Contrôle global de la taille (0% à 100%) */
+    --container-width: calc(100% * var(--section-scale) / 100);
+    --font-scale: calc(0.8 + (var(--section-scale) / 100) * 0.4); /* De 0.8x à 1.2x */
+    --padding-scale: calc(20px * var(--section-scale) / 100);
 }
 
-// Fonction pour corriger spécifiquement le positionnement des images avec vidéos
-function fixVideoImagePositioning() {
-    const videoItems = document.querySelectorAll('.gallery-item[data-has-video="oui"]');
-    
-    console.log('Correction du positionnement pour', videoItems.length, 'items avec vidéos');
-    
-    videoItems.forEach(item => {
-        const currentTop = parseFloat(item.style.top) || 0;
-        const currentLeft = parseFloat(item.style.left) || 0;
-        
-        // Vérifier si l'item semble mal positionné (chevauchement ou position négative)
-        if (currentTop < 0 || currentLeft < 0) {
-            console.log('Correction de position nécessaire pour item avec vidéo');
-            
-            // Recalculer la position
-            const gallery = document.querySelector('.projects-gallery');
-            const computedStyle = getComputedStyle(document.documentElement);
-            const columns = parseInt(computedStyle.getPropertyValue('--masonry-columns').trim()) || 3;
-            const gap = parseInt(computedStyle.getPropertyValue('--masonry-gap').trim().replace('px', '')) || 20;
-            const galleryWidth = gallery.offsetWidth;
-            const itemWidth = (galleryWidth - (columns - 1) * gap) / columns;
-            
-            // Repositionner dans la première colonne disponible
-            const columnIndex = Math.floor(Math.random() * columns);
-            const newLeft = columnIndex * (itemWidth + gap);
-            
-            item.style.left = `${newLeft}px`;
-            item.style.transform = 'translateY(20px)'; // Léger décalage vers le bas
-            
-            setTimeout(() => {
-                item.style.transform = 'translateY(0)';
-            }, 300);
-        }
-    });
-    
-    // Relancer un layout complet après correction
-    setTimeout(() => {
-        layoutMasonry();
-    }, 500);
+/* Contrôleur de taille */
+.size-controller {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(15, 20, 25, 0.9);
+    padding: 15px 20px;
+    border-radius: 10px;
+    border: 1px solid rgba(100, 255, 218, 0.3);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: #64ffda;
+    backdrop-filter: blur(10px);
 }
 
-// Fonction pour initialiser le masonry JavaScript - ZERO TROU !
-function initMasonry() {
-    const gallery = document.querySelector('.projects-gallery');
-    const items = document.querySelectorAll('.gallery-item');
-    
-    if (!gallery || items.length === 0) return;
-    
-    console.log('Initialisation du masonry avec', items.length, 'éléments');
-    
-    // Attendre que toutes les images soient chargées
-    let loadedImages = 0;
-    const totalImages = items.length;
-    
-    function checkAllLoaded() {
-        loadedImages++;
-        console.log(`Image ${loadedImages}/${totalImages} chargée`);
-        if (loadedImages === totalImages) {
-            console.log('Toutes les images sont chargées, lancement du layout');
-            setTimeout(() => layoutMasonry(), 100); // Petit délai pour s'assurer que tout est prêt
-        }
+.size-controller label {
+    font-weight: 600;
+    min-width: 50px;
+}
+
+.size-controller input[type="range"] {
+    width: 150px;
+    height: 6px;
+    background: rgba(100, 255, 218, 0.2);
+    border-radius: 3px;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.size-controller input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #64ffda;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.size-controller input[type="range"]::-webkit-slider-thumb:hover {
+    background: #4db6cd;
+    transform: scale(1.1);
+}
+
+.size-controller span {
+    font-weight: bold;
+    min-width: 40px;
+    color: #ffffff;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #0f1419;
+    color: #ffffff;
+    line-height: 1.6;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Background interactif avec la souris */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle 50px at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+                rgba(100, 255, 218, 0.1) 0%, 
+                rgba(29, 233, 182, 0.05) 25%, 
+                transparent 50%);
+    pointer-events: none;
+    z-index: 1;
+    transition: opacity 0.3s ease;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle 100px at 20% 30%, rgba(100, 255, 218, 0.03) 0%, transparent 50%),
+        radial-gradient(circle 150px at 80% 70%, rgba(29, 233, 182, 0.02) 0%, transparent 50%),
+        radial-gradient(circle 120px at 60% 20%, rgba(0, 188, 212, 0.02) 0%, transparent 50%);
+    animation: backgroundFloat 20s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes backgroundFloat {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(120deg); }
+    66% { transform: translate(-20px, 20px) rotate(240deg); }
+}
+
+/* Conteneur principal */
+.container {
+    max-width: calc(1200px * var(--section-scale) / 100);
+    margin: 0 auto;
+    padding: 0 clamp(10px, 3vw, var(--padding-scale, 20px));
+    position: relative;
+    z-index: 2;
+    transform: scale(var(--section-scale, 100%) / 100);
+    transform-origin: center top;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Header sobre avec animation - Version arrondie */
+header {
+    background: linear-gradient(135deg, rgba(15, 20, 25, 0.95), rgba(26, 31, 54, 0.95));
+    padding: 20px 0;
+    text-align: center;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(100, 255, 218, 0.2);
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    margin: 20px; /* Retour aux marges originales */
+    border-radius: 20px; /* Retour aux bords originaux */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+header:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(100, 255, 218, 0.4);
+    background: linear-gradient(135deg, rgba(15, 20, 25, 0.98), rgba(26, 31, 54, 0.98));
+}
+
+/* Styles généraux pour les titres h1 */
+h1 {
+    text-align: center;
+    font-size: 2.2em;
+    background: linear-gradient(45deg, #64ffda, #1de9b6, #00bcd4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 15px 0;
+    font-weight: 700;
+}
+
+/* Header pour la page portfolio - Version arrondie */
+.portfolio-page header {
+    background: linear-gradient(135deg, rgba(15, 20, 25, 0.95), rgba(26, 31, 54, 0.95));
+    padding: 30px 0;
+    position: sticky;
+    top: 20px; /* Retour à la valeur originale */
+    z-index: 100;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(100, 255, 218, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    margin: 20px; /* Retour aux marges originales */
+    border-radius: 20px; /* Retour aux bords originaux */
+    transition: all 0.4s ease;
+}
+
+.portfolio-page header:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(100, 255, 218, 0.4);
+}
+
+/* Ajuster le conteneur pour compenser les marges */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px; /* Réduire le padding pour compenser */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+}
+
+/* Navigation interactive */
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: clamp(10px, 3vw, 20px);
+    flex-wrap: wrap;
+    padding: 0 10px;
+}
+
+nav a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: clamp(8px, 2vw, 12px) clamp(12px, 4vw, 24px);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    white-space: nowrap;
+    font-size: clamp(0.8em, 2vw, 1em);
+}
+
+nav a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(100, 255, 218, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+nav a:hover::before {
+    left: 100%;
+}
+
+nav a:hover {
+    border-color: #64ffda;
+    box-shadow: 0 0 20px rgba(100, 255, 218, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Navigation spéciale pour la page portfolio */
+.portfolio-page nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(15px, 8vw, 120px); /* Espacement adaptatif */
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    flex-wrap: wrap; /* Permettre le retour à la ligne si nécessaire */
+    padding: 0 15px;
+}
+
+.portfolio-page nav ul li {
+    flex: none; /* Enlever flex: 1 pour un espacement naturel */
+}
+
+.portfolio-page nav ul li:first-child,
+.portfolio-page nav ul li:nth-child(2),
+.portfolio-page nav ul li:last-child {
+    text-align: center; /* Centrer tout le texte */
+}
+
+/* Styles pour les boutons de filtre */
+.filter-btn {
+    color: #b8c5d1 !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 8px 0 !important;
+    font-size: 1em !important;
+    font-weight: 400 !important;
+    letter-spacing: 1px !important;
+    text-decoration: none !important;
+    position: relative !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer !important;
+}
+
+/* Bouton du milieu (PORTFOLIO) plus gros */
+.filter-btn[data-filter="all"] {
+    font-size: 1.4em !important;
+    font-weight: 600 !important;
+    letter-spacing: 2px !important;
+}
+
+/* Animation de survol */
+.filter-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(45deg, #64ffda, #1de9b6);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.filter-btn:hover {
+    color: #64ffda !important;
+    transform: translateY(-2px) !important;
+}
+
+.filter-btn:hover::after {
+    width: 100%;
+}
+
+/* État actif */
+.filter-btn.active {
+    color: #64ffda !important;
+    background: transparent !important;
+}
+
+.filter-btn.active::after {
+    width: 100%;
+}
+
+.filter-btn.active:hover {
+    color: #ffffff !important;
+    transform: translateY(-2px) scale(1.05) !important;
+}
+
+/* Effet de glow pour le bouton actif */
+.filter-btn.active {
+    text-shadow: 0 0 10px rgba(100, 255, 218, 0.5) !important;
+}
+
+/* Réinitialiser les anciens styles de navigation */
+.portfolio-page nav a::before {
+    display: none !important;
+}
+
+/* Sections avec effets de survol */
+.section {
+    background: rgba(26, 31, 54, 0.8);
+    margin: 15px 0;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(5px);
+}
+
+.section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #64ffda, #1de9b6, #00bcd4);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.section:hover::before {
+    transform: scaleX(1);
+}
+
+.section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border-color: rgba(100, 255, 218, 0.3);
+    background: rgba(26, 31, 54, 0.95);
+}
+
+.section h2 {
+    color: #64ffda;
+    margin-bottom: 15px;
+    font-size: 1.6em;
+    transition: color 0.3s ease;
+}
+
+.section:hover h2 {
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
+}
+
+.section p {
+    color: #b8c5d1;
+    transition: color 0.3s ease;
+}
+
+.section:hover p {
+    color: #ffffff;
+}
+
+/* Sections de présentation */
+.presentation-content,
+.cv-content,
+.portfolio-content {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(25px, 5vw, 40px);
+    min-height: clamp(200px, 40vw, 280px);
+    flex-wrap: wrap;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+/* Section présentation */
+.photo-container {
+    flex: 0 0 clamp(200px, 40vw, 300px);
+    min-width: 200px;
+    max-width: 300px;
+}
+
+.profile-photo {
+    width: 100%;
+    height: clamp(200px, 40vw, 300px);
+    object-fit: cover;
+    border-radius: 15px;
+    border: 3px solid #64ffda;
+    box-shadow: 0 10px 30px rgba(100, 255, 218, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-photo:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(100, 255, 218, 0.5);
+}
+
+.text-content {
+    flex: 1;
+    min-width: 300px;
+    order: 1;
+    padding-right: 20px;
+}
+
+.presentation-text h2 {
+    font-size: clamp(1.5em, 4vw, 2.2em);
+    margin-bottom: 20px;
+    color: #64ffda;
+}
+
+.presentation-text p {
+    font-size: clamp(0.9em, 2.5vw, 1.1em);
+    line-height: 1.8;
+    color: #b8c5d1;
+}
+
+/* Effet hover sur le texte de présentation */
+.presentation-text-container {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    width: 100%;
+}
+
+.presentation-text {
+    transition: filter 0.3s ease;
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.presentation-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.95);
+    transition: all 0.4s ease;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.overlay-text {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: bold;
+    color: #64ffda;
+    text-align: center;
+    text-shadow: 
+        0 0 10px rgba(100, 255, 218, 0.9),
+        0 0 20px rgba(100, 255, 218, 0.7),
+        0 0 30px rgba(100, 255, 218, 0.5),
+        2px 2px 6px rgba(0, 0, 0, 0.9);
+    letter-spacing: 2px;
+    animation: pulse 2s infinite;
+}
+
+.presentation-text-container:hover .presentation-text {
+    filter: blur(4px);
+}
+
+.presentation-text-container:hover .presentation-overlay {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+@keyframes pulse {
+    0% { 
+        transform: scale(1);
+        text-shadow: 0 0 20px rgba(100, 255, 218, 0.5);
+    }
+    50% { 
+        transform: scale(1.05);
+        text-shadow: 0 0 30px rgba(100, 255, 218, 0.8);
+    }
+    100% { 
+        transform: scale(1);
+        text-shadow: 0 0 20px rgba(100, 255, 218, 0.5);
+    }
+}
+
+/* Section CV */
+.cv-image-container {
+    flex: 0 0 clamp(140px, 25vw, 180px);
+    min-width: 140px;
+    max-width: 180px;
+}
+
+.cv-image {
+    width: 100%;
+    height: clamp(180px, 35vw, 250px);
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cv-image:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.cv-action {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Section Portfolio */
+.portfolio-image-container {
+    flex: 0 0 clamp(180px, 35vw, 250px);
+    min-width: 180px;
+    max-width: 250px;
+}
+
+.portfolio-image {
+    width: 100%;
+    height: clamp(200px, 40vw, 300px);
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.portfolio-image:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.portfolio-action {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Boutons */
+.btn {
+    display: inline-block;
+    padding: 12px 25px;
+    margin-top: 15px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #64ffda, #1de9b6);
+    color: #0f1419;
+    border: 4px solid;
+    border-image: linear-gradient(45deg, #ff0080, #00ff80, #8000ff, #ff0080) 1;
+    border-radius: 15px;
+    animation: rgb-border 4s ease-in-out infinite;
+}
+
+@keyframes rgb-border {
+    0% { border-image: linear-gradient(45deg, #ff0080, #00ff80, #8000ff, #ff0080) 1; }
+    16.6% { border-image: linear-gradient(45deg, #ff4080, #40ff80, #8040ff, #ff4080) 1; }
+    33.3% { border-image: linear-gradient(45deg, #00ff80, #8000ff, #ff8000, #00ff80) 1; }
+    50% { border-image: linear-gradient(45deg, #8000ff, #ff8000, #0080ff, #8000ff) 1; }
+    66.6% { border-image: linear-gradient(45deg, #ff8000, #0080ff, #ff0080, #ff8000) 1; }
+    83.3% { border-image: linear-gradient(45deg, #0080ff, #ff0080, #40ff40, #0080ff) 1; }
+    100% { border-image: linear-gradient(45deg, #ff0080, #00ff80, #8000ff, #ff0080) 1; }
+}
+
+.btn-secondary {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: #ffffff;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Animation pour les éléments filtrés */
+.gallery-item {
+    transition: all 0.5s ease, opacity 0.3s ease, transform 0.3s ease;
+    opacity: 1;
+    visibility: visible;
+}
+
+.gallery-item.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.8);
+    pointer-events: none;
+}
+
+/* Animations au scroll */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.section {
+    animation: fadeIn 0.6s ease forwards;
+}
+
+/* Canvas pour les particules - Réactivé */
+#particles-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.8; /* Légère transparence pour que ce ne soit pas trop agressif */
+}
+
+/* Styles spécifiques pour la page Portfolio */
+.hero-section {
+    margin: 20px 0 40px 0;
+}
+
+.hero-image {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 0;
+    transition: transform 0.3s ease;
+}
+
+.hero-image:hover {
+    transform: scale(1.02); /* Très léger zoom */
+}
+
+.hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: none;
+}
+
+/* Supprimer l'overlay du hero aussi */
+.hero-overlay {
+    display: none !important;
+}
+
+/* Projects Gallery - Layout compact */
+.projects-section {
+    margin: 0 auto;
+    padding: 0;
+    transition: all 0.3s ease;
+    width: 100%;
+    overflow-x: hidden; /* Éviter le débordement horizontal */
+}
+
+.projects-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(clamp(200px, 30vw, 250px), 1fr));
+    gap: clamp(10px, 2vw, 15px);
+    padding: clamp(20px, 4vw, 40px) clamp(10px, 3vw, 20px);
+    max-width: 1200px;
+    margin: 0 auto;
+    transition: height 0.3s ease, min-height 0.3s ease;
+    min-height: 100px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Quand il y a peu d'éléments visibles, réduire l'espacement */
+.projects-gallery:has(.gallery-item:nth-child(n+1):nth-child(-n+3)) {
+    padding: 20px;
+    min-height: 50px;
+}
+
+/* Grille Masonry avec JavaScript - AUCUN TROU ! */
+.projects-gallery {
+    position: relative;
+    padding: 40px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    /* Le JavaScript va gérer le positionnement */
+    transition: height 0.3s ease, min-height 0.3s ease, padding 0.3s ease;
+}
+
+/* Style spécial pour peu d'éléments visibles */
+.projects-gallery.few-items {
+    padding: 20px !important;
+    min-height: 100px !important;
+}
+
+/* Section projets avec espacement réduit quand peu d'éléments */
+.projects-section {
+    transition: margin 0.3s ease;
+}
+
+.projects-section:has(.projects-gallery.few-items) {
+    margin-top: 20px;
+}
+
+/* Items positionnés par JavaScript */
+.gallery-item {
+    position: absolute; /* Positionnement absolu pour masonry */
+    overflow: hidden;
+    border-radius: clamp(8px, 2vw, 12px);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(26, 31, 54, 0.5);
+    border: 1px solid rgba(100, 255, 218, 0.1);
+    padding: clamp(6px, 1.5vw, 8px);
+    /* La largeur sera calculée par JavaScript */
+    box-sizing: border-box; /* Important pour les calculs précis */
+    max-width: 100vw; /* Éviter le débordement */
+    /* Amélioration pour éviter les bugs d'encadrement */
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: auto; /* Hauteur automatique pour respecter les proportions */
+    object-fit: cover; /* Changé de contain à cover pour un meilleur rendu */
+    object-position: center;
+    transition: transform 0.3s ease;
+    display: block; /* Évite les espaces sous l'image */
+    border-radius: clamp(6px, 1.5vw, 8px); /* Arrondir les coins de l'image */
+    min-height: clamp(100px, 20vw, 150px); /* Hauteur minimale adaptative */
+    max-height: clamp(300px, 60vw, 500px); /* Hauteur maximale adaptative */
+    /* Correction des bugs de format */
+    backface-visibility: hidden;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: optimize-contrast;
+}
+
+/* Gestion spéciale pour les images très larges (panoramiques) */
+.gallery-item img[src*="panoramic"], 
+.gallery-item img[style*="aspect-ratio"] {
+    max-height: 300px; /* Limiter la hauteur des images panoramiques */
+    object-fit: cover;
+    aspect-ratio: auto; /* Forcer le ratio automatique */
+}
+
+/* Correction des bugs d'encadrement - force le bon affichage */
+.gallery-item img {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    will-change: transform;
+}
+
+/* S'assurer que les images se chargent correctement */
+.gallery-item img:not([src]), 
+.gallery-item img[src=""], 
+.gallery-item img[src$="/"] {
+    background: rgba(100, 255, 218, 0.1);
+    position: relative;
+}
+
+.gallery-item img:not([src])::after, 
+.gallery-item img[src=""]::after,
+.gallery-item img[src$="/"]::after {
+    content: "🖼️ Image manquante";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(100, 255, 218, 0.7);
+    font-size: 14px;
+    text-align: center;
+}
+
+.gallery-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 30px rgba(100, 255, 218, 0.2);
+    border-color: rgba(100, 255, 218, 0.3);
+    z-index: 10; /* S'assurer que l'item au survol est au-dessus */
+}
+
+/* Variations de hauteur pour effet masonry - amélioré */
+.gallery-item:nth-child(3n+1) {
+    grid-row: span 2; /* Plus haut */
+}
+
+.gallery-item:nth-child(5n+2) {
+    grid-row: span 1; /* Hauteur normale */
+}
+
+.gallery-item:nth-child(7n+3) {
+    grid-row: span 3; /* Encore plus haut pour certaines images */
+}
+
+.gallery-item:nth-child(11n+4) {
+    grid-row: span 1; /* Hauteur normale */
+}
+
+.gallery-item:nth-child(13n+5) {
+    grid-row: span 2; /* Plus haut */
+}
+
+/* Styles spécifiques selon le type d'image - SUPPRIMÉS */
+/* Les images gardent maintenant leurs proportions naturelles */
+
+/* Variables pour le masonry JavaScript */
+:root {
+    --masonry-columns: 4;
+    --masonry-gap: 20px;
+}
+
+/* Responsive pour le masonry JavaScript */
+@media (min-width: 1200px) {
+    :root {
+        --masonry-columns: 4;
+        --masonry-gap: 25px;
+    }
+}
+
+@media (min-width: 900px) and (max-width: 1199px) {
+    :root {
+        --masonry-columns: 3;
+        --masonry-gap: 20px;
+    }
+}
+
+@media (min-width: 600px) and (max-width: 899px) {
+    :root {
+        --masonry-columns: 2;
+        --masonry-gap: 18px;
+    }
+}
+
+@media (max-width: 599px) {
+    :root {
+        --masonry-columns: 1;
+        --masonry-gap: 15px;
     }
     
-    items.forEach((item, index) => {
-        const img = item.querySelector('img');
-        if (img) {
-            if (img.complete && img.naturalHeight !== 0) {
-                checkAllLoaded();
-            } else {
-                img.addEventListener('load', checkAllLoaded, { once: true });
-                img.addEventListener('error', () => {
-                    console.warn(`Erreur de chargement pour l'image ${index}`);
-                    checkAllLoaded();
-                }, { once: true });
-            }
-        } else {
-            checkAllLoaded();
-        }
-    });
-    
-    // Sécurité : forcer le layout après 3 secondes même si toutes les images ne sont pas chargées
-    setTimeout(() => {
-        if (loadedImages < totalImages) {
-            console.warn(`Timeout: seulement ${loadedImages}/${totalImages} images chargées, forçage du layout`);
-            layoutMasonry();
-        }
-    }, 3000);
-    
-    // Relayout au redimensionnement avec debounce amélioré
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-            console.log('Redimensionnement détecté, re-layout');
-            layoutMasonry();
-        }, 300); // Délai plus long pour éviter les re-layouts trop fréquents
-    });
-    
-    // Relayout quand on change de filtre
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            setTimeout(() => {
-                console.log('Filtre changé, re-layout');
-                layoutMasonry();
-            }, 100);
-        });
-    });
+    .projects-gallery {
+        padding: 20px 10px;
+    }
 }
 
-function layoutMasonry() {
-    const gallery = document.querySelector('.projects-gallery');
-    const allItems = document.querySelectorAll('.gallery-item');
-    
-    // Filtrer seulement les items visibles
-    const items = Array.from(allItems).filter(item => 
-        getComputedStyle(item).display !== 'none' && !item.classList.contains('hidden')
-    );
-    
-    if (!gallery || items.length === 0) {
-        // Si aucun item visible, réduire la hauteur de la galerie ET minimiser l'espacement
-        gallery.style.height = '50px';
-        gallery.style.minHeight = '50px';
-        return;
+/* Hero section ajustée */
+.hero-section {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto 40px auto;
+}
+
+.hero-image {
+    aspect-ratio: 21/9; /* Plus panoramique pour se démarquer */
+    max-height: 300px;
+}
+
+/* Section Contact - Style original restauré */
+.contact-section {
+    background: rgba(26, 31, 54, 0.8) !important;
+    margin: 30px 0 !important;
+    padding: 40px !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    transition: all 0.4s ease !important;
+    position: relative !important;
+    overflow: hidden !important;
+    backdrop-filter: blur(5px) !important;
+}
+
+.contact-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #64ffda, #1de9b6, #00bcd4);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.contact-section:hover::before {
+    transform: scaleX(1);
+}
+
+.contact-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border-color: rgba(100, 255, 218, 0.3);
+    background: rgba(26, 31, 54, 0.95);
+}
+
+.contact-section h2 {
+    color: #64ffda !important;
+    margin-bottom: 20px !important;
+    font-size: 1.8em !important;
+    transition: color 0.3s ease !important;
+    text-align: center !important;
+}
+
+.contact-section:hover h2 {
+    color: #ffffff !important;
+    text-shadow: 0 0 10px rgba(100, 255, 218, 0.5) !important;
+}
+
+/* Contact info styles */
+.contact-info {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.contact-info p {
+    color: #b8c5d1;
+    margin: 15px 0;
+    font-size: 1.1em;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.contact-section:hover .contact-info p {
+    color: #ffffff;
+}
+
+.contact-info a {
+    color: #64ffda;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.contact-info a:hover {
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
+    transform: translateX(5px);
+}
+
+/* Styles pour les icônes sociales */
+.social-icon {
+    width: 28px;
+    height: 28px;
+    transition: all 0.3s ease;
+    filter: brightness(1.2);
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.social-icon:hover {
+    transform: scale(1.2) rotate(5deg);
+    filter: brightness(1.5) drop-shadow(0 0 8px rgba(100, 255, 218, 0.6));
+}
+
+/* Animation spéciale pour l'icône YouTube */
+.contact-info p:first-child .social-icon:hover {
+    filter: brightness(1.3) drop-shadow(0 0 8px rgba(255, 0, 0, 0.8));
+    transform: scale(1.2) rotate(-5deg);
+}
+
+/* Animation spéciale pour l'icône LinkedIn */
+.contact-info p:nth-child(2) .social-icon:hover {
+    filter: brightness(1.4) drop-shadow(0 0 8px rgba(0, 119, 181, 0.8));
+    transform: scale(1.2) rotate(5deg);
+}
+
+/* Animation spéciale pour l'icône GitHub */
+.contact-info p:last-child .social-icon:hover {
+    filter: brightness(1.3) drop-shadow(0 0 8px rgba(100, 255, 218, 0.6));
+    transform: scale(1.2) rotate(-5deg);
+}
+
+/* Formulaire de contact */
+.contact-form-container {
+    margin-top: 40px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.contact-form-container h3 {
+    color: #64ffda;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.5em;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+}
+
+.contact-section:hover .contact-form-container h3 {
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
+}
+
+.contact-form {
+    background: rgba(26, 31, 54, 0.6);
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid rgba(100, 255, 218, 0.2);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 15px 20px;
+    background: rgba(15, 20, 25, 0.8);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 1em;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    resize: vertical;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #b8c5d1;
+    opacity: 0.7;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #64ffda;
+    box-shadow: 0 0 15px rgba(100, 255, 218, 0.2);
+    background: rgba(15, 20, 25, 0.9);
+}
+
+.contact-form .btn {
+    width: 100%;
+    margin-top: 10px;
+    font-size: 1.1em;
+    padding: 15px 30px;
+}
+
+/* Animation de succès */
+.form-success {
+    background: rgba(100, 255, 218, 0.1) !important;
+    border-color: #64ffda !important;
+    animation: successPulse 0.6s ease;
+}
+
+.form-error {
+    background: rgba(255, 100, 100, 0.1) !important;
+    border-color: #ff6464 !important;
+    animation: errorShake 0.6s ease;
+}
+
+@keyframes successPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+}
+
+@keyframes errorShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Message de statut */
+.status-message {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.status-message.success {
+    background: rgba(100, 255, 218, 0.1);
+    border: 1px solid #64ffda;
+    color: #64ffda;
+}
+
+.status-message.error {
+    background: rgba(255, 100, 100, 0.1);
+    border: 1px solid #ff6464;
+    color: #ff6464;
+}
+
+/* Header content pour la page portfolio - Version corrigée */
+.portfolio-page .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative; /* AJOUT - nécessaire pour le positionnement absolu du bouton */
+    margin-bottom: 25px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 20px;
+    min-height: 60px; /* Hauteur minimale pour éviter les problèmes */
+}
+
+/* Bouton retour corrigé */
+.back-home-btn {
+    position: absolute;
+    left: clamp(15px, 4vw, 20px);
+    top: 50%;
+    transform: translateY(-50%); /* AJOUT - centrage vertical parfait */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #b8c5d1 !important;
+    text-decoration: none !important;
+    font-size: clamp(0.75em, 2vw, 0.95em) !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.5px !important;
+    padding: clamp(8px, 2vw, 12px) clamp(12px, 3vw, 20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 25px !important;
+    transition: all 0.3s ease !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(10px) !important;
+    z-index: 10; /* AJOUT - s'assurer qu'il est au-dessus */
+    cursor: pointer; /* AJOUT - s'assurer que le curseur change */
+    white-space: nowrap; /* Éviter le retour à la ligne */
+    max-width: calc(50vw - 40px); /* Limiter la largeur sur mobile */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* S'assurer que le hover fonctionne */
+.back-home-btn:hover {
+    color: #64ffda !important;
+    border-color: rgba(100, 255, 218, 0.5) !important;
+    background: rgba(100, 255, 218, 0.1) !important;
+    transform: translateY(-50%) translateX(-3px) !important;
+    box-shadow: 0 0 20px rgba(100, 255, 218, 0.2) !important;
+}
+
+/* Titre avec espace pour le bouton */
+.portfolio-page header h1 {
+    text-align: center;
+    font-size: 2.2em;
+    background: linear-gradient(45deg, #64ffda, #1de9b6, #00bcd4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: 2px;
+    position: relative;
+    width: 100%;
+    padding: 0 160px; /* AJOUT - espace pour le bouton à gauche */
+    word-break: break-word;
+    line-height: 1.2;
+}
+
+/* Responsive corrigé */
+@media (max-width: 768px) {
+    .portfolio-page .header-content {
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 15px;
+        padding: 0 15px;
     }
     
-    // Obtenir les variables CSS
-    const computedStyle = getComputedStyle(document.documentElement);
-    const columns = parseInt(computedStyle.getPropertyValue('--masonry-columns').trim()) || 3;
-    const gap = parseInt(computedStyle.getPropertyValue('--masonry-gap').trim().replace('px', '')) || 20;
-    
-    const galleryWidth = gallery.offsetWidth;
-    const itemWidth = (galleryWidth - (columns - 1) * gap) / columns;
-    
-    // Initialiser les hauteurs des colonnes
-    const columnHeights = new Array(columns).fill(0);
-    
-    // Traiter les items par ordre séquentiel
-    let processedItems = 0;
-    
-    items.forEach((item, index) => {
-        // Définir la largeur de l'item
-        item.style.width = `${itemWidth}px`;
-        item.style.position = 'absolute';
-        
-        // Cacher initialement pour éviter le flash
-        item.style.opacity = '0';
-        item.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-        
-        const img = item.querySelector('img');
-        if (img) {
-            const processItem = () => {
-                // Attendre un frame pour que les dimensions soient calculées
-                requestAnimationFrame(() => {
-                    const itemHeight = item.offsetHeight;
-                    
-                    // Trouver la colonne la plus courte
-                    const shortestColumn = columnHeights.indexOf(Math.min(...columnHeights));
-                    
-                    // Calculer la position
-                    const x = shortestColumn * (itemWidth + gap);
-                    const y = columnHeights[shortestColumn];
-                    
-                    // Positionner l'item avec animation fluide
-                    item.style.left = `${x}px`;
-                    item.style.top = `${y}px`;
-                    item.style.opacity = '1';
-                    
-                    // Mettre à jour la hauteur de la colonne
-                    columnHeights[shortestColumn] += itemHeight + gap;
-                    
-                    processedItems++;
-                    
-                    // Ajuster la hauteur du conteneur quand tous les items sont traités
-                    if (processedItems === items.length) {
-                        const maxHeight = Math.max(...columnHeights);
-                        // Réduire la hauteur si peu d'éléments
-                        const finalHeight = items.length <= 3 ? Math.max(maxHeight, 200) : maxHeight;
-                        gallery.style.height = `${finalHeight}px`;
-                        
-                        // Ajouter classe spéciale si peu d'éléments
-                        if (items.length <= 3) {
-                            gallery.classList.add('few-items');
-                            gallery.style.marginBottom = '20px';
-                        } else {
-                            gallery.classList.remove('few-items');
-                            gallery.style.marginBottom = '';
-                        }
-                        
-                        console.log(`Masonry terminé: ${columns} colonnes, ${items.length} items, hauteur: ${finalHeight}px`);
-                    }
-                });
-            };
-            
-            // Si l'image est déjà chargée
-            if (img.complete && img.naturalHeight !== 0) {
-                processItem();
-            } else {
-                // Attendre le chargement de l'image
-                img.addEventListener('load', processItem, { once: true });
-                img.addEventListener('error', processItem, { once: true }); // Gérer les erreurs
-            }
-        } else {
-            // Pas d'image, traiter immédiatement
-            setTimeout(() => {
-                const itemHeight = item.offsetHeight;
-                const shortestColumn = columnHeights.indexOf(Math.min(...columnHeights));
-                const x = shortestColumn * (itemWidth + gap);
-                const y = columnHeights[shortestColumn];
-                
-                item.style.left = `${x}px`;
-                item.style.top = `${y}px`;
-                item.style.opacity = '1';
-                
-                columnHeights[shortestColumn] += itemHeight + gap;
-                processedItems++;
-                
-                if (processedItems === items.length) {
-                    const maxHeight = Math.max(...columnHeights);
-                    // Réduire la hauteur si peu d'éléments
-                    const finalHeight = items.length <= 3 ? Math.max(maxHeight, 200) : maxHeight;
-                    gallery.style.height = `${finalHeight}px`;
-                    
-                    // Ajouter classe spéciale si peu d'éléments
-                    if (items.length <= 3) {
-                        gallery.classList.add('few-items');
-                        gallery.style.marginBottom = '20px';
-                    } else {
-                        gallery.classList.remove('few-items');
-                        gallery.style.marginBottom = '';
-                    }
-                }
-            }, 50);
-        }
-    });
-    
-    console.log(`Masonry initialisé: ${columns} colonnes, ${items.length} items, largeur: ${itemWidth}px`);
-}
-
-// Fonction pour le contrôleur de taille
-function initSizeController() {
-    const sizeSlider = document.getElementById('size-slider');
-    const sizeValue = document.getElementById('size-value');
-    
-    if (!sizeSlider || !sizeValue) return;
-    
-    // Charger la valeur sauvegardée
-    const savedSize = localStorage.getItem('portfolio-size') || '100';
-    sizeSlider.value = savedSize;
-    sizeValue.textContent = savedSize + '%';
-    updateSectionScale(savedSize);
-    
-    // Écouter les changements
-    sizeSlider.addEventListener('input', function() {
-        const value = this.value;
-        sizeValue.textContent = value + '%';
-        updateSectionScale(value);
-        localStorage.setItem('portfolio-size', value);
-    });
-}
-
-// Fonction pour mettre à jour l'échelle
-function updateSectionScale(value) {
-    document.documentElement.style.setProperty('--section-scale', value + '%');
-}
-
-// Configuration de l'API OpenRouter
-const OPENROUTER_API_KEY = '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';
-const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
-
-// Gestion du formulaire de contact - Version mailto
-function initContactForm() {
-    const contactForm = document.getElementById('contact-form');
-    if (!contactForm) return;
-    
-    contactForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const submitButton = this.querySelector('button[type="submit"]');
-        const originalText = submitButton.textContent;
-        
-        // Récupérer les données du formulaire
-        const formData = new FormData(this);
-        const name = formData.get('name');
-        const email = formData.get('email');
-        const message = formData.get('message');
-        
-        // Vérifier que tous les champs sont remplis
-        if (!name || !email || !message) {
-            showStatusMessage('❌ Veuillez remplir tous les champs', 'error');
-            return;
-        }
-        
-        // Vérifier le format de l'email
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            showStatusMessage('❌ Veuillez entrer une adresse email valide', 'error');
-            return;
-        }
-        
-        // Afficher le chargement
-        submitButton.disabled = true;
-        submitButton.textContent = '� Ouverture de votre boîte mail...';
-        
-        // Créer le sujet et le corps du message
-        const subject = `Portfolio - Message pour ${name}`;
-        const body = `Bonjour Ugo,
-
-${message}
-
----
-Cordialement,
-${name}
-Email: ${email}`;
-        
-        // Créer le lien mailto avec les données encodées
-        const mailtoLink = `mailto:ugo.ravard47@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        
-        // Ouvrir la boîte mail
-        try {
-            window.location.href = mailtoLink;
-            
-            // Afficher un message de succès
-            setTimeout(() => {
-                showStatusMessage('✅ Votre boîte mail s\'ouvre ! Le message est pré-rempli.', 'success');
-                
-                // Réinitialiser le formulaire après un délai
-                setTimeout(() => {
-                    this.reset();
-                    showStatusMessage('💡 Formulaire réinitialisé. N\'oubliez pas d\'envoyer votre email !', 'info');
-                }, 2000);
-            }, 500);
-            
-        } catch (error) {
-            console.error('Erreur lors de l\'ouverture du client mail:', error);
-            showStatusMessage('❌ Impossible d\'ouvrir votre boîte mail. Copiez cette adresse : ugo.ravard47@gmail.com', 'error');
-        }
-        
-        // Réactiver le bouton après un délai
-        setTimeout(() => {
-            submitButton.disabled = false;
-            submitButton.textContent = originalText;
-        }, 2000);
-    });
-}
-
-// Afficher un message de statut
-function showStatusMessage(message, type) {
-    const existingMessage = document.querySelector('.status-message');
-    if (existingMessage) {
-        existingMessage.remove();
+    .back-home-btn {
+        position: static; /* Retour en position normale sur mobile */
+        transform: none; /* Supprime le transform sur mobile */
+        align-self: flex-start;
+        font-size: 0.85em !important;
+        padding: 8px 14px !important;
+        margin-bottom: 10px;
     }
     
-    const statusDiv = document.createElement('div');
-    statusDiv.className = `status-message ${type}`;
-    statusDiv.textContent = message;
-    
-    let backgroundColor, textColor;
-    switch(type) {
-        case 'success':
-            backgroundColor = '#64ffda';
-            textColor = '#1a1a2e';
-            break;
-        case 'error':
-            backgroundColor = '#ff6b6b';
-            textColor = '#ffffff';
-            break;
-        case 'info':
-            backgroundColor = '#4dabf7';
-            textColor = '#ffffff';
-            break;
-        default:
-            backgroundColor = '#64ffda';
-            textColor = '#1a1a2e';
+    .back-home-btn:hover {
+        transform: translateY(-2px) !important; /* Seul effet sur mobile */
     }
     
-    statusDiv.style.cssText = `
+    .portfolio-page header h1 {
+        padding: 0; /* Supprime le padding sur mobile */
+        font-size: 1.8em;
+        line-height: 1.2;
+        text-align: center;
+        word-break: break-word;
+    }
+    
+    .portfolio-page nav ul {
+        gap: clamp(10px, 5vw, 25px) !important;
+        justify-content: center;
+        width: 100%;
+        padding: 10px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .portfolio-page header h1 {
+        font-size: 1.4em;
+        margin: 0;
+        padding: 10px 5px;
+    }
+    
+    .portfolio-page nav ul {
+        gap: 8px !important;
+        padding: 8px 10px;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .filter-btn {
+        font-size: 0.7em !important;
+        padding: 8px 15px !important;
+        letter-spacing: 0.5px !important;
+        margin: 2px 0;
+        min-width: 80px;
+        text-align: center;
+    }
+    
+    .filter-btn[data-filter="all"] {
+        font-size: 0.8em !important;
+        padding: 10px 20px !important;
+        order: -1; /* Met PORTFOLIO en premier */
+    }
+    
+    .portfolio-page .header-content {
+        gap: 10px;
+        padding: 0 10px;
+    }
+    
+    .back-home-btn {
+        font-size: 0.75em !important;
+        padding: 6px 12px !important;
+    }
+}
+
+/* Supprimer l'effet de survol pour les liens de navigation sur index uniquement */
+body:not(.portfolio-page) nav a {
+    color: #b8c5d1 !important;
+    text-decoration: none !important;
+    padding: 10px 20px !important;
+    font-size: 0.9em !important;
+    font-weight: 500 !important;
+    letter-spacing: 1px !important;
+    border-radius: 25px !important;
+    text-transform: uppercase !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+/* Effet de survol simple pour index */
+body:not(.portfolio-page) nav a:hover {
+    color: #64ffda !important;
+    background: rgba(100, 255, 218, 0.1) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 5px 15px rgba(100, 255, 218, 0.2) !important;
+}
+
+/* Supprimer complètement les anciens effets ::before pour index */
+body:not(.portfolio-page) nav a::before {
+    display: none !important;
+}
+
+body:not(.portfolio-page) nav a:hover::before {
+    display: none !important;
+}
+
+/* Garder les styles .filter-btn pour la page portfolio uniquement */
+.portfolio-page .filter-btn {
+    color: #b8c5d1 !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    font-size: 0.9em !important;
+    font-weight: 500 !important;
+    letter-spacing: 1px !important;
+    text-decoration: none !important;
+    position: relative !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer !important;
+    border-radius: 25px !important;
+    text-transform: uppercase !important;
+}
+
+.portfolio-page .filter-btn[data-filter="all"] {
+    font-size: 1.1em !important;
+    font-weight: 600 !important;
+    padding: 12px 25px !important;
+    background: rgba(100, 255, 218, 0.1) !important;
+    border: 1px solid rgba(100, 255, 218, 0.3) !important;
+}
+
+.portfolio-page .filter-btn:hover {
+    color: #64ffda !important;
+    background: rgba(100, 255, 218, 0.1) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 5px 15px rgba(100, 255, 218, 0.2) !important;
+}
+
+.portfolio-page .filter-btn.active {
+    color: #ffffff !important;
+    background: linear-gradient(45deg, #64ffda, #1de9b6) !important;
+    box-shadow: 0 5px 20px rgba(100, 255, 218, 0.4) !important;
+    text-shadow: none !important;
+}
+
+/* Image de profil redimensionnée - Version carrée avec bords arrondis */
+.profile-image {
+    width: clamp(150px, 35vw, 220px) !important; 
+    height: clamp(150px, 35vw, 220px) !important; 
+    object-fit: cover !important; 
+    border-radius: clamp(10px, 2vw, 15px) !important; 
+    border: 3px solid rgba(100, 255, 218, 0.3) !important;
+    transition: all 0.4s ease !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+}
+
+.profile-image:hover {
+    transform: scale(1.05) !important;
+    border-color: rgba(100, 255, 218, 0.6) !important;
+    box-shadow: 0 15px 40px rgba(100, 255, 218, 0.2) !important;
+}
+
+/* Ajuster le conteneur de l'image */
+.image-content {
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: flex-start !important;
+    flex: 0 0 auto !important; 
+    margin-left: auto !important;
+    max-width: clamp(180px, 40vw, 250px) !important;
+    order: 2 !important;
+}
+
+/* Responsive pour l'image */
+@media (max-width: 768px) {
+    .presentation-content,
+    .cv-content,
+    .portfolio-content {
+        flex-direction: column !important;
+        text-align: center !important;
+        gap: 20px !important;
+        min-height: auto !important;
+    }
+    
+    .text-content {
+        order: 2 !important;
+        padding-right: 0 !important;
+    }
+    
+    /* Adaptation mobile pour l'effet hover */
+    .overlay-text {
+        font-size: clamp(1.2rem, 6vw, 2rem) !important;
+        letter-spacing: 1px !important;
+        padding: 0 10px;
+    }
+    
+    .image-content {
+        order: 1 !important;
+        margin-left: 0 !important;
+        justify-content: center !important;
+    }
+    
+    .photo-container,
+    .cv-image-container,
+    .portfolio-image-container,
+    .image-content {
+        flex: none !important;
+        margin: 0 auto !important;
+        max-width: 250px !important;
+    }
+    
+    .presentation-text,
+    .cv-action,
+    .portfolio-action {
+        flex: none !important;
+        width: 100% !important;
+        min-width: auto !important;
+    }
+    
+    .profile-image {
+        width: clamp(180px, 45vw, 250px) !important; 
+        height: clamp(180px, 45vw, 250px) !important; 
+        border-radius: 12px !important;
+    }
+    
+    .cv-image,
+    .portfolio-image {
+        height: clamp(200px, 50vw, 280px) !important;
+    }
+    
+    .image-content {
+        margin-left: 0 !important;
+        margin-top: 20px !important;
+    }
+    
+    .section {
+        margin: 10px 0;
+        padding: 20px 15px;
+    }
+    
+    .section h2 {
+        font-size: clamp(1.2em, 4vw, 1.6em);
+    }
+    
+    .section p {
+        font-size: clamp(0.85em, 3vw, 1em);
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-image {
+        width: clamp(120px, 40vw, 180px) !important; 
+        height: clamp(120px, 40vw, 180px) !important; 
+        border-radius: 10px !important; 
+    }
+    
+    .cv-image,
+    .portfolio-image {
+        height: clamp(150px, 40vw, 200px) !important;
+    }
+    
+    .container {
+        padding: 0 10px;
+    }
+    
+    .section {
+        margin: 8px 0;
+        padding: 15px 10px;
+        border-radius: 8px;
+    }
+    
+    .section h2 {
+        font-size: clamp(1em, 5vw, 1.3em);
+        margin-bottom: 10px;
+    }
+    
+    .section p {
+        font-size: clamp(0.8em, 3.5vw, 0.9em);
+        line-height: 1.6;
+    }
+    
+    .btn {
+        font-size: 0.9em;
+        padding: 10px 20px;
+    }
+    
+    .contact-info p {
+        font-size: 0.95em;
+        margin: 10px 0;
+    }
+    
+    .social-icon {
+        width: 24px;
+        height: 24px;
+    }
+    
+    /* Formulaire plus compact sur très petit écran */
+    .contact-form {
+        padding: 20px 15px;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        padding: 12px 15px;
+        font-size: 0.9em;
+    }
+}
+
+/* Lightbox améliorée - compatible tous navigateurs */
+.lightbox {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+    overflow: hidden;
+}
+
+.lightbox-content {
+    position: relative;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    padding: 40px;
+}
+
+.lightbox-image-container {
+    position: relative;
+    display: inline-block;
+    max-width: 85vw;
+    max-height: 80vh;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: -25px;
+    right: -25px;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    z-index: 10001;
+    background: rgba(255, 68, 68, 0.9);
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(5px);
+}
+
+.lightbox-close:hover {
+    color: white;
+    background: rgba(255, 68, 68, 1);
+    transform: scale(1.15);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+#lightbox-image {
+    max-width: 80vw;
+    max-height: 70vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+    border: 2px solid rgba(100, 255, 218, 0.3);
+    display: block;
+    margin: 0 auto;
+}
+
+/* Adaptation automatique pour images très larges ou très hautes */
+#lightbox-image.wide {
+    max-width: 85vw;
+    max-height: 65vh;
+}
+
+#lightbox-image.tall {
+    max-width: 70vw;
+    max-height: 75vh;
+}
+
+.lightbox-prev,
+.lightbox-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(100, 255, 218, 0.8);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    font-size: 20px;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    font-weight: bold;
+}
+
+.lightbox-prev {
+    left: -60px;
+}
+
+.lightbox-next {
+    right: -60px;
+}
+
+.lightbox-prev:hover,
+.lightbox-next:hover {
+    background: rgba(100, 255, 218, 1);
+    transform: translateY(-50%) scale(1.15);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.lightbox-description {
+    color: white;
+    margin-top: 20px;
+    font-size: 1.2em;
+    max-width: 80%;
+    background: rgba(15, 20, 25, 0.8);
+    padding: 15px 25px;
+    border-radius: 8px;
+    border: 1px solid rgba(100, 255, 218, 0.2);
+}
+
+.lightbox-counter {
+    color: #64ffda;
+    margin-top: 15px;
+    font-size: 1em;
+    font-weight: 600;
+}
+
+/* Responsive lightbox amélioré */
+@media (max-width: 768px) {
+    .lightbox-content {
+        padding: 20px;
+    }
+    
+    .lightbox-image-container {
+        max-width: 90vw;
+        max-height: 70vh;
+    }
+    
+    .lightbox-prev,
+    .lightbox-next {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+        left: -50px;
+        right: -50px;
+    }
+    
+    .lightbox-prev {
+        left: -50px;
+    }
+    
+    .lightbox-next {
+        right: -50px;
+    }
+    
+    .lightbox-close {
+        top: -20px;
+        right: -20px;
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+    }
+    
+    #lightbox-image {
+        max-width: 90vw;
+        max-height: 70vh;
+    }
+    
+    #lightbox-image.wide {
+        max-width: 95vw;
+        max-height: 65vh;
+    }
+    
+    #lightbox-image.tall {
+        max-width: 85vw;
+        max-height: 75vh;
+    }
+    
+    .lightbox-description {
+        font-size: 0.9em;
+        margin-top: 12px;
+        padding: 10px 15px;
+        max-width: 90%;
+    }
+}
+
+/* Pour très petits écrans */
+@media (max-width: 480px) {
+    .lightbox-content {
+        padding: 15px;
+    }
+    
+    .lightbox-image-container {
+        max-width: 95vw;
+        max-height: 65vh;
+    }
+    
+    .lightbox-prev,
+    .lightbox-next {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+    
+    .lightbox-prev {
+        left: -40px;
+    }
+    
+    .lightbox-next {
+        right: -40px;
+    }
+    
+    .lightbox-close {
+        top: -15px;
+        right: -15px;
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+    }
+    
+    #lightbox-image {
+        max-width: 95vw;
+        max-height: 65vh;
+    }
+    
+    .lightbox-description {
+        font-size: 0.85em;
+        padding: 8px 12px;
+        margin-top: 10px;
+    }
+}
+
+/* S'assurer que les images de galerie sont cliquables */
+.gallery-item img {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.gallery-item img:hover {
+    transform: scale(1.05);
+}
+
+/* Surbrillance rouge pour les images avec vidéos YouTube */
+.gallery-item[data-has-video="oui"], 
+.gallery-item.has-video {
+    position: relative;
+    overflow: hidden;
+}
+
+.gallery-item[data-has-video="oui"]::before,
+.gallery-item.has-video::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 3px solid #ff4444;
+    border-radius: 10px;
+    box-shadow: 
+        0 0 20px rgba(255, 68, 68, 0.6),
+        inset 0 0 20px rgba(255, 68, 68, 0.1);
+    pointer-events: none;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.gallery-item[data-has-video="oui"]:hover::before,
+.gallery-item.has-video:hover::before {
+    border-color: #ff6666;
+    box-shadow: 
+        0 0 30px rgba(255, 68, 68, 0.8),
+        inset 0 0 25px rgba(255, 68, 68, 0.2);
+}
+
+/* Surbrillance jaune pour les images avec jeux */
+.gallery-item[data-has-game="oui"] {
+    position: relative;
+    overflow: hidden;
+}
+
+.gallery-item[data-has-game="oui"]::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 3px solid #ffdd44;
+    border-radius: 10px;
+    box-shadow: 
+        0 0 20px rgba(255, 221, 68, 0.6),
+        inset 0 0 20px rgba(255, 221, 68, 0.1);
+    pointer-events: none;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.gallery-item[data-has-game="oui"]:hover::before {
+    border-color: #ffee66;
+    box-shadow: 
+        0 0 30px rgba(255, 221, 68, 0.8),
+        inset 0 0 25px rgba(255, 221, 68, 0.2);
+}
+
+/* Icône vidéo avec effet de déroulement au survol */
+.gallery-item[data-has-video="oui"]::after,
+.gallery-item.has-video::after {
+    content: '▶';
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: linear-gradient(135deg, #ff4444, #cc2222);
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 5;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(255, 68, 68, 0.3);
+    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    overflow: hidden;
+    white-space: nowrap;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(2px);
+}
+
+/* Animation de déroulement au survol */
+.gallery-item[data-has-video="oui"]:hover::after,
+.gallery-item.has-video:hover::after {
+    content: '▶ vidéo';
+    width: 85px;
+    border-radius: 20px;
+    padding: 0 15px 0 12px;
+    justify-content: flex-start;
+    background: linear-gradient(135deg, #ff5555, #dd3333);
+    box-shadow: 0 6px 20px rgba(255, 68, 68, 0.5);
+    transform: translateX(-2px) scale(1.02);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Icône de jeu avec effet de déroulement au survol */
+.gallery-item[data-has-game="oui"]::after {
+    content: '🎮';
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: linear-gradient(135deg, #ffdd44, #cc9900);
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 5;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(255, 221, 68, 0.3);
+    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    overflow: hidden;
+    white-space: nowrap;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(2px);
+}
+
+/* Animation de déroulement au survol pour les jeux */
+.gallery-item[data-has-game="oui"]:hover::after {
+    content: '🎮 jeu';
+    width: 85px;
+    border-radius: 20px;
+    padding: 0 15px 0 12px;
+    justify-content: flex-start;
+    background: linear-gradient(135deg, #ffee55, #ddaa00);
+    box-shadow: 0 6px 20px rgba(255, 221, 68, 0.5);
+    transform: translateX(-2px) scale(1.02);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Animation de pulsation pour attirer l'attention - plus douce */
+@keyframes redGlow {
+    0%, 100% {
+        box-shadow: 0 0 15px rgba(255, 68, 68, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(255, 68, 68, 0.7);
+    }
+}
+
+.gallery-item[data-has-video="oui"],
+.gallery-item.has-video {
+    animation: redGlow 3s ease-in-out infinite; /* Plus lent et plus subtil */
+}
+
+/* Arrêter l'animation au survol */
+.gallery-item[data-has-video="oui"]:hover,
+.gallery-item.has-video:hover {
+    animation: none;
+}
+
+/* Assurer une meilleure stabilité pour les items avec vidéos */
+.gallery-item.has-video {
+    min-height: 200px; /* Hauteur minimale pour éviter les problèmes de layout */
+    transform-origin: center center; /* Origine de transformation centrée */
+}
+
+.gallery-item.has-video img {
+    max-height: 400px; /* Limiter la hauteur pour éviter les débordements */
+    object-fit: cover; /* S'assurer que l'image remplit bien l'espace */
+}
+
+/* Lightbox améliorée pour YouTube */
+.lightbox-video-container {
+    width: 100%;
+    max-width: 800px;
+    aspect-ratio: 16/9;
+    margin: 20px auto;
+}
+
+.lightbox-video-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 10px;
+}
+
+.lightbox-image-container {
+    max-width: 95vw;
+    max-height: 85vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin: 0 auto;
+}
+
+#lightbox-image {
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    border: 2px solid rgba(100, 255, 218, 0.2);
+    transition: all 0.3s ease;
+}
+
+#lightbox-image:hover {
+    border-color: rgba(100, 255, 218, 0.4);
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.9);
+}
+
+/* Version responsive mobile pour l'icône vidéo */
+@media (max-width: 768px) {
+    .gallery-item[data-has-video="oui"]::after,
+    .gallery-item.has-video::after {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+        top: 8px;
+        right: 8px;
+        border-width: 1px;
+    }
+    
+    .gallery-item[data-has-video="oui"]:hover::after,
+    .gallery-item.has-video:hover::after {
+        width: 70px;
+        padding: 0 12px 0 10px;
+        font-size: 11px;
+        border-radius: 16px;
+        transform: translateX(-1px) scale(1.01);
+    }
+    
+    .gallery-item[data-has-video="oui"]::before,
+    .gallery-item.has-video::before {
+        border-width: 2px;
+    }
+    
+    /* Version responsive mobile pour l'icône jeu */
+    .gallery-item[data-has-game="oui"]::after {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+        top: 8px;
+        right: 8px;
+        border-width: 1px;
+    }
+    
+    .gallery-item[data-has-game="oui"]:hover::after {
+        width: 70px;
+        padding: 0 12px 0 10px;
+        font-size: 11px;
+        border-radius: 16px;
+        transform: translateX(-1px) scale(1.01);
+    }
+    
+    .gallery-item[data-has-game="oui"]::before {
+        border-width: 2px;
+    }
+}
+
+
+/* Animations pour les messages de statut */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Style pour le bouton désactivé du formulaire */
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* Ajustement du contenu pour éviter le chevauchement avec le chatbot */
+@media (min-width: 3024px) {
+    .container {
+        padding-right: 90px;
+        transition: padding-right 0.4s ease;
+    }
+}
+
+/* Réduire l'espacement sur les écrans plus petits */
+@media (max-width: 3024px) {
+    .container {
+        padding-right: 20px;
+    }
+}
+
+/* Styles pour le sélecteur de langue */
+.language-toggle {
+    display: flex;
+    gap: 5px;
+    background: rgba(15, 20, 25, 0.8);
+    border-radius: 8px;
+    padding: 5px;
+    border: 1px solid rgba(100, 255, 218, 0.2);
+}
+
+.lang-btn {
+    background: transparent;
+    border: none;
+    color: #8892b0;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.lang-btn:hover {
+    color: #64ffda;
+    background: rgba(100, 255, 218, 0.1);
+    transform: translateY(-1px);
+}
+
+.lang-btn.active {
+    color: #64ffda;
+    background: rgba(100, 255, 218, 0.2);
+    border: 1px solid rgba(100, 255, 218, 0.3);
+}
+
+.lang-btn.active:hover {
+    transform: none;
+}
+
+/* Ajustement pour la navigation */
+nav ul {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+nav ul li:last-child {
+    margin-left: 20px;
+}
+
+/* Animation d'apparition pour les changements de langue */
+[data-translate] {
+    transition: opacity 0.2s ease;
+}
+
+/* Responsive pour le sélecteur de langue */
+@media (max-width: 768px) {
+    .language-toggle {
         position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${backgroundColor};
-        color: ${textColor};
-        padding: 15px 20px;
-        border-radius: 10px;
-        z-index: 10000;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        font-weight: bold;
-        max-width: 350px;
-        animation: slideIn 0.3s ease;
-        font-size: 14px;
-        line-height: 1.4;
-    `;
-    
-    document.body.appendChild(statusDiv);
-    
-    // Durée d'affichage selon le type
-    const displayTime = type === 'info' ? 4000 : 5000;
-    
-    setTimeout(() => {
-        if (statusDiv.parentNode) {
-            statusDiv.style.animation = 'slideOut 0.3s ease';
-            setTimeout(() => {
-                if (statusDiv.parentNode) {
-                    statusDiv.remove();
-                }
-            }, 300);
-        }
-    }, displayTime);
-}
-
-// Gestion des filtres pour le portfolio
-function initFilters() {
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const galleryItems = document.querySelectorAll('.gallery-item');
-    
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            if (this.getAttribute('href') && this.getAttribute('href').startsWith('#')) {
-                e.preventDefault();
-            }
-            
-            filterBtns.forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            
-            const filter = this.getAttribute('data-filter');
-            if (!filter) return;
-            
-            galleryItems.forEach(item => {
-                const category = item.getAttribute('data-category');
-                if (filter === 'all' || category === filter) {
-                    item.style.display = 'block';
-                    item.classList.remove('hidden');
-                } else {
-                    item.style.display = 'none';
-                    item.classList.add('hidden');
-                }
-            });
-            
-            // Compter les éléments visibles pour ajuster l'espacement
-            const visibleItems = Array.from(galleryItems).filter(item => 
-                getComputedStyle(item).display !== 'none' && !item.classList.contains('hidden')
-            );
-            
-            const gallery = document.querySelector('.projects-gallery');
-            if (gallery) {
-                if (visibleItems.length <= 3) {
-                    gallery.classList.add('few-items');
-                    gallery.style.padding = '20px';
-                } else {
-                    gallery.classList.remove('few-items');
-                    gallery.style.padding = '40px 20px';
-                }
-            }
-            
-            // Réorganiser le masonry après filtrage avec un délai plus court
-            setTimeout(() => {
-                layoutMasonry();
-            }, 50);
-        });
-    });
-}
-
-// Fonction pour convertir URL YouTube en embed
-function getYouTubeEmbedUrl(url) {
-    const regex = /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/;
-    const match = url.match(regex);
-    if (match) {
-        return `https://www.youtube.com/embed/${match[1]}`;
-    }
-    return null;
-}
-
-// Fonction pour vérifier si c'est une URL YouTube
-function isYouTubeUrl(url) {
-    return url.includes('youtube.com') || url.includes('youtu.be');
-}
-
-// Gestion de la lightbox avec support YouTube
-function initLightbox() {
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImageContainer = document.querySelector('.lightbox-image-container');
-    const lightboxDescription = document.getElementById('lightbox-description');
-    const lightboxClose = document.querySelector('.lightbox-close');
-    const lightboxPrev = document.querySelector('.lightbox-prev');
-    const lightboxNext = document.querySelector('.lightbox-next');
-    const currentImageSpan = document.getElementById('current-image');
-    const totalImagesSpan = document.getElementById('total-images');
-    
-    if (!lightbox) return;
-    
-    // Clic sur une image
-    document.addEventListener('click', function(e) {
-        if (e.target.matches('.gallery-item img')) {
-            e.preventDefault();
-            
-            const img = e.target;
-            const galleryItem = img.closest('.gallery-item');
-            
-            // Stocker la référence au projet actuel pour récupérer la description dynamiquement
-            window.currentProject = {
-                galleryItem: galleryItem,
-                img: img
-            };
-            
-            // Récupérer la galerie
-            const galleryData = galleryItem.getAttribute('data-gallery');
-            if (galleryData) {
-                try {
-                    currentGallery = JSON.parse(galleryData);
-                } catch (e) {
-                    console.error('Erreur parsing gallery:', e);
-                    currentGallery = [img.src];
-                }
-            } else {
-                currentGallery = [img.src];
-            }
-            
-            currentImageIndex = 0;
-            openLightbox();
-        }
-    });
-    
-    // Ouvrir la lightbox
-    function openLightbox() {
-        lightbox.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-        isLightboxOpen = true;
-        
-        loadMedia(currentImageIndex);
-        updateCounter();
-        updateNavigation();
+        top: 15px;
+        right: 15px;
+        z-index: 1000;
+        background: rgba(15, 20, 25, 0.95);
+        backdrop-filter: blur(10px);
     }
     
-    // Charger un média (image ou vidéo)
-    function loadMedia(index) {
-        if (currentGallery[index]) {
-            const mediaUrl = currentGallery[index];
-            currentImageIndex = index;
-            
-            // Nettoyer le conteneur
-            lightboxImageContainer.innerHTML = '';
-            
-            if (isYouTubeUrl(mediaUrl)) {
-                // C'est une vidéo YouTube - ouvrir dans un nouvel onglet
-                window.open(mediaUrl, '_blank');
-                closeLightbox();
-                return;
-            } else {
-                // C'est une image - avec détection automatique des dimensions
-                const img = document.createElement('img');
-                img.id = 'lightbox-image';
-                img.src = mediaUrl;
-                img.alt = 'Image du portfolio';
-                
-                // Attendre le chargement pour détecter les dimensions
-                img.onload = function() {
-                    const imgWidth = this.naturalWidth;
-                    const imgHeight = this.naturalHeight;
-                    const aspectRatio = imgWidth / imgHeight;
-                    
-                    // Supprimer les classes précédentes
-                    this.classList.remove('wide', 'tall');
-                    
-                    // Adapter selon le ratio
-                    if (aspectRatio > 2.5) {
-                        // Image très large (panoramique)
-                        this.classList.add('wide');
-                        this.style.cssText = `
-                            max-width: 95vw;
-                            max-height: 70vh;
-                            width: auto;
-                            height: auto;
-                            object-fit: contain;
-                            border-radius: 12px;
-                            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-                            border: 2px solid rgba(100, 255, 218, 0.2);
-                        `;
-                    } else if (aspectRatio < 0.7) {
-                        // Image très haute (portrait)
-                        this.classList.add('tall');
-                        this.style.cssText = `
-                            max-width: 80vw;
-                            max-height: 90vh;
-                            width: auto;
-                            height: auto;
-                            object-fit: contain;
-                            border-radius: 12px;
-                            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-                            border: 2px solid rgba(100, 255, 218, 0.2);
-                        `;
-                    } else {
-                        // Image normale
-                        this.style.cssText = `
-                            max-width: 90vw;
-                            max-height: 80vh;
-                            width: auto;
-                            height: auto;
-                            object-fit: contain;
-                            border-radius: 12px;
-                            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-                            border: 2px solid rgba(100, 255, 218, 0.2);
-                        `;
-                    }
-                    
-                    console.log(`Image dimensions: ${imgWidth}x${imgHeight}, ratio: ${aspectRatio.toFixed(2)}`);
-                };
-                
-                // Style initial pendant le chargement
-                img.style.cssText = `
-                    max-width: 90vw;
-                    max-height: 80vh;
-                    width: auto;
-                    height: auto;
-                    object-fit: contain;
-                    border-radius: 12px;
-                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-                    border: 2px solid rgba(100, 255, 218, 0.2);
-                    opacity: 0;
-                    transition: opacity 0.3s ease;
-                `;
-                
-                // Effet de fondu à l'apparition
-                setTimeout(() => {
-                    img.style.opacity = '1';
-                }, 50);
-                
-                lightboxImageContainer.appendChild(img);
-            }
-            
-            // Mettre à jour la description du projet actuel
-            updateLightboxDescription();
-            updateCounter();
-            updateNavigation();
-        }
-    }
-    
-    // Nouvelle fonction pour mettre à jour la description de la lightbox
-    function updateLightboxDescription() {
-        if (lightboxDescription && window.currentProject) {
-            const description = window.currentProject.img.getAttribute('data-description') || 
-                               window.currentProject.img.alt || 
-                               'Image du portfolio';
-            lightboxDescription.textContent = description;
-            lightboxDescription.style.display = 'block';
-        }
-    }
-    
-    // Mettre à jour le compteur
-    function updateCounter() {
-        if (currentImageSpan && totalImagesSpan) {
-            currentImageSpan.textContent = currentImageIndex + 1;
-            totalImagesSpan.textContent = currentGallery.length;
-        }
-    }
-    
-    // Mettre à jour la navigation
-    function updateNavigation() {
-        if (lightboxPrev && lightboxNext) {
-            lightboxPrev.style.display = currentGallery.length > 1 ? 'block' : 'none';
-            lightboxNext.style.display = currentGallery.length > 1 ? 'block' : 'none';
-        }
-    }
-    
-    // Restaurer les descriptions originales du carrousel
-    function restoreCarouselDescriptions() {
-        const carouselItems = document.querySelectorAll('.carousel-item');
-        carouselItems.forEach(item => {
-            const titleEl = item.querySelector('.carousel-overlay h3');
-            const descEl = item.querySelector('.carousel-overlay p');
-            
-            if (titleEl && titleEl.hasAttribute('data-original-title')) {
-                titleEl.textContent = titleEl.getAttribute('data-original-title');
-            }
-            if (descEl && descEl.hasAttribute('data-original-description')) {
-                descEl.textContent = descEl.getAttribute('data-original-description');
-            }
-        });
-    }
-    
-    // Fermer la lightbox
-    function closeLightbox() {
-        lightbox.style.display = 'none';
-        document.body.style.overflow = '';
-        isLightboxOpen = false;
-        
-        // Restaurer les descriptions originales du carrousel
-        restoreCarouselDescriptions();
-        
-        // Arrêter toutes les vidéos
-        const iframes = lightboxImageContainer.querySelectorAll('iframe');
-        iframes.forEach(iframe => {
-            iframe.src = iframe.src; // Recharge pour arrêter la vidéo
-        });
-    }
-    
-    // Event listeners
-    if (lightboxClose) {
-        lightboxClose.addEventListener('click', closeLightbox);
-    }
-    
-    if (lightboxPrev) {
-        lightboxPrev.addEventListener('click', function() {
-            if (currentImageIndex > 0) {
-                loadMedia(currentImageIndex - 1);
-            }
-        });
-    }
-    
-    if (lightboxNext) {
-        lightboxNext.addEventListener('click', function() {
-            if (currentImageIndex < currentGallery.length - 1) {
-                loadMedia(currentImageIndex + 1);
-            }
-        });
-    }
-    
-    // Fermer en cliquant sur le fond
-    lightbox.addEventListener('click', function(e) {
-        if (e.target === lightbox) {
-            closeLightbox();
-        }
-    });
-    
-    // Navigation au clavier
-    document.addEventListener('keydown', function(e) {
-        if (isLightboxOpen) {
-            if (e.key === 'Escape') {
-                closeLightbox();
-            } else if (e.key === 'ArrowLeft' && currentImageIndex > 0) {
-                loadMedia(currentImageIndex - 1);
-            } else if (e.key === 'ArrowRight' && currentImageIndex < currentGallery.length - 1) {
-                loadMedia(currentImageIndex + 1);
-            }
-        }
-    });
-}
-
-// Fonction pour initialiser les filtres
-function initFilters() {
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const galleryItems = document.querySelectorAll('.gallery-item');
-
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Retirer la classe active de tous les boutons
-            filterBtns.forEach(b => b.classList.remove('active'));
-            
-            // Ajouter la classe active au bouton cliqué
-            this.classList.add('active');
-            
-            const filter = this.getAttribute('data-filter');
-            
-            galleryItems.forEach(item => {
-                if (filter === 'all' || item.getAttribute('data-category') === filter) {
-                    item.classList.remove('hidden');
-                } else {
-                    item.classList.add('hidden');
-                }
-            });
-        });
-    });
-}
-
-// Fonction pour initialiser la lightbox
-function initLightbox() {
-    const galleryItems = document.querySelectorAll('.gallery-item img');
-    
-    galleryItems.forEach(img => {
-        img.addEventListener('click', function() {
-            const galleryItem = this.closest('.gallery-item');
-            
-            // Définir window.currentProject pour récupérer la description
-            window.currentProject = {
-                galleryItem: galleryItem,
-                img: this
-            };
-            
-            const galleryData = galleryItem.getAttribute('data-gallery');
-            
-            if (galleryData) {
-                // Si l'image a une galerie
-                try {
-                    currentGallery = JSON.parse(galleryData);
-                    currentImageIndex = 0;
-                } catch(e) {
-                    console.error('Erreur parsing gallery data:', e);
-                    currentGallery = [this.src];
-                    currentImageIndex = 0;
-                }
-            } else {
-                // Image simple
-                currentGallery = [this.src];
-                currentImageIndex = 0;
-            }
-            
-            openLightbox();
-            loadMedia(0);
-        });
-    });
-    
-    // Événements de la lightbox
-    const lightbox = document.getElementById('lightbox');
-    const closeBtn = document.querySelector('.lightbox-close');
-    const prevBtn = document.querySelector('.lightbox-prev');
-    const nextBtn = document.querySelector('.lightbox-next');
-    
-    if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
-    if (prevBtn) prevBtn.addEventListener('click', () => currentImageIndex > 0 && loadMedia(currentImageIndex - 1));
-    if (nextBtn) nextBtn.addEventListener('click', () => currentImageIndex < currentGallery.length - 1 && loadMedia(currentImageIndex + 1));
-    
-    if (lightbox) {
-        lightbox.addEventListener('click', function(e) {
-            if (e.target === lightbox) {
-                closeLightbox();
-            }
-        });
+    nav ul li:last-child {
+        margin-left: 0;
+        position: absolute;
+        top: -60px;
+        right: 0;
     }
 }
 
-// Ouvrir la lightbox
-function openLightbox() {
-    const lightbox = document.getElementById('lightbox');
-    if (lightbox) {
-        lightbox.style.display = 'flex';
-        isLightboxOpen = true;
-        document.body.style.overflow = 'hidden';
+/* Carousel Featured Projects */
+.featured-projects-section {
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.featured-projects-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.featured-title {
+    text-align: center;
+    font-size: 2rem;
+    color: #3498db;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.featured-projects-container:hover .featured-title {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.carousel-container {
+    position: relative;
+    max-width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.carousel-wrapper {
+    overflow: hidden;
+    border-radius: 6px;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-item {
+    min-width: 100%;
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 21/9;
+    height: 250px;
+    /* Corrections pour les bugs de format */
+    border-radius: 8px;
+    background: rgba(26, 31, 54, 0.2);
+    backface-visibility: hidden;
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    border-radius: 8px;
+    /* Amélioration du rendu */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: optimize-contrast;
+    backface-visibility: hidden;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(52, 152, 219, 0.8);
+    border: none;
+    color: white;
+    font-size: 1.8rem;
+    padding: 12px 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    z-index: 2;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-btn:hover {
+    background: rgba(52, 152, 219, 1);
+    transform: translateY(-50%) scale(1.05);
+}
+
+.carousel-btn.prev {
+    left: 10px;
+}
+
+.carousel-btn.next {
+    right: 10px;
+}
+
+.carousel-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid rgba(52, 152, 219, 0.5);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.indicator.active,
+.indicator:hover {
+    background: #3498db;
+    border-color: #3498db;
+}
+
+/* Responsive Carousel */
+@media (max-width: 768px) {
+    .featured-title {
+        font-size: clamp(1.2em, 4vw, 1.6em);
+    }
+    
+    .featured-projects-section {
+        padding: 15px 10px;
+        margin-bottom: 15px;
+    }
+    
+    .carousel-item {
+        height: clamp(120px, 25vw, 180px);
+        aspect-ratio: 16/9; /* Ratio fixe pour mobile */
+    }
+    
+    .carousel-btn {
+        font-size: clamp(1.2em, 3vw, 1.4em);
+        padding: 6px 10px;
+        width: clamp(25px, 8vw, 35px);
+        height: clamp(25px, 8vw, 35px);
+    }
+    
+    .carousel-btn.prev {
+        left: 5px;
+    }
+    
+    .carousel-btn.next {
+        right: 5px;
     }
 }
 
-// Fermer la lightbox
-function closeLightbox() {
-    const lightbox = document.getElementById('lightbox');
-    if (lightbox) {
-        lightbox.style.display = 'none';
-        isLightboxOpen = false;
-        document.body.style.overflow = 'auto';
+@media (max-width: 480px) {
+    .featured-projects-section {
+        padding: 10px 5px;
+        margin-bottom: 10px;
+    }
+    
+    .carousel-item {
+        height: clamp(100px, 20vw, 150px);
+        aspect-ratio: 16/9; /* Ratio fixe pour très petits écrans */
+    }
+
+    
+    .carousel-btn {
+        width: clamp(20px, 6vw, 28px);
+        height: clamp(20px, 6vw, 28px);
+        font-size: clamp(1em, 2.5vw, 1.2em);
+        padding: 2px 4px;
+    }
+    
+    .carousel-indicators {
+        margin-top: 8px;
+        gap: 4px;
+    }
+    
+    .indicator {
+        width: 6px;
+        height: 6px;
     }
 }
 
-// Charger un média (image ou vidéo)
-function loadMedia(index) {
-    currentImageIndex = index;
-    const mediaUrl = currentGallery[index];
-    const image = document.getElementById('lightbox-image');
-    const counter = document.querySelector('.lightbox-counter');
-    
-    if (!image) return;
-    
-    // Mettre à jour le compteur
-    if (counter) {
-        const currentSpan = document.getElementById('current-image');
-        const totalSpan = document.getElementById('total-images');
-        if (currentSpan) currentSpan.textContent = index + 1;
-        if (totalSpan) totalSpan.textContent = currentGallery.length;
+/* Media queries pour très petits écrans */
+@media (max-width: 320px) {
+    .container {
+        padding: 0 5px;
     }
     
-    if (mediaUrl.includes('youtube.com') || mediaUrl.includes('youtu.be')) {
-        // C'est une vidéo YouTube - ouvrir dans un nouvel onglet
-        window.open(mediaUrl, '_blank');
-        closeLightbox();
-    } else {
-        // C'est une image
-        image.src = mediaUrl;
-        
-        // Mettre à jour la description en utilisant la fonction existante
-        const description = document.getElementById('lightbox-description');
-        if (description && window.currentProject) {
-            const desc = window.currentProject.img.getAttribute('data-description') || 
-                        window.currentProject.img.alt || 
-                        'Image du portfolio';
-            description.textContent = desc;
-            description.style.display = 'block';
-        }
+    .carousel-item {
+        height: 100px;
+        aspect-ratio: 16/9;
+        border-radius: 4px;
     }
     
-    // Gérer les boutons prev/next
-    const prevBtn = document.querySelector('.lightbox-prev');
-    const nextBtn = document.querySelector('.lightbox-next');
+    .carousel-item img {
+        border-radius: 4px;
+    }
     
-    if (prevBtn) prevBtn.style.display = index > 0 ? 'block' : 'none';
-    if (nextBtn) nextBtn.style.display = index < currentGallery.length - 1 ? 'block' : 'none';
+    header,
+    .portfolio-page header {
+        margin: 5px;
+        padding: 10px 0;
+        border-radius: 8px;
+    }
+    
+    .portfolio-page header h1 {
+        font-size: 1.1em;
+        padding: 0 50px;
+        letter-spacing: 0.5px;
+    }
+    
+    .back-home-btn {
+        padding: 4px 8px !important;
+        font-size: 0.65em !important;
+        left: 8px;
+    }
+    
+    .portfolio-page nav ul {
+        flex-direction: column;
+        gap: 5px !important;
+        padding: 5px;
+    }
+    
+    .filter-btn {
+        font-size: 0.6em !important;
+        padding: 6px 12px !important;
+        margin: 1px 0;
+    }
+    
+    .filter-btn[data-filter="all"] {
+        font-size: 0.7em !important;
+        padding: 8px 16px !important;
+    }
+    
+    .section {
+        padding: 10px 8px;
+        margin: 5px 0;
+    }
+    
+    .profile-image {
+        width: 100px !important;
+        height: 100px !important;
+    }
+    
+    .projects-gallery {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 15px 5px;
+    }
+    
+    .gallery-item {
+        padding: 4px;
+    }
+    
+    .gallery-item img {
+        min-height: 80px;
+        border-radius: 4px;
+    }
+    
+    .contact-form {
+        padding: 15px 10px;
+    }
+    
+    .carousel-item {
+        height: 80px;
+    }
+    
+    .carousel-btn {
+        width: 20px;
+        height: 20px;
+        font-size: 0.8em;
+    }
 }
 
-// Fonction pour initialiser les tooltips de prévisualisation
-function initPreviewTooltips() {
-    // Tooltips pour les éléments de la galerie
-    const galleryItems = document.querySelectorAll('.gallery-item');
-    galleryItems.forEach(item => {
-        const img = item.querySelector('img');
-        if (img) {
-            const description = img.getAttribute('data-description') || img.alt;
-            if (description) {
-                // Créer un tooltip avec une version courte de la description
-                const shortDescription = description.length > 60 ? 
-                    description.substring(0, 60) + '...' : description;
-                
-                const tooltip = document.createElement('div');
-                tooltip.className = 'preview-tooltip';
-                tooltip.textContent = shortDescription;
-                item.appendChild(tooltip);
-            }
-        }
-    });
-    
-    // Tooltips pour les éléments du carousel
-    const carouselItems = document.querySelectorAll('.carousel-item');
-    carouselItems.forEach(item => {
-        const projectOrder = item.getAttribute('data-project-order');
-        if (projectOrder) {
-            // Trouver le projet correspondant dans la galerie pour récupérer sa description
-            const galleryItem = document.querySelector(`[data-order="${projectOrder}"]`);
-            if (galleryItem) {
-                const galleryImg = galleryItem.querySelector('img');
-                if (galleryImg) {
-                    const description = galleryImg.getAttribute('data-description') || galleryImg.alt;
-                    if (description) {
-                        // Créer un tooltip plus court pour le carousel
-                        const shortDescription = description.length > 50 ? 
-                            description.substring(0, 50) + '...' : description;
-                        
-                        const tooltip = document.createElement('div');
-                        tooltip.className = 'preview-tooltip';
-                        tooltip.textContent = shortDescription;
-                        item.appendChild(tooltip);
-                    }
-                }
-            }
-        }
-    });
+body.mobile-test-mode .container {
+    max-width: 375px !important;
+    margin: 0 auto !important;
+    transform: scale(1) !important;
+    border: 3px solid #ff6b6b;
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    background: #000;
+    padding: 20px 10px;
+    margin-top: 20px !important;
+    min-height: calc(100vh - 40px);
+    position: relative;
 }
+
+/* Ajustements spécifiques pour le mode test */
+body.mobile-test-mode header,
+body.mobile-test-mode .portfolio-page header {
+    margin: 10px 5px !important;
+    border-radius: 15px !important;
+    padding: 15px 0 !important;
+}
+
+body.mobile-test-mode .portfolio-page nav ul {
+    flex-direction: column !important;
+    gap: 8px !important;
+    padding: 10px !important;
+}
+
+body.mobile-test-mode .filter-btn {
+    font-size: 0.7em !important;
+    padding: 8px 15px !important;
+}
+
+body.mobile-test-mode .portfolio-page header h1 {
+    font-size: 1.4em !important;
+    padding: 0 50px !important;
+}
+
+body.mobile-test-mode .back-home-btn {
+    position: static !important;
+    transform: none !important;
+    margin-bottom: 10px !important;
+    align-self: flex-start !important;
+}
+
+body.mobile-test-mode .presentation-content,
+body.mobile-test-mode .cv-content,
+body.mobile-test-mode .portfolio-content {
+    flex-direction: column !important;
+    text-align: center !important;
+}
+
+body.mobile-test-mode .profile-image {
+    width: 150px !important;
+    height: 150px !important;
+}
+
+body.mobile-test-mode .projects-gallery {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    padding: 15px 5px !important;
+}
+
+
+
+/* Tooltips pour aperçu des descriptions */
+.gallery-item {
+    position: relative;
+}
+
+.gallery-item .preview-tooltip {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.85);
+    color: #64ffda;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.3;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 10;
+    border: 1px solid rgba(100, 255, 218, 0.3);
+    backdrop-filter: blur(5px);
+}
+
+.gallery-item:hover .preview-tooltip {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Style pour les éléments du carousel */
+.carousel-item {
+    position: relative;
+}
+
+.carousel-item .preview-tooltip {
+    position: absolute;
+    bottom: 50px;
+    left: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.9);
+    color: #64ffda;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.4;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 20;
+    border: 1px solid rgba(100, 255, 218, 0.4);
+    backdrop-filter: blur(8px);
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.carousel-item:hover .preview-tooltip {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Animation des tooltips */
+@keyframes tooltipFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.preview-tooltip.show {
+    animation: tooltipFadeIn 0.3s ease forwards;
+}
+
+/* Section Logiciels & Outils */
+.logiciels-section {
+    background: rgba(26, 31, 54, 0.8);
+    margin: 25px 0;
+    padding: 30px 25px;
+    border-radius: 15px;
+    border: 1px solid rgba(100, 255, 218, 0.2);
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.logiciels-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #64ffda, #1de9b6, #00bcd4);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.logiciels-section:hover::before {
+    transform: scaleX(1);
+}
+
+.logiciels-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border-color: rgba(100, 255, 218, 0.4);
+    background: rgba(26, 31, 54, 0.95);
+}
+
+.logiciels-section h2 {
+    color: #64ffda;
+    text-align: center;
+    font-size: 1.8em;
+    margin-bottom: 10px;
+    transition: color 0.3s ease;
+}
+
+.logiciels-section:hover h2 {
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
+}
+
+.logiciels-section p {
+    color: #b8c5d1;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.1em;
+    transition: color 0.3s ease;
+}
+
+.logiciels-section:hover p {
+    color: #ffffff;
+}
+
+/* Grille des logiciels */
+.software-grid {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.software-important,
+.software-secondary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.software-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 15px;
+    background: rgba(15, 20, 25, 0.6);
+    border: 2px solid rgba(100, 255, 218, 0.2);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.software-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(100, 255, 218, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.software-item:hover::before {
+    left: 100%;
+}
+
+.software-item:hover {
+    transform: translateY(-5px) scale(1.05);
+    border-color: rgba(100, 255, 218, 0.5);
+    box-shadow: 0 15px 30px rgba(100, 255, 218, 0.2);
+    background: rgba(15, 20, 25, 0.8);
+}
+
+.software-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease;
+    filter: brightness(1.1);
+}
+
+.software-item:hover img {
+    transform: scale(1.1);
+    filter: brightness(1.3) drop-shadow(0 0 10px rgba(100, 255, 218, 0.3));
+}
+
+.software-item span {
+    font-size: 0.95em;
+    font-weight: 600;
+    color: #b8c5d1;
+    transition: color 0.3s ease;
+    text-align: center;
+}
+
+.software-item:hover span {
+    color: #64ffda;
+    text-shadow: 0 0 5px rgba(100, 255, 218, 0.5);
+}
+
+/* Style pour indiquer que les logiciels sont cliquables */
+.software-item[data-url] {
+    cursor: pointer !important;
+    position: relative;
+}
+
+.software-item[data-url]:hover::after {
+    content: '🔗';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 12px;
+    opacity: 0.8;
+    z-index: 10;
+}
+
+/* Tous les logiciels maintenant dans la même grille */
+
+/* Les logiciels secondaires sont maintenant toujours visibles dans le scroll */
+
+/* Responsive pour les logiciels */
+@media (max-width: 768px) {
+    .logiciels-section {
+        padding: 25px 20px;
+        margin: 20px 0;
+    }
+    
+    .software-important,
+    .software-secondary {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 15px;
+    }
+    
+    .software-item {
+        padding: 15px 10px;
+    }
+    
+    .software-item img {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 8px;
+    }
+    
+    .software-item span {
+        font-size: 0.85em;
+    }
+}
+
+@media (max-width: 480px) {
+    .logiciels-section {
+        padding: 20px 15px;
+    }
+    
+    .software-important,
+    .software-secondary {
+        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+        gap: 12px;
+    }
+    
+    .software-item {
+        padding: 12px 8px;
+    }
+    
+    .software-item img {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .software-item span {
+        font-size: 0.8em;
+    }
+}
+
+/* Animation d'apparition pour les éléments de logiciels */
+@keyframes softwareAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.software-secondary.show .software-item {
+    animation: softwareAppear 0.4s ease forwards;
+}
+
+.software-secondary.show .software-item:nth-child(1) { animation-delay: 0.1s; }
+.software-secondary.show .software-item:nth-child(2) { animation-delay: 0.2s; }
+.software-secondary.show .software-item:nth-child(3) { animation-delay: 0.3s; }
+.software-secondary.show .software-item:nth-child(4) { animation-delay: 0.4s; }
+.software-secondary.show .software-item:nth-child(5) { animation-delay: 0.5s; }
+
+/* Badges de présentation - positionnés en bas de la section */
+.presentation-badges {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(15px, 4vw, 25px);
+    margin: 30px auto 0 auto;
+    flex-wrap: wrap;
+    max-width: 800px;
+    padding: 20px;
+}
+
+.badge-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, rgba(100, 255, 218, 0.1), rgba(29, 233, 182, 0.05));
+    border: 2px solid rgba(100, 255, 218, 0.3);
+    padding: 10px 16px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(5px);
+}
+
+.badge-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(100, 255, 218, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.badge-item:hover::before {
+    left: 100%;
+}
+
+.badge-item:hover {
+    transform: translateY(-3px) scale(1.05);
+    border-color: rgba(100, 255, 218, 0.6);
+    background: linear-gradient(135deg, rgba(100, 255, 218, 0.2), rgba(29, 233, 182, 0.1));
+    box-shadow: 0 10px 30px rgba(100, 255, 218, 0.2);
+}
+
+.badge-icon {
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;
+}
+
+.badge-item:hover .badge-icon {
+    transform: scale(1.2) rotate(5deg);
+}
+
+.badge-text {
+    font-size: clamp(0.85em, 2.5vw, 1em);
+    font-weight: 600;
+    color: #b8c5d1;
+    transition: color 0.3s ease;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+}
+
+.badge-item:hover .badge-text {
+    color: #64ffda;
+    text-shadow: 0 0 8px rgba(100, 255, 218, 0.4);
+}
+
+/* Animations spéciales pour chaque badge */
+.badge-item:nth-child(1):hover .badge-icon {
+    animation: sparkle 0.6s ease-in-out;
+}
+
+.badge-item:nth-child(2):hover .badge-icon {
+    animation: bounce 0.6s ease-in-out;
+}
+
+.badge-item:nth-child(3):hover .badge-icon {
+    animation: wiggle 0.6s ease-in-out;
+}
+
+@keyframes sparkle {
+    0%, 100% { transform: scale(1.2) rotate(0deg); }
+    25% { transform: scale(1.3) rotate(-5deg); }
+    50% { transform: scale(1.4) rotate(5deg); }
+    75% { transform: scale(1.3) rotate(-3deg); }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: scale(1.2) translateY(0); }
+    50% { transform: scale(1.3) translateY(-3px); }
+}
+
+@keyframes wiggle {
+    0%, 100% { transform: scale(1.2) rotate(0deg); }
+    25% { transform: scale(1.3) rotate(-10deg); }
+    75% { transform: scale(1.3) rotate(10deg); }
+}
+
+/* Responsive pour les badges */
+@media (max-width: 768px) {
+    .presentation-badges {
+        gap: 12px;
+        margin: 20px 0 15px 0;
+    }
+    
+    .badge-item {
+        padding: 8px 12px;
+        gap: 6px;
+    }
+    
+    .badge-icon {
+        width: 20px;
+        height: 20px;
+        font-size: 1em;
+    }
+    
+    .badge-text {
+        font-size: clamp(0.8em, 3vw, 0.9em);
+    }
+}
+
+@media (max-width: 480px) {
+    .presentation-badges {
+        flex-direction: column;
+        gap: 10px;
+        margin: 15px 0;
+    }
+    
+    .badge-item {
+        padding: 10px 15px;
+        min-width: 150px;
+        justify-content: center;
+    }
+    
+    .badge-text {
+        font-size: 0.85em;
+    }
+}
+
+/* Boutons de traduction en haut à droite */
+.header-content {
+    position: relative;
+}
+
+.language-toggle {
+    position: absolute;
+    top: 60%;
+    transform: translateY(-50%);
+    right: clamp(15px, 4vw, 20px);
+    display: flex;
+    gap: 8px;
+    z-index: 50;
+}
+
+.lang-btn {
+    background: rgba(100, 255, 218, 0.1);
+    border: 1px solid rgba(100, 255, 218, 0.3);
+    color: #64ffda;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* ========================================
+   FOOTER AMÉLIORÉ
+======================================== */
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.footer-link {
+    color: #64ffda;
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 5px 10px;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(100, 255, 218, 0.3);
+}
+
+.footer-link:hover {
+    background: rgba(100, 255, 218, 0.1);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(100, 255, 218, 0.2);
+}
+
+/* ========================================
+   PAGE CONDITIONS GÉNÉRALES - DESIGN BASIQUE
+======================================== */
+
+/* Style basique et lisible - MODE CLAIR */
+.conditions-page {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background: white;
+    color: black;
+    transition: all 0.3s ease;
+}
+
+.conditions-page .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+}
+
+.conditions-page header {
+    text-align: center;
+    padding: 20px 0;
+    border-bottom: 2px solid #333;
+    margin-bottom: 30px;
+    background: white;
+}
+
+.conditions-page h1 {
+    font-size: 24px;
+    color: black;
+    margin: 0;
+    font-weight: bold;
+}
+
+.conditions-page nav ul {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.conditions-page nav a,
+.conditions-page nav button {
+    background: #333;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.conditions-page nav a:hover,
+.conditions-page nav button:hover {
+    background: #555;
+}
+
+/* MODE SOMBRE */
+.conditions-page.dark-theme {
+    background: #1a1a1a;
+    color: white;
+}
+
+.conditions-page.dark-theme .container {
+    background: #1a1a1a;
+}
+
+.conditions-page.dark-theme header {
+    border-bottom-color: #666;
+    background: #1a1a1a;
+}
+
+.conditions-page.dark-theme h1 {
+    color: white;
+}
+
+.conditions-page.dark-theme nav a,
+.conditions-page.dark-theme nav button {
+    background: #666;
+    color: white;
+}
+
+.conditions-page.dark-theme nav a:hover,
+.conditions-page.dark-theme nav button:hover {
+    background: #888;
+}
+
+/* Contenu principal */
+.conditions-section {
+    padding: 0;
+    margin: 0;
+    background: transparent;
+}
+
+.conditions-content {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 30px;
+    margin: 0;
+}
+
+.conditions-page.dark-theme .conditions-content {
+    background: #1a1a1a;
+    border-color: #444;
+}
+
+.conditions-intro h2 {
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 10px;
+    color: black;
+    font-weight: bold;
+}
+
+.conditions-page.dark-theme .conditions-intro h2 {
+    color: white;
+}
+
+.last-updated {
+    text-align: center;
+    font-style: italic;
+    font-size: 14px;
+    margin-bottom: 40px;
+    padding: 10px;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    color: black;
+}
+
+.conditions-page.dark-theme .last-updated {
+    background: #333;
+    border-color: #555;
+    color: white;
+}
+
+/* Articles */
+.condition-item {
+    margin: 30px 0;
+    padding: 20px;
+    border: 1px solid #ddd;
+    background: white;
+}
+
+.conditions-page.dark-theme .condition-item {
+    border-color: #444;
+    background: #1a1a1a;
+}
+
+.condition-item h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: black;
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 8px;
+}
+
+.conditions-page.dark-theme .condition-item h3 {
+    color: white;
+    border-bottom-color: #444;
+}
+
+.condition-item p,
+.condition-item li {
+    color: black;
+    margin-bottom: 12px;
+    font-size: 16px;
+}
+
+.conditions-page.dark-theme .condition-item p,
+.conditions-page.dark-theme .condition-item li {
+    color: white;
+}
+
+.condition-item ul {
+    padding-left: 20px;
+    margin: 15px 0;
+}
+
+.condition-item strong {
+    font-weight: bold;
+}
+
+.condition-item a {
+    color: blue;
+    text-decoration: underline;
+}
+
+.conditions-page.dark-theme .condition-item a {
+    color: #87ceeb;
+}
+
+/* Zone d'urgence */
+.contact-urgence {
+    background: #fffacd;
+    border: 2px solid orange;
+    padding: 20px;
+    margin: 30px 0;
+    text-align: center;
+}
+
+.conditions-page.dark-theme .contact-urgence {
+    background: #2d2d00;
+    border-color: #ffaa00;
+}
+
+.contact-urgence h3 {
+    color: black;
+    margin-bottom: 10px;
+    border: none;
+    padding: 0;
+}
+
+.conditions-page.dark-theme .contact-urgence h3,
+.conditions-page.dark-theme .contact-urgence p {
+    color: white;
+}
+
+/* Footer */
+.conditions-footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 25px;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+}
+
+.conditions-page.dark-theme .conditions-footer {
+    background: #333;
+    border-color: #555;
+}
+
+.conditions-footer p {
+    color: black;
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.conditions-page.dark-theme .conditions-footer p {
+    color: white;
+}
+
+.conditions-page .btn {
+    background: #333;
+    color: white;
+    padding: 12px 20px;
+    text-decoration: none;
+    border: none;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.conditions-page .btn:hover {
+    background: #555;
+}
+
+/* Footer du site */
+.conditions-page .footer {
+    background: #333;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+.conditions-page.dark-theme .footer {
+    background: #111;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .conditions-page .container {
+        padding: 10px;
+    }
+    
+    .conditions-content {
+        padding: 20px 15px;
+    }
+    
+    .condition-item {
+        padding: 15px;
+    }
+    
+    .condition-item h3 {
+        font-size: 16px;
+    }
+    
+    .conditions-intro h2 {
+        font-size: 22px;
+    }
+    
+    .conditions-page nav ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+.lang-btn:hover {
+    background: rgba(100, 255, 218, 0.2);
+    border-color: rgba(100, 255, 218, 0.5);
+    transform: translateY(-1px);
+}
+
+.lang-btn.active {
+    background: #64ffda;
+    color: #0f1419;
+    border-color: #64ffda;
+}
+
+/* Bouton jouer dans la lightbox */
+.lightbox-game-button {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.btn-game {
+    display: inline-block;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #1a1a1a !important;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    border: 2px solid #FFD700;
+}
+
+.btn-game:hover {
+    background: linear-gradient(135deg, #FFA500, #FF8C00);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 165, 0, 0.4);
+    text-decoration: none;
+    color: #1a1a1a !important;
+}
+
 
