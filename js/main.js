@@ -867,6 +867,7 @@ function initLightbox() {
             updateLightboxDescription();
             updateCounter();
             updateNavigation();
+            updateGameButton();
         }
     }
     
@@ -900,19 +901,25 @@ function initLightbox() {
     // Mettre à jour le bouton jouer
     function updateGameButton() {
         const gameButton = document.getElementById('lightbox-game-button');
+        console.log('updateGameButton called', gameButton, window.currentProject);
+        
         if (gameButton && window.currentProject) {
             const galleryItem = window.currentProject.galleryItem;
             const hasGame = galleryItem.getAttribute('data-has-game') === 'oui';
             const gameUrl = galleryItem.getAttribute('data-game-url');
             
+            console.log('Game check:', hasGame, gameUrl);
+            
             if (hasGame && gameUrl) {
-                const gameLink = gameButton.querySelector('.btn-game');
+                const gameLink = gameButton.querySelector('.btn-game-access');
                 if (gameLink) {
                     gameLink.href = gameUrl;
                     gameButton.style.display = 'block';
+                    console.log('Game button shown!');
                 }
             } else {
                 gameButton.style.display = 'none';
+                console.log('Game button hidden');
             }
         }
     }
