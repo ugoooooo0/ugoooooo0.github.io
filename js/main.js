@@ -731,6 +731,17 @@ function initLightbox() {
             const img = e.target;
             const galleryItem = img.closest('.gallery-item');
             
+            // Vérifier si c'est un projet de jeu
+            const hasGame = galleryItem.getAttribute('data-has-game') === 'oui';
+            const gameUrl = galleryItem.getAttribute('data-game-url');
+            
+            if (hasGame && gameUrl) {
+                // Si c'est un jeu, rediriger directement
+                console.log('🎮 Redirecting to game:', gameUrl);
+                window.open(gameUrl, '_blank');
+                return;
+            }
+            
             // Stocker la référence au projet actuel pour récupérer la description dynamiquement
             window.currentProject = {
                 galleryItem: galleryItem,
