@@ -731,16 +731,23 @@ function initLightbox() {
             const img = e.target;
             const galleryItem = img.closest('.gallery-item');
             
+            console.log('🔍 Clicked on gallery item:', galleryItem);
+            
             // Vérifier si c'est un projet de jeu
-            const hasGame = galleryItem.getAttribute('data-has-game') === 'oui';
+            const hasGame = galleryItem.getAttribute('data-has-game');
             const gameUrl = galleryItem.getAttribute('data-game-url');
             
-            if (hasGame && gameUrl) {
+            console.log('🔍 data-has-game:', hasGame);
+            console.log('🔍 data-game-url:', gameUrl);
+            
+            if (hasGame === 'oui' && gameUrl) {
                 // Si c'est un jeu, rediriger directement
-                console.log('🎮 Redirecting to game:', gameUrl);
+                console.log('🎮 GAME DETECTED! Redirecting to:', gameUrl);
                 window.open(gameUrl, '_blank');
-                return;
+                return; // IMPORTANT : empêche l'ouverture de la lightbox
             }
+            
+            console.log('📷 Normal project, opening lightbox');
             
             // Stocker la référence au projet actuel pour récupérer la description dynamiquement
             window.currentProject = {
