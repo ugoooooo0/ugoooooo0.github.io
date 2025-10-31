@@ -710,11 +710,6 @@ function isYouTubeUrl(url) {
     return url.includes('youtube.com') || url.includes('youtu.be');
 }
 
-// Fonction pour vérifier si c'est une URL de jeu
-function isGameUrl(url) {
-    return url.includes('itch.io') || url.includes('steam') || url.includes('/game') || url.includes('/jeu');
-}
-
 // Gestion de la lightbox avec support YouTube
 function initLightbox() {
     const lightbox = document.getElementById('lightbox');
@@ -801,12 +796,6 @@ function initLightbox() {
             
             if (isYouTubeUrl(mediaUrl)) {
                 // C'est une vidéo YouTube - ouvrir dans un nouvel onglet
-                window.open(mediaUrl, '_blank');
-                closeLightbox();
-                return;
-            } else if (isGameUrl(mediaUrl)) {
-                // C'est un lien de jeu - ouvrir dans un nouvel onglet
-                console.log('🎮 Opening game:', mediaUrl);
                 window.open(mediaUrl, '_blank');
                 closeLightbox();
                 return;
@@ -972,6 +961,45 @@ function initLightbox() {
             gameButton.style.display = 'none';
         }
     }
+    
+    // Navigation des images du jeu
+    function initGameNavigation() {
+        // Trouver tous les boutons de navigation de jeu
+        document.querySelectorAll('.game-next-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation(); // Empêcher le clic de rediriger vers le jeu
+                
+                const galleryItem = this.closest('.gallery-item');
+                const img = galleryItem.querySelector('img');
+                const galleryData = galleryItem.getAttribute('data-gallery');
+                
+                if (galleryData) {
+                    try {
+                        const images = JSON.parse(galleryData);
+                        const currentSrc = img.src;
+                        let currentIndex = images.findIndex(src => src === currentSrc);
+                        
+                        // Passer à l'image suivante (revenir au début si à la fin)
+                        currentIndex = (currentIndex + 1) % images.length;
+                        
+                        // Changer l'image avec une transition
+                        img.style.opacity = '0.5';
+                        setTimeout(() => {
+                            img.src = images[currentIndex];
+                            img.style.opacity = '1';
+                        }, 150);
+                        
+                        console.log(`📷 Game image changed to ${currentIndex + 1}/${images.length}`);
+                    } catch (e) {
+                        console.error('Erreur navigation jeu:', e);
+                    }
+                }
+            });
+        });
+    }
+    
+    // Initialiser la navigation des jeux après le chargement
+    document.addEventListener('DOMContentLoaded', initGameNavigation);
     
     // Restaurer les descriptions originales du carrousel
     function restoreCarouselDescriptions() {
