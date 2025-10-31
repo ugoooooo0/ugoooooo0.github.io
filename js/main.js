@@ -733,21 +733,8 @@ function initLightbox() {
             
             console.log('🔍 Clicked on gallery item:', galleryItem);
             
-            // Vérifier si c'est un projet de jeu
-            const hasGame = galleryItem.getAttribute('data-has-game');
-            const gameUrl = galleryItem.getAttribute('data-game-url');
-            
-            console.log('🔍 data-has-game:', hasGame);
-            console.log('🔍 data-game-url:', gameUrl);
-            
-            if (hasGame === 'oui' && gameUrl) {
-                // Si c'est un jeu, rediriger directement
-                console.log('🎮 GAME DETECTED! Redirecting to:', gameUrl);
-                window.open(gameUrl, '_blank');
-                return; // IMPORTANT : empêche l'ouverture de la lightbox
-            }
-            
-            console.log('📷 Normal project, opening lightbox');
+            // Pour tous les projets (y compris les jeux), ouvrir la lightbox
+            console.log('📷 Opening lightbox for project');
             
             // Stocker la référence au projet actuel pour récupérer la description dynamiquement
             window.currentProject = {
@@ -885,7 +872,11 @@ function initLightbox() {
             updateLightboxDescription();
             updateCounter();
             updateNavigation();
-            updateGameButton();
+            
+            // Délai pour s'assurer que tout est chargé avant d'afficher le bouton
+            setTimeout(() => {
+                updateGameButton();
+            }, 100);
         }
     }
     
@@ -961,45 +952,6 @@ function initLightbox() {
             gameButton.style.display = 'none';
         }
     }
-    
-    // Navigation des images du jeu
-    function initGameNavigation() {
-        // Trouver tous les boutons de navigation de jeu
-        document.querySelectorAll('.game-next-btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation(); // Empêcher le clic de rediriger vers le jeu
-                
-                const galleryItem = this.closest('.gallery-item');
-                const img = galleryItem.querySelector('img');
-                const galleryData = galleryItem.getAttribute('data-gallery');
-                
-                if (galleryData) {
-                    try {
-                        const images = JSON.parse(galleryData);
-                        const currentSrc = img.src;
-                        let currentIndex = images.findIndex(src => src === currentSrc);
-                        
-                        // Passer à l'image suivante (revenir au début si à la fin)
-                        currentIndex = (currentIndex + 1) % images.length;
-                        
-                        // Changer l'image avec une transition
-                        img.style.opacity = '0.5';
-                        setTimeout(() => {
-                            img.src = images[currentIndex];
-                            img.style.opacity = '1';
-                        }, 150);
-                        
-                        console.log(`📷 Game image changed to ${currentIndex + 1}/${images.length}`);
-                    } catch (e) {
-                        console.error('Erreur navigation jeu:', e);
-                    }
-                }
-            });
-        });
-    }
-    
-    // Initialiser la navigation des jeux après le chargement
-    document.addEventListener('DOMContentLoaded', initGameNavigation);
     
     // Restaurer les descriptions originales du carrousel
     function restoreCarouselDescriptions() {
