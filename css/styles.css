@@ -1635,6 +1635,49 @@ body:not(.portfolio-page) nav a:hover::before {
     right: -60px;
 }
 
+.lightbox-game-access {
+    position: absolute;
+    top: 50%;
+    right: -180px;
+    transform: translateY(-50%);
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    border: 2px solid #FFD700;
+    color: #1a1a1a;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 12px 16px;
+    cursor: pointer;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+    z-index: 10001;
+    white-space: nowrap;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 140px;
+    animation: gamePulse 2s infinite;
+}
+
+.lightbox-game-access:hover {
+    background: linear-gradient(135deg, #FFA500, #FF8C00);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+    text-decoration: none;
+    color: #1a1a1a;
+    animation: none;
+}
+
+@keyframes gamePulse {
+    0%, 100% { 
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+    }
+    50% { 
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.8);
+    }
+}
+
 .lightbox-prev:hover,
 .lightbox-next:hover {
     background: rgba(100, 255, 218, 1);
@@ -1686,6 +1729,16 @@ body:not(.portfolio-page) nav a:hover::before {
     
     .lightbox-next {
         right: -50px;
+    }
+    
+    .lightbox-game-access {
+        right: -50px;
+        top: auto;
+        bottom: -70px;
+        transform: none;
+        font-size: 12px;
+        padding: 8px 12px;
+        min-width: 120px;
     }
     
     .lightbox-close {
@@ -3334,69 +3387,6 @@ body.mobile-test-mode .projects-gallery {
     border-color: #64ffda;
 }
 
-/* Wrapper pour contenu lightbox */
-.lightbox-content-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    max-width: 90%;
-    margin: 0 auto;
-}
 
-/* Bouton accéder au jeu dans la lightbox */
-.lightbox-game-button {
-    text-align: center;
-    margin: 0;
-}
-
-.btn-game-access {
-    display: inline-block;
-    background: linear-gradient(135deg, #FFD700, #FFA500);
-    color: #1a1a1a !important;
-    text-decoration: none;
-    padding: 14px 28px;
-    border-radius: 30px;
-    font-weight: bold;
-    font-size: 18px;
-    transition: all 0.3s ease;
-    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
-    border: 3px solid #FFD700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    animation: gameButtonPulse 2s infinite;
-}
-
-.btn-game-access:hover {
-    background: linear-gradient(135deg, #FFA500, #FF8C00);
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 8px 25px rgba(255, 165, 0, 0.6);
-    text-decoration: none;
-    color: #1a1a1a !important;
-    animation: none;
-}
-
-/* Animation pulse pour attirer l'attention */
-@keyframes gameButtonPulse {
-    0%, 100% { 
-        box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
-    }
-    50% { 
-        box-shadow: 0 6px 20px rgba(255, 215, 0, 0.7);
-    }
-}
-
-/* Responsive pour mobile */
-@media (max-width: 768px) {
-    .lightbox-content-wrapper {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .btn-game-access {
-        padding: 12px 24px;
-        font-size: 16px;
-    }
-}
 
 
