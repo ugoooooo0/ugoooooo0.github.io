@@ -3425,4 +3425,35 @@ body.mobile-test-mode .projects-gallery {
     }
 }
 
+/* Flèche de navigation pour les images du jeu */
+.game-nav-arrow {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 3;
+}
+
+.game-next-btn {
+    background: rgba(255, 215, 0, 0.8);
+    border: 2px solid #FFD700;
+    color: #1a1a1a;
+    font-size: 16px;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    backdrop-filter: blur(5px);
+}
+
+.game-next-btn:hover {
+    background: rgba(255, 215, 0, 1);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.5);
+}
+
 
