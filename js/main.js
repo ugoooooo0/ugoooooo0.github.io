@@ -710,6 +710,11 @@ function isYouTubeUrl(url) {
     return url.includes('youtube.com') || url.includes('youtu.be');
 }
 
+// Fonction pour vérifier si c'est une URL de jeu
+function isGameUrl(url) {
+    return url.includes('itch.io') || url.includes('steam') || url.includes('/game') || url.includes('/jeu');
+}
+
 // Gestion de la lightbox avec support YouTube
 function initLightbox() {
     const lightbox = document.getElementById('lightbox');
@@ -796,6 +801,12 @@ function initLightbox() {
             
             if (isYouTubeUrl(mediaUrl)) {
                 // C'est une vidéo YouTube - ouvrir dans un nouvel onglet
+                window.open(mediaUrl, '_blank');
+                closeLightbox();
+                return;
+            } else if (isGameUrl(mediaUrl)) {
+                // C'est un lien de jeu - ouvrir dans un nouvel onglet
+                console.log('🎮 Opening game:', mediaUrl);
                 window.open(mediaUrl, '_blank');
                 closeLightbox();
                 return;
