@@ -901,25 +901,46 @@ function initLightbox() {
     // Mettre à jour le bouton jouer
     function updateGameButton() {
         const gameButton = document.getElementById('lightbox-game-access');
-        console.log('updateGameButton called', gameButton, window.currentProject);
+        console.log('🎮 updateGameButton called');
+        console.log('🎮 gameButton found:', gameButton);
+        console.log('🎮 window.currentProject:', window.currentProject);
         
-        if (gameButton && window.currentProject) {
-            const galleryItem = window.currentProject.galleryItem;
-            const hasGame = galleryItem.getAttribute('data-has-game') === 'oui';
-            const gameUrl = galleryItem.getAttribute('data-game-url');
-            
-            console.log('Game check:', hasGame, gameUrl);
-            
-            if (hasGame && gameUrl) {
-                gameButton.onclick = function() {
-                    window.open(gameUrl, '_blank');
-                };
-                gameButton.style.display = 'flex';
-                console.log('Game button shown!');
-            } else {
-                gameButton.style.display = 'none';
-                console.log('Game button hidden');
-            }
+        if (!gameButton) {
+            console.error('🎮 Game button element not found!');
+            return;
+        }
+        
+        if (!window.currentProject) {
+            console.log('🎮 No current project, hiding button');
+            gameButton.style.display = 'none';
+            return;
+        }
+        
+        const galleryItem = window.currentProject.galleryItem;
+        console.log('🎮 galleryItem:', galleryItem);
+        
+        if (!galleryItem) {
+            console.error('🎮 No gallery item found!');
+            gameButton.style.display = 'none';
+            return;
+        }
+        
+        const hasGame = galleryItem.getAttribute('data-has-game');
+        const gameUrl = galleryItem.getAttribute('data-game-url');
+        
+        console.log('🎮 data-has-game:', hasGame);
+        console.log('🎮 data-game-url:', gameUrl);
+        
+        if (hasGame === 'oui' && gameUrl) {
+            console.log('🎮 SHOWING GAME BUTTON!');
+            gameButton.onclick = function() {
+                console.log('🎮 Button clicked, opening:', gameUrl);
+                window.open(gameUrl, '_blank');
+            };
+            gameButton.style.display = 'flex';
+        } else {
+            console.log('🎮 Hiding game button - not a game or no URL');
+            gameButton.style.display = 'none';
         }
     }
     
