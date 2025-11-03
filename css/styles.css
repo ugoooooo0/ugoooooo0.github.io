@@ -3658,6 +3658,8 @@ body.mobile-test-mode .projects-gallery {
     padding: 12px;
     background: rgba(15, 20, 25, 0.98);
     border-top: 1px solid rgba(100, 255, 218, 0.2);
+    position: relative;
+    z-index: 50; /* Plus élevé que les tooltips (z-index: 10-20) */
 }
 
 .play-game-btn {
@@ -3678,6 +3680,8 @@ body.mobile-test-mode .projects-gallery {
     background: linear-gradient(45deg, #FFD700, #FFA500);
     color: #1a1a1a;
     border: 2px solid rgba(255, 215, 0, 0.5);
+    position: relative;
+    z-index: 51; /* Encore plus élevé pour garantir qu'il reste au-dessus */
 }
 
 .play-game-btn:hover {
