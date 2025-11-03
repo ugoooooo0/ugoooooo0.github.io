@@ -625,7 +625,6 @@ nav a:hover {
 
 .btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
 
 /* Conteneur pour les boutons côte à côte */
@@ -677,9 +676,8 @@ nav a:hover {
 
 .btn-artstation:hover {
     background: linear-gradient(45deg, #2563eb, #3b82f6) !important;
-    border-color: rgba(37, 99, 235, 0.8) !important;
+    border-color: #333 !important;
     transform: translateY(-3px) !important;
-    box-shadow: 0 10px 25px rgba(30, 58, 138, 0.4) !important;
     color: #ffffff !important;
 }
 
@@ -1349,17 +1347,15 @@ nav a:hover {
 
 .artstation-btn-external:hover {
     color: #13aff0 !important;
-    border-color: rgba(19, 175, 240, 0.9) !important;
+    border-color: #333 !important;
     background: rgba(19, 175, 240, 0.15) !important;
     transform: translateY(-50%) translateX(10px) !important;
-    box-shadow: 0 12px 40px rgba(19, 175, 240, 0.3) !important;
 }
 
 .artstation-btn-external:hover .logo-container {
     transform: scale(1.1);
     background: rgba(19, 175, 240, 0.2);
-    box-shadow: 0 0 20px rgba(19, 175, 240, 0.5);
-    border-color: rgba(19, 175, 240, 0.8);
+    border-color: #333;
 }
 
 .artstation-btn-external:hover img,
@@ -1913,7 +1909,6 @@ body:not(.portfolio-page) nav a:hover::before {
 .lightbox-game-access:hover {
     background: linear-gradient(135deg, #FFA500, #FF8C00);
     transform: translateY(-50%) scale(1.1);
-    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
     text-decoration: none;
     color: #1a1a1a;
     animation: none;
@@ -1921,10 +1916,10 @@ body:not(.portfolio-page) nav a:hover::before {
 
 @keyframes gamePulse {
     0%, 100% { 
-        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        transform: scale(1);
     }
     50% { 
-        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.8);
+        transform: scale(1.02);
     }
 }
 
@@ -3679,7 +3674,7 @@ body.mobile-test-mode .projects-gallery {
     font-family: inherit;
     background: linear-gradient(45deg, #FFD700, #FFA500);
     color: #1a1a1a;
-    border: 2px solid rgba(255, 215, 0, 0.5);
+    border: 2px solid #333;
     position: relative;
     z-index: 51; /* Encore plus élevé pour garantir qu'il reste au-dessus */
 }
@@ -3687,8 +3682,7 @@ body.mobile-test-mode .projects-gallery {
 .play-game-btn:hover {
     background: linear-gradient(45deg, #FFA500, #FF8C00);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
-    border-color: rgba(255, 215, 0, 0.8);
+    border-color: #555;
 }
 
 .play-icon,
