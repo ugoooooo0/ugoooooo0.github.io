@@ -1349,11 +1349,11 @@ nav a:hover {
     color: #13aff0 !important;
     border-color: #333 !important;
     background: rgba(19, 175, 240, 0.15) !important;
-    transform: translateY(-50%) translateX(10px) !important;
+    transform: translateY(-50%) scale(1.05) !important;
 }
 
 .artstation-btn-external:hover .logo-container {
-    transform: scale(1.1);
+    transform: scale(1.05);
     background: rgba(19, 175, 240, 0.2);
     border-color: #333;
 }
@@ -3872,20 +3872,9 @@ header {
     transform-origin: left center;
 }
 
+/* Animation hover simple - juste un scale */
 .artstation-btn-external:hover {
-    animation: artstationPop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-@keyframes artstationPop {
-    0% {
-        transform: translateY(-50%) translateX(10px) scale(1);
-    }
-    50% {
-        transform: translateY(-50%) translateX(15px) scale(1.1);
-    }
-    100% {
-        transform: translateY(-50%) translateX(10px) scale(1);
-    }
+    transition: all 0.3s ease !important;
 }
 
 
