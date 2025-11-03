@@ -21,18 +21,30 @@ class PagePopAnimation {
         // Préparer tous les éléments pour l'animation
         this.prepareElements();
         
-        // Démarrer les animations avec des délais plus doux
+        // Animer selon la page
         setTimeout(() => {
-            this.animateHeader();
+            this.animateHeader(); // Bouton ArtStation
         }, 200);
         
-        setTimeout(() => {
-            this.animateMainContent();
-        }, 400);
-        
-        setTimeout(() => {
-            this.animateProjects();
-        }, 600);
+        // Si on est sur la page portfolio, animer les projets
+        if (document.querySelector('.gallery-item') || document.querySelector('.carousel-item')) {
+            setTimeout(() => {
+                this.animateProjects(); // Projets + boutons
+            }, 400);
+        } else {
+            // Sinon on est sur index, animer boutons/badges/logiciels
+            setTimeout(() => {
+                this.animateButtons(); // Boutons
+            }, 400);
+            
+            setTimeout(() => {
+                this.animateBadges(); // Badges : ⚡ 5 ans d'exp, 🎓 CNAM, 😊 Super gentil
+            }, 500);
+            
+            setTimeout(() => {
+                this.animateSoftwareItems(); // Logiciels un par un
+            }, 700);
+        }
     }
 
     prepareElements() {
@@ -41,61 +53,35 @@ class PagePopAnimation {
     }
 
     animateHeader() {
-        const header = document.querySelector('header');
-        if (header) {
-            this.popElement(header, 0);
-        }
-        
-        // Bouton ArtStation externe
+        // Header visible immédiatement, seulement animer le bouton ArtStation
         const artstationBtn = document.querySelector('.artstation-btn-external');
         if (artstationBtn) {
-            this.popElement(artstationBtn, 200);
+            this.popElement(artstationBtn, 300);
         }
     }
 
     animateMainContent() {
-        // Section présentation ou featured projects
-        const presentationSection = document.querySelector('.presentation-section');
-        const featuredSection = document.querySelector('.featured-projects-section');
-        
-        if (presentationSection) {
-            this.popElement(presentationSection, 100);
-        }
-        
-        if (featuredSection) {
-            this.popElement(featuredSection, 100);
-        }
-        
-        // Sections logiciels et contact avec délais plus fluides
-        const logicielsSection = document.querySelector('.logiciels-section');
-        const contactSection = document.querySelector('.contact-section');
-        
-        if (logicielsSection) {
-            this.popElement(logicielsSection, 400);
-        }
-        
-        if (contactSection) {
-            this.popElement(contactSection, 500);
-        }
+        // Plus d'animation pour les containers - seulement les boutons
+        console.log('Containers visibles immédiatement, animation seulement pour les boutons');
     }
 
     animateProjects() {
-        // Projets de la galerie (portfolio) - plus fluide
+        // Animer les projets de la galerie (portfolio)
         const galleryItems = document.querySelectorAll('.gallery-item');
         galleryItems.forEach((item, index) => {
             this.popElement(item, index * 120);
         });
         
-        // Items du carousel - délai plus doux
+        // Items du carousel
         const carouselItems = document.querySelectorAll('.carousel-item');
         carouselItems.forEach((item, index) => {
             this.popElement(item, index * 150);
         });
         
-        // Boutons - délai plus espacé
+        // Animer les boutons (pour les deux pages)
         const buttons = document.querySelectorAll('.btn');
         buttons.forEach((btn, index) => {
-            this.popElement(btn, index * 200);
+            this.popElement(btn, 400 + (index * 200));
         });
     }
 
@@ -104,6 +90,30 @@ class PagePopAnimation {
             // Simplement ajouter la classe d'animation
             element.classList.add('pop-show');
         }, delay);
+    }
+
+    animateButtons() {
+        // Animer seulement les boutons individuellement
+        const allButtons = document.querySelectorAll('.btn');
+        allButtons.forEach((btn, index) => {
+            this.popElement(btn, 400 + (index * 200));
+        });
+    }
+
+    animateSoftwareItems() {
+        // Animer chaque logiciel individuellement avec délais fluides
+        const softwareItems = document.querySelectorAll('.software-item');
+        softwareItems.forEach((item, index) => {
+            this.popElement(item, 600 + (index * 80));
+        });
+    }
+
+    animateBadges() {
+        // Animer chaque badge individuellement
+        const badges = document.querySelectorAll('.badge-item');
+        badges.forEach((badge, index) => {
+            this.popElement(badge, 800 + (index * 150));
+        });
     }
 
     // Méthode pour animer un nouvel élément ajouté dynamiquement
