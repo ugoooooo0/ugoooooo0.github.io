@@ -3746,23 +3746,45 @@ body.mobile-test-mode .projects-gallery {
    EFFET POP STYLE CANVA POUR LES ELEMENTS
    ======================================== */
 
-/* Cacher TOUS les éléments dès le début avec CSS */
-header,
+/* Cacher les éléments pour l'effet POP */
+.btn,
+.artstation-btn-external,
+.software-item,
+.badge-item,
 .gallery-item,
-.carousel-item,
+.carousel-item {
+    transform: scale(0);
+    opacity: 0;
+}
+
+/* Containers et sections restent visibles normalement */
+header,
 .featured-projects-section,
 .presentation-section,
 .logiciels-section,
 .contact-section,
-.artstation-btn-external,
-.btn {
-    transform: scale(0);
-    opacity: 0;
+.cv-section,
+.buttons-container,
+.profile-image,
+.cv-image,
+.presentation-badges {
+    opacity: 1;
+    transform: scale(1);
 }
 
 /* État final - éléments visibles avec animation plus fluide */
 .pop-show {
     animation: popBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+}
+
+/* Les enfants héritent de l'animation de leur parent */
+.pop-show img,
+.pop-show .software-item img,
+.pop-show .cv-image,
+.pop-show .profile-image {
+    transform: scale(1) !important;
+    opacity: 1 !important;
+    transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
 }
 
 /* Animation POP avec effet élastique plus fluide */
