@@ -1228,7 +1228,8 @@ nav a:hover {
     justify-content: center;
 }
 
-.artstation-btn-external img {
+.artstation-btn-external img,
+.artstation-btn-external svg {
     width: 32px;
     height: 32px;
     object-fit: contain;
@@ -1256,7 +1257,8 @@ nav a:hover {
     box-shadow: 0 0 20px rgba(19, 175, 240, 0.5);
 }
 
-.artstation-btn-external:hover img {
+.artstation-btn-external:hover img,
+.artstation-btn-external:hover svg {
     transform: scale(1.05);
 }
 
@@ -1304,7 +1306,8 @@ nav a:hover {
         height: 35px;
     }
     
-    .artstation-btn-external img {
+    .artstation-btn-external img,
+    .artstation-btn-external svg {
         width: 28px;
         height: 28px;
     }
@@ -1362,7 +1365,8 @@ nav a:hover {
         border-radius: 6px;
     }
     
-    .artstation-btn-external img {
+    .artstation-btn-external img,
+    .artstation-btn-external svg {
         width: 24px;
         height: 24px;
     }
