@@ -22,7 +22,7 @@ class TranslationSystem {
                 // Page d'accueil - Section présentation
                 'ARTISTE 3D': 'ARTISTE 3D',
                 'presentation-text': 'Je m\'appelle Ugo Ravard, j\'ai 18 ans et je suis passionné par la création numérique et la 3D depuis plusieurs années. J\'aime donner vie à des idées à travers la modélisation, l\'animation et la conception visuelle. Actuellement étudiant au CNAM Enjmin, une école reconnue en France dans le domaine du jeu vidéo et de la création numérique, je développe mes compétences artistiques et techniques pour bâtir une carrière dans l\'industrie créative. Ce portfolio rassemble mes travaux et projets, reflets de mon univers et de mon évolution artistique.',
-                '🎨 VOIR MON PORTFOLIO': '🎨 VOIR MON PORTFOLIO',
+                '🎨 Portfolio site web': '🎨 Portfolio site web',
                 
                 // Badges de présentation
                 '5 ans d\'expérience': '5 ans d\'expérience',
@@ -119,7 +119,7 @@ class TranslationSystem {
                 // Page d'accueil - Section présentation
                 'ARTISTE 3D': '3D ARTIST',
                 'presentation-text': 'My name is Ugo Ravard, I am 18 years old and I have been passionate about digital creation and 3D for several years. I love bringing ideas to life through modeling, animation and visual design. Currently studying at CNAM Enjmin, a renowned school in France in the field of video games and digital creation, I am developing my artistic and technical skills to build a career in the creative industry. This portfolio brings together my work and projects, reflections of my universe and my artistic evolution.',
-                '🎨 VOIR MON PORTFOLIO': '🎨 VIEW MY PORTFOLIO',
+                '🎨 Portfolio site web': '🎨 Portfolio website',
                 
                 // Badges de présentation
                 '5 ans d\'expérience': '5 years experience',
