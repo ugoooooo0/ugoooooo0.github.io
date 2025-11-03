@@ -3760,24 +3760,28 @@ header,
     opacity: 0;
 }
 
-/* État final - éléments visibles avec animation */
+/* État final - éléments visibles avec animation plus fluide */
 .pop-show {
-    animation: popBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards !important;
+    animation: popBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
 }
 
-/* Animation POP avec effet élastique (comme Canva) */
+/* Animation POP avec effet élastique plus fluide */
 @keyframes popBounce {
     0% {
         transform: scale(0);
         opacity: 0;
     }
-    50% {
-        transform: scale(1.15);
-        opacity: 0.8;
+    40% {
+        transform: scale(1.08);
+        opacity: 0.7;
     }
-    80% {
-        transform: scale(0.95);
+    70% {
+        transform: scale(0.98);
         opacity: 0.9;
+    }
+    85% {
+        transform: scale(1.02);
+        opacity: 0.95;
     }
     100% {
         transform: scale(1);
