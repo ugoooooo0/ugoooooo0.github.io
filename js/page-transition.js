@@ -21,18 +21,18 @@ class PagePopAnimation {
         // Préparer tous les éléments pour l'animation
         this.prepareElements();
         
-        // Démarrer les animations avec des délais différents
+        // Démarrer les animations avec des délais plus doux
         setTimeout(() => {
             this.animateHeader();
-        }, 100);
+        }, 200);
         
         setTimeout(() => {
             this.animateMainContent();
-        }, 300);
+        }, 400);
         
         setTimeout(() => {
             this.animateProjects();
-        }, 500);
+        }, 600);
     }
 
     prepareElements() {
@@ -59,43 +59,43 @@ class PagePopAnimation {
         const featuredSection = document.querySelector('.featured-projects-section');
         
         if (presentationSection) {
-            this.popElement(presentationSection, 0);
+            this.popElement(presentationSection, 100);
         }
         
         if (featuredSection) {
-            this.popElement(featuredSection, 0);
+            this.popElement(featuredSection, 100);
         }
         
-        // Sections logiciels et contact
+        // Sections logiciels et contact avec délais plus fluides
         const logicielsSection = document.querySelector('.logiciels-section');
         const contactSection = document.querySelector('.contact-section');
         
         if (logicielsSection) {
-            this.popElement(logicielsSection, 300);
+            this.popElement(logicielsSection, 400);
         }
         
         if (contactSection) {
-            this.popElement(contactSection, 400);
+            this.popElement(contactSection, 500);
         }
     }
 
     animateProjects() {
-        // Projets de la galerie (portfolio)
+        // Projets de la galerie (portfolio) - plus fluide
         const galleryItems = document.querySelectorAll('.gallery-item');
         galleryItems.forEach((item, index) => {
-            this.popElement(item, index * 80);
+            this.popElement(item, index * 120);
         });
         
-        // Items du carousel
+        // Items du carousel - délai plus doux
         const carouselItems = document.querySelectorAll('.carousel-item');
         carouselItems.forEach((item, index) => {
-            this.popElement(item, index * 100);
+            this.popElement(item, index * 150);
         });
         
-        // Boutons
+        // Boutons - délai plus espacé
         const buttons = document.querySelectorAll('.btn');
         buttons.forEach((btn, index) => {
-            this.popElement(btn, index * 150);
+            this.popElement(btn, index * 200);
         });
     }
 
