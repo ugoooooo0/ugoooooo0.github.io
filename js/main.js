@@ -733,7 +733,18 @@ function initLightbox() {
             
             console.log('🔍 Clicked on gallery item:', galleryItem);
             
-            // Pour tous les projets (y compris les jeux), ouvrir la lightbox
+            // Vérifier si c'est un projet de jeu avec un lien direct
+            const hasGame = galleryItem.getAttribute('data-has-game');
+            const gameUrl = galleryItem.getAttribute('data-game-url');
+            
+            // Si c'est un jeu ET que l'utilisateur fait Ctrl+Clic, ouvrir directement le jeu
+            if (hasGame === 'oui' && gameUrl && e.ctrlKey) {
+                console.log('🎮 CTRL+Click detected! Opening game directly:', gameUrl);
+                window.open(gameUrl, '_blank');
+                return;
+            }
+            
+            // Sinon, ouvrir la lightbox normalement
             console.log('📷 Opening lightbox for project');
             
             // Stocker la référence au projet actuel pour récupérer la description dynamiquement
@@ -942,6 +953,8 @@ function initLightbox() {
         
         if (hasGame === 'oui' && gameUrl) {
             console.log('🎮 SHOWING GAME BUTTON!');
+            gameButton.textContent = '🎮 Jouer maintenant';
+            gameButton.title = 'Ouvrir le jeu sur itch.io';
             gameButton.onclick = function() {
                 console.log('🎮 Button clicked, opening:', gameUrl);
                 window.open(gameUrl, '_blank');
