@@ -3637,31 +3637,100 @@ body.mobile-test-mode .projects-gallery {
     border-color: #64ffda;
 }
 
-/* Overlay pour les projets de jeu */
-.game-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(transparent, rgba(0,0,0,0.8));
-    padding: 20px 15px 15px;
-    transform: translateY(100%);
-    transition: transform 0.3s ease;
-    pointer-events: none;
-    z-index: 2;
+/* Nouveau design pour les projets de jeux avec boutons visibles */
+.game-project {
+    background: rgba(15, 20, 25, 0.95) !important;
+    border: 2px solid rgba(100, 255, 218, 0.3) !important;
+    border-radius: 15px !important;
+    overflow: hidden !important;
 }
 
-.gallery-item:hover .game-overlay {
-    transform: translateY(0);
+.project-content img {
+    width: 100%;
+    height: auto;
+    border-radius: 0 !important;
+    display: block;
 }
 
-.game-overlay-text {
-    color: #FFD700;
-    font-weight: bold;
+.project-actions {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    background: rgba(15, 20, 25, 0.98);
+    border-top: 1px solid rgba(100, 255, 218, 0.2);
+}
+
+.play-game-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+    color: #1a1a1a;
+    border: 2px solid rgba(255, 215, 0, 0.5);
+}
+
+.play-game-btn:hover {
+    background: linear-gradient(45deg, #FFA500, #FF8C00);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+    border-color: rgba(255, 215, 0, 0.8);
+}
+
+.play-icon,
+.gallery-icon {
     font-size: 16px;
-    text-align: center;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-    animation: gameTextPulse 2s infinite;
+}
+
+.play-text,
+.gallery-text {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Responsive pour les projets de jeux */
+@media (max-width: 768px) {
+    .project-actions {
+        padding: 10px;
+    }
+    
+    .play-game-btn {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+    
+    .play-text {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .project-actions {
+        padding: 8px;
+    }
+    
+    .play-game-btn {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+    
+    .play-icon {
+        font-size: 14px;
+    }
+    
+    .play-text {
+        font-size: 11px;
+    }
 }
 
 @keyframes gameTextPulse {
