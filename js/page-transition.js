@@ -39,7 +39,6 @@ class PagePopAnimation {
         // Cacher initialement tous les éléments animables
         const elementsToAnimate = [
             'header',
-            '.container > main',
             '.gallery-item',
             '.carousel-item',
             '.featured-projects-section',
@@ -53,9 +52,8 @@ class PagePopAnimation {
         elementsToAnimate.forEach(selector => {
             const elements = document.querySelectorAll(selector);
             elements.forEach(el => {
-                el.style.transform = 'scale(0)';
-                el.style.opacity = '0';
-                el.style.transition = 'all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+                // Ajouter une classe pour l'animation au lieu de styles inline
+                el.classList.add('pop-hidden');
             });
         });
     }
@@ -121,16 +119,9 @@ class PagePopAnimation {
 
     popElement(element, delay = 0) {
         setTimeout(() => {
-            element.style.transform = 'scale(1)';
-            element.style.opacity = '1';
-            
-            // Ajouter un petit effet de rebond supplémentaire
-            setTimeout(() => {
-                element.style.transform = 'scale(1.05)';
-                setTimeout(() => {
-                    element.style.transform = 'scale(1)';
-                }, 100);
-            }, 300);
+            // Retirer la classe qui cache et ajouter la classe d'animation
+            element.classList.remove('pop-hidden');
+            element.classList.add('pop-show');
         }, delay);
     }
 
