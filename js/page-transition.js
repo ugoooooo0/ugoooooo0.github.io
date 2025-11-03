@@ -36,26 +36,8 @@ class PagePopAnimation {
     }
 
     prepareElements() {
-        // Cacher initialement tous les éléments animables
-        const elementsToAnimate = [
-            'header',
-            '.gallery-item',
-            '.carousel-item',
-            '.featured-projects-section',
-            '.presentation-section',
-            '.logiciels-section',
-            '.contact-section',
-            '.artstation-btn-external',
-            '.btn'
-        ];
-        
-        elementsToAnimate.forEach(selector => {
-            const elements = document.querySelectorAll(selector);
-            elements.forEach(el => {
-                // Ajouter une classe pour l'animation au lieu de styles inline
-                el.classList.add('pop-hidden');
-            });
-        });
+        // Les éléments sont déjà cachés par le CSS, pas besoin de les préparer
+        console.log('Éléments préparés pour l\'animation POP');
     }
 
     animateHeader() {
@@ -119,8 +101,7 @@ class PagePopAnimation {
 
     popElement(element, delay = 0) {
         setTimeout(() => {
-            // Retirer la classe qui cache et ajouter la classe d'animation
-            element.classList.remove('pop-hidden');
+            // Simplement ajouter la classe d'animation
             element.classList.add('pop-show');
         }, delay);
     }
