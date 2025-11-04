@@ -57,43 +57,42 @@ function initCarousel() {
     
     if (!track || !prevBtn || !nextBtn) return;
     
-    // Associer les images aux projets en utilisant data-order
-    carouselItems.forEach(item => {
-        const projectOrder = item.dataset.projectOrder;
+    // Associer les images aux projets par ordre automatique (index)
+    const allGalleryItems = document.querySelectorAll('.gallery-item');
+    
+    carouselItems.forEach((item, carouselIndex) => {
         const img = item.querySelector('img');
         const titleEl = item.querySelector('.carousel-overlay h3');
         const descEl = item.querySelector('.carousel-overlay p');
         
-        if (projectOrder && img) {
-            // Trouver le projet correspondant dans la galerie
-            const galleryItem = document.querySelector(`[data-order="${projectOrder}"]`);
-            if (galleryItem) {
-                const galleryImg = galleryItem.querySelector('img');
-                if (galleryImg) {
-                    // Utiliser l'image de couverture du projet
-                    img.src = galleryImg.src;
-                    img.alt = galleryImg.alt;
-                    
-                    // Remplir avec les vraies descriptions de la galerie ET les sauvegarder
-                    const originalTitle = galleryImg.alt || `Projet ${projectOrder}`;
-                    const originalDescription = galleryImg.getAttribute('data-description') || 'Description du projet';
-                    
-                    if (titleEl) {
-                        titleEl.textContent = originalTitle;
-                        titleEl.setAttribute('data-original-title', originalTitle); // Sauvegarde
-                    }
-                    if (descEl) {
-                        descEl.textContent = originalDescription;
-                        descEl.setAttribute('data-original-description', originalDescription); // Sauvegarde
-                    }
+        // Utiliser l'index du carousel pour trouver le projet correspondant
+        if (carouselIndex < allGalleryItems.length && img) {
+            const galleryItem = allGalleryItems[carouselIndex];
+            const galleryImg = galleryItem.querySelector('img');
+            
+            if (galleryImg) {
+                // Utiliser l'image de couverture du projet
+                img.src = galleryImg.src;
+                img.alt = galleryImg.alt;
+                
+                // Remplir avec les vraies descriptions de la galerie
+                const originalTitle = galleryImg.alt || `Projet ${carouselIndex + 1}`;
+                const originalDescription = galleryImg.getAttribute('data-description') || 'Description du projet';
+                
+                if (titleEl) {
+                    titleEl.textContent = originalTitle;
+                    titleEl.setAttribute('data-original-title', originalTitle);
+                }
+                if (descEl) {
+                    descEl.textContent = originalDescription;
+                    descEl.setAttribute('data-original-description', originalDescription);
                 }
             }
             
             // Ajouter le clic pour ouvrir dans la lightbox
             item.style.cursor = 'pointer';
             item.addEventListener('click', () => {
-                // Trouver le projet correspondant dans la galerie
-                const galleryItem = document.querySelector(`[data-order="${projectOrder}"]`);
+                // Utiliser directement l'élément de galerie correspondant
                 if (galleryItem) {
                     // D'abord s'assurer que l'item est visible (changer de filtre si nécessaire)
                     const category = galleryItem.getAttribute('data-category');
@@ -1211,11 +1210,11 @@ function initPreviewTooltips() {
     
     // Tooltips pour les éléments du carousel
     const carouselItems = document.querySelectorAll('.carousel-item');
-    carouselItems.forEach(item => {
-        const projectOrder = item.getAttribute('data-project-order');
-        if (projectOrder) {
-            // Trouver le projet correspondant dans la galerie pour récupérer sa description
-            const galleryItem = document.querySelector(`[data-order="${projectOrder}"]`);
+    carouselItems.forEach((item, index) => {
+        // Utiliser l'index automatique au lieu de data-project-order
+        if (index < allGalleryItems.length) {
+            // Trouver le projet correspondant par index
+            const galleryItem = allGalleryItems[index];
             if (galleryItem) {
                 const galleryImg = galleryItem.querySelector('img');
                 if (galleryImg) {
