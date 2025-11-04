@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Ajouter les tooltips de prévisualisation
         initPreviewTooltips();
         
-        // Initialiser le masonry après chargement des images
-        initMasonry();
+        // Masonry désactivé - utilisation du système CSS columns pour un vrai imbriquement
+        // initMasonry();
         
         // Correction spéciale pour les images avec vidéos après 2 secondes
         setTimeout(() => {
@@ -687,10 +687,10 @@ function initFilters() {
                 }
             }
             
-            // Réorganiser le masonry après filtrage avec un délai plus court
-            setTimeout(() => {
-                layoutMasonry();
-            }, 50);
+            // Masonry désactivé - le CSS columns gère automatiquement la disposition
+            // setTimeout(() => {
+            //     layoutMasonry();
+            // }, 50);
         });
     });
 }
