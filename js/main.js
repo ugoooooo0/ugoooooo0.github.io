@@ -206,6 +206,7 @@ function initCarousel() {
 // Fonction pour préprocesser les images et améliorer le layout
 function preprocessImages() {
     const items = document.querySelectorAll('.gallery-item');
+    let loadedCount = 0;
     
     items.forEach(item => {
         const img = item.querySelector('img');
@@ -227,9 +228,32 @@ function preprocessImages() {
                 this.style.height = '200px'; // Hauteur par défaut en cas d'erreur
                 this.style.backgroundColor = 'rgba(100, 255, 218, 0.1)';
                 this.alt = 'Image non disponible';
+                loadedCount++;
+                checkAllLoaded();
             };
+            
+            // Vérifier le chargement pour l'optimisation
+            if (img.complete && img.naturalHeight !== 0) {
+                loadedCount++;
+                checkAllLoaded();
+            } else {
+                img.addEventListener('load', () => {
+                    loadedCount++;
+                    checkAllLoaded();
+                }, { once: true });
+            }
+        } else {
+            loadedCount++;
+            checkAllLoaded();
         }
     });
+    
+    function checkAllLoaded() {
+        if (loadedCount === items.length) {
+            console.log('Toutes les images préprocessées, lancement de l\'optimisation...');
+            setTimeout(() => optimizeContainerSizes(), 100);
+        }
+    }
 }
 
 // Fonction pour corriger spécifiquement le positionnement des images avec vidéos
@@ -352,7 +376,7 @@ function layoutMasonry() {
     );
     
     if (!gallery || items.length === 0) {
-        // Si aucun item visible, réduire la hauteur de la galerie ET minimiser l'espacement
+        // Si aucun item visible, réduire la hauteur de la galerie
         gallery.style.height = '50px';
         gallery.style.minHeight = '50px';
         return;
@@ -361,7 +385,7 @@ function layoutMasonry() {
     // Obtenir les variables CSS
     const computedStyle = getComputedStyle(document.documentElement);
     const columns = parseInt(computedStyle.getPropertyValue('--masonry-columns').trim()) || 3;
-    const gap = parseInt(computedStyle.getPropertyValue('--masonry-gap').trim().replace('px', '')) || 20;
+    const gap = parseInt(computedStyle.getPropertyValue('--masonry-gap').trim().replace('px', '')) || 15;
     
     const galleryWidth = gallery.offsetWidth;
     const itemWidth = (galleryWidth - (columns - 1) * gap) / columns;
@@ -369,7 +393,7 @@ function layoutMasonry() {
     // Initialiser les hauteurs des colonnes
     const columnHeights = new Array(columns).fill(0);
     
-    // Traiter les items par ordre séquentiel
+    // Traiter les items par ordre séquentiel pour un meilleur effet de brique
     let processedItems = 0;
     
     items.forEach((item, index) => {
@@ -386,21 +410,22 @@ function layoutMasonry() {
             const processItem = () => {
                 // Attendre un frame pour que les dimensions soient calculées
                 requestAnimationFrame(() => {
+                    // Obtenir la hauteur réelle de l'item
                     const itemHeight = item.offsetHeight;
                     
-                    // Trouver la colonne la plus courte
+                    // AMÉLIORATION : Trouver la colonne la plus courte pour un meilleur effet de brique
                     const shortestColumn = columnHeights.indexOf(Math.min(...columnHeights));
                     
-                    // Calculer la position
+                    // Calculer la position avec un espacement serré
                     const x = shortestColumn * (itemWidth + gap);
                     const y = columnHeights[shortestColumn];
                     
-                    // Positionner l'item avec animation fluide
+                    // Positionner l'item
                     item.style.left = `${x}px`;
                     item.style.top = `${y}px`;
                     item.style.opacity = '1';
                     
-                    // Mettre à jour la hauteur de la colonne
+                    // Mettre à jour la hauteur de la colonne avec un espacement réduit
                     columnHeights[shortestColumn] += itemHeight + gap;
                     
                     processedItems++;
@@ -408,8 +433,8 @@ function layoutMasonry() {
                     // Ajuster la hauteur du conteneur quand tous les items sont traités
                     if (processedItems === items.length) {
                         const maxHeight = Math.max(...columnHeights);
-                        // Réduire la hauteur si peu d'éléments
-                        const finalHeight = items.length <= 3 ? Math.max(maxHeight, 200) : maxHeight;
+                        // Hauteur optimisée selon le nombre d'éléments
+                        const finalHeight = items.length <= 3 ? Math.max(maxHeight, 200) : maxHeight - gap; // Réduire l'espace en bas
                         gallery.style.height = `${finalHeight}px`;
                         
                         // Ajouter classe spéciale si peu d'éléments
@@ -418,7 +443,7 @@ function layoutMasonry() {
                             gallery.style.marginBottom = '20px';
                         } else {
                             gallery.classList.remove('few-items');
-                            gallery.style.marginBottom = '';
+                            gallery.style.marginBottom = '40px'; // Marge standard
                         }
                         
                         console.log(`Masonry terminé: ${columns} colonnes, ${items.length} items, hauteur: ${finalHeight}px`);
@@ -432,7 +457,7 @@ function layoutMasonry() {
             } else {
                 // Attendre le chargement de l'image
                 img.addEventListener('load', processItem, { once: true });
-                img.addEventListener('error', processItem, { once: true }); // Gérer les erreurs
+                img.addEventListener('error', processItem, { once: true });
             }
         } else {
             // Pas d'image, traiter immédiatement
@@ -451,24 +476,55 @@ function layoutMasonry() {
                 
                 if (processedItems === items.length) {
                     const maxHeight = Math.max(...columnHeights);
-                    // Réduire la hauteur si peu d'éléments
-                    const finalHeight = items.length <= 3 ? Math.max(maxHeight, 200) : maxHeight;
+                    const finalHeight = items.length <= 3 ? Math.max(maxHeight, 200) : maxHeight - gap;
                     gallery.style.height = `${finalHeight}px`;
                     
-                    // Ajouter classe spéciale si peu d'éléments
                     if (items.length <= 3) {
                         gallery.classList.add('few-items');
                         gallery.style.marginBottom = '20px';
                     } else {
                         gallery.classList.remove('few-items');
-                        gallery.style.marginBottom = '';
+                        gallery.style.marginBottom = '40px';
                     }
                 }
             }, 50);
         }
     });
     
-    console.log(`Masonry initialisé: ${columns} colonnes, ${items.length} items, largeur: ${itemWidth}px`);
+    console.log(`Masonry initialisé: ${columns} colonnes, ${items.length} items, largeur: ${itemWidth}px, gap: ${gap}px`);
+}
+
+// Fonction pour optimiser les containers et éviter qu'ils soient trop grands
+function optimizeContainerSizes() {
+    const items = document.querySelectorAll('.gallery-item');
+    
+    items.forEach(item => {
+        const img = item.querySelector('img');
+        const projectContent = item.querySelector('.project-content');
+        
+        if (img && projectContent && img.complete && img.naturalHeight !== 0) {
+            // Attendre que l'image soit chargée pour calculer les bonnes dimensions
+            const imgHeight = img.offsetHeight;
+            const containerPadding = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--container-max-padding').trim().replace('px', '')) || 20;
+            
+            // Définir une hauteur optimale pour le container
+            // La hauteur du container = hauteur image + padding vertical fixe
+            const optimalHeight = imgHeight + (containerPadding * 2);
+            
+            // Appliquer la hauteur optimale
+            item.style.minHeight = `${optimalHeight}px`;
+            item.style.maxHeight = `${optimalHeight + 40}px`; // Petite marge de flexibilité
+            
+            // S'assurer que le contenu ne déborde pas
+            projectContent.style.height = '100%';
+            projectContent.style.display = 'flex';
+            projectContent.style.flexDirection = 'column';
+            projectContent.style.justifyContent = 'center';
+        }
+    });
+    
+    // Relancer le layout après l'optimisation
+    setTimeout(() => layoutMasonry(), 100);
 }
 
 // Fonction pour le contrôleur de taille
