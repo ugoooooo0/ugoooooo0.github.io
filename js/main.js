@@ -206,7 +206,6 @@ function initCarousel() {
 // Fonction pour préprocesser les images et améliorer le layout
 function preprocessImages() {
     const items = document.querySelectorAll('.gallery-item');
-    let loadedCount = 0;
     
     items.forEach(item => {
         const img = item.querySelector('img');
@@ -228,32 +227,9 @@ function preprocessImages() {
                 this.style.height = '200px'; // Hauteur par défaut en cas d'erreur
                 this.style.backgroundColor = 'rgba(100, 255, 218, 0.1)';
                 this.alt = 'Image non disponible';
-                loadedCount++;
-                checkAllLoaded();
             };
-            
-            // Vérifier le chargement pour l'optimisation
-            if (img.complete && img.naturalHeight !== 0) {
-                loadedCount++;
-                checkAllLoaded();
-            } else {
-                img.addEventListener('load', () => {
-                    loadedCount++;
-                    checkAllLoaded();
-                }, { once: true });
-            }
-        } else {
-            loadedCount++;
-            checkAllLoaded();
         }
     });
-    
-    function checkAllLoaded() {
-        if (loadedCount === items.length) {
-            console.log('Toutes les images préprocessées, lancement de l\'optimisation...');
-            setTimeout(() => optimizeContainerSizes(), 100);
-        }
-    }
 }
 
 // Fonction pour corriger spécifiquement le positionnement des images avec vidéos
@@ -297,235 +273,146 @@ function fixVideoImagePositioning() {
     }, 500);
 }
 
-// Fonction pour initialiser le masonry JavaScript - ZERO TROU !
+// NOUVEAU SYSTÈME MASONRY - Version qui fonctionne réellement
 function initMasonry() {
     const gallery = document.querySelector('.projects-gallery');
-    const items = document.querySelectorAll('.gallery-item');
+    if (!gallery) return;
     
-    if (!gallery || items.length === 0) return;
+    console.log('🧱 Initialisation du nouveau système masonry');
     
-    console.log('Initialisation du masonry avec', items.length, 'éléments');
-    
-    // Attendre que toutes les images soient chargées
-    let loadedImages = 0;
-    const totalImages = items.length;
-    
-    function checkAllLoaded() {
-        loadedImages++;
-        console.log(`Image ${loadedImages}/${totalImages} chargée`);
-        if (loadedImages === totalImages) {
-            console.log('Toutes les images sont chargées, lancement du layout');
-            setTimeout(() => layoutMasonry(), 100); // Petit délai pour s'assurer que tout est prêt
-        }
-    }
-    
-    items.forEach((item, index) => {
-        const img = item.querySelector('img');
-        if (img) {
-            if (img.complete && img.naturalHeight !== 0) {
-                checkAllLoaded();
-            } else {
-                img.addEventListener('load', checkAllLoaded, { once: true });
-                img.addEventListener('error', () => {
-                    console.warn(`Erreur de chargement pour l'image ${index}`);
-                    checkAllLoaded();
-                }, { once: true });
-            }
-        } else {
-            checkAllLoaded();
-        }
-    });
-    
-    // Sécurité : forcer le layout après 3 secondes même si toutes les images ne sont pas chargées
-    setTimeout(() => {
-        if (loadedImages < totalImages) {
-            console.warn(`Timeout: seulement ${loadedImages}/${totalImages} images chargées, forçage du layout`);
-            layoutMasonry();
-        }
-    }, 3000);
-    
-    // Relayout au redimensionnement avec debounce amélioré
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-            console.log('Redimensionnement détecté, re-layout');
-            layoutMasonry();
-        }, 300); // Délai plus long pour éviter les re-layouts trop fréquents
-    });
-    
-    // Relayout quand on change de filtre
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            setTimeout(() => {
-                console.log('Filtre changé, re-layout');
-                layoutMasonry();
-            }, 100);
+    // Attendre que toutes les images soient chargées avant de faire le layout
+    imagesLoaded(gallery, () => {
+        console.log('📸 Toutes les images sont chargées, création du layout masonry');
+        createMasonryLayout();
+        
+        // Re-layout au redimensionnement
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(createMasonryLayout, 250);
+        });
+        
+        // Re-layout au changement de filtre
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                setTimeout(createMasonryLayout, 100);
+            });
         });
     });
 }
 
-function layoutMasonry() {
-    const gallery = document.querySelector('.projects-gallery');
-    const allItems = document.querySelectorAll('.gallery-item');
+// Fonction pour vérifier que toutes les images sont chargées
+function imagesLoaded(container, callback) {
+    const images = container.querySelectorAll('img');
+    let loadedCount = 0;
+    const totalImages = images.length;
     
-    // Filtrer seulement les items visibles
-    const items = Array.from(allItems).filter(item => 
-        getComputedStyle(item).display !== 'none' && !item.classList.contains('hidden')
-    );
-    
-    if (!gallery || items.length === 0) {
-        // Si aucun item visible, réduire la hauteur de la galerie
-        gallery.style.height = '50px';
-        gallery.style.minHeight = '50px';
+    if (totalImages === 0) {
+        callback();
         return;
     }
     
-    // Obtenir les variables CSS
-    const computedStyle = getComputedStyle(document.documentElement);
-    const columns = parseInt(computedStyle.getPropertyValue('--masonry-columns').trim()) || 3;
-    const gap = parseInt(computedStyle.getPropertyValue('--masonry-gap').trim().replace('px', '')) || 15;
+    function checkComplete() {
+        loadedCount++;
+        if (loadedCount === totalImages) {
+            callback();
+        }
+    }
     
-    const galleryWidth = gallery.offsetWidth;
-    const itemWidth = (galleryWidth - (columns - 1) * gap) / columns;
-    
-    // Initialiser les hauteurs des colonnes
-    const columnHeights = new Array(columns).fill(0);
-    
-    // Traiter les items par ordre séquentiel pour un meilleur effet de brique
-    let processedItems = 0;
-    
-    items.forEach((item, index) => {
-        // Définir la largeur de l'item
-        item.style.width = `${itemWidth}px`;
-        item.style.position = 'absolute';
-        
-        // Cacher initialement pour éviter le flash
-        item.style.opacity = '0';
-        item.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-        
-        const img = item.querySelector('img');
-        if (img) {
-            const processItem = () => {
-                // Attendre un frame pour que les dimensions soient calculées
-                requestAnimationFrame(() => {
-                    // Obtenir la hauteur réelle de l'item
-                    const itemHeight = item.offsetHeight;
-                    
-                    // AMÉLIORATION : Trouver la colonne la plus courte pour un meilleur effet de brique
-                    const shortestColumn = columnHeights.indexOf(Math.min(...columnHeights));
-                    
-                    // Calculer la position avec un espacement serré
-                    const x = shortestColumn * (itemWidth + gap);
-                    const y = columnHeights[shortestColumn];
-                    
-                    // Positionner l'item
-                    item.style.left = `${x}px`;
-                    item.style.top = `${y}px`;
-                    item.style.opacity = '1';
-                    
-                    // Mettre à jour la hauteur de la colonne avec un espacement réduit
-                    columnHeights[shortestColumn] += itemHeight + gap;
-                    
-                    processedItems++;
-                    
-                    // Ajuster la hauteur du conteneur quand tous les items sont traités
-                    if (processedItems === items.length) {
-                        const maxHeight = Math.max(...columnHeights);
-                        // Hauteur optimisée selon le nombre d'éléments
-                        const finalHeight = items.length <= 3 ? Math.max(maxHeight, 200) : maxHeight - gap; // Réduire l'espace en bas
-                        gallery.style.height = `${finalHeight}px`;
-                        
-                        // Ajouter classe spéciale si peu d'éléments
-                        if (items.length <= 3) {
-                            gallery.classList.add('few-items');
-                            gallery.style.marginBottom = '20px';
-                        } else {
-                            gallery.classList.remove('few-items');
-                            gallery.style.marginBottom = '40px'; // Marge standard
-                        }
-                        
-                        console.log(`Masonry terminé: ${columns} colonnes, ${items.length} items, hauteur: ${finalHeight}px`);
-                    }
-                });
-            };
-            
-            // Si l'image est déjà chargée
-            if (img.complete && img.naturalHeight !== 0) {
-                processItem();
-            } else {
-                // Attendre le chargement de l'image
-                img.addEventListener('load', processItem, { once: true });
-                img.addEventListener('error', processItem, { once: true });
-            }
+    images.forEach(img => {
+        if (img.complete && img.naturalHeight !== 0) {
+            checkComplete();
         } else {
-            // Pas d'image, traiter immédiatement
-            setTimeout(() => {
-                const itemHeight = item.offsetHeight;
-                const shortestColumn = columnHeights.indexOf(Math.min(...columnHeights));
-                const x = shortestColumn * (itemWidth + gap);
-                const y = columnHeights[shortestColumn];
-                
-                item.style.left = `${x}px`;
-                item.style.top = `${y}px`;
-                item.style.opacity = '1';
-                
-                columnHeights[shortestColumn] += itemHeight + gap;
-                processedItems++;
-                
-                if (processedItems === items.length) {
-                    const maxHeight = Math.max(...columnHeights);
-                    const finalHeight = items.length <= 3 ? Math.max(maxHeight, 200) : maxHeight - gap;
-                    gallery.style.height = `${finalHeight}px`;
-                    
-                    if (items.length <= 3) {
-                        gallery.classList.add('few-items');
-                        gallery.style.marginBottom = '20px';
-                    } else {
-                        gallery.classList.remove('few-items');
-                        gallery.style.marginBottom = '40px';
-                    }
-                }
-            }, 50);
+            img.addEventListener('load', checkComplete);
+            img.addEventListener('error', checkComplete);
         }
     });
-    
-    console.log(`Masonry initialisé: ${columns} colonnes, ${items.length} items, largeur: ${itemWidth}px, gap: ${gap}px`);
 }
 
-// Fonction pour optimiser les containers et éviter qu'ils soient trop grands
-function optimizeContainerSizes() {
-    const items = document.querySelectorAll('.gallery-item');
+// NOUVELLE FONCTION MASONRY - Création de l'effet de brique qui fonctionne
+function createMasonryLayout() {
+    const gallery = document.querySelector('.projects-gallery');
+    const allItems = document.querySelectorAll('.gallery-item');
     
-    items.forEach(item => {
-        const img = item.querySelector('img');
-        const projectContent = item.querySelector('.project-content');
+    // Filtrer seulement les éléments visibles (non cachés par les filtres)
+    const visibleItems = Array.from(allItems).filter(item => 
+        !item.classList.contains('hidden') && 
+        getComputedStyle(item).display !== 'none'
+    );
+    
+    if (!gallery || visibleItems.length === 0) {
+        gallery.style.height = '100px';
+        return;
+    }
+    
+    console.log(`🧱 Layout masonry pour ${visibleItems.length} éléments`);
+    
+    // Obtenir le nombre de colonnes selon la largeur de l'écran
+    const containerWidth = gallery.offsetWidth;
+    let columns, gap;
+    
+    if (containerWidth >= 1200) {
+        columns = 4;
+        gap = 20;
+    } else if (containerWidth >= 768) {
+        columns = 3;
+        gap = 15;
+    } else if (containerWidth >= 480) {
+        columns = 2;
+        gap = 12;
+    } else {
+        columns = 1;
+        gap = 10;
+    }
+    
+    // Calculer la largeur de chaque élément
+    const itemWidth = (containerWidth - (columns - 1) * gap) / columns;
+    
+    // Initialiser les hauteurs des colonnes
+    const columnHeights = Array(columns).fill(0);
+    
+    // Positionner chaque élément
+    visibleItems.forEach((item, index) => {
+        // Réinitialiser les styles
+        item.style.position = 'absolute';
+        item.style.width = `${itemWidth}px`;
+        item.style.opacity = '1';
         
-        if (img && projectContent && img.complete && img.naturalHeight !== 0) {
-            // Attendre que l'image soit chargée pour calculer les bonnes dimensions
-            const imgHeight = img.offsetHeight;
-            const containerPadding = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--container-max-padding').trim().replace('px', '')) || 20;
-            
-            // Définir une hauteur optimale pour le container
-            // La hauteur du container = hauteur image + padding vertical fixe
-            const optimalHeight = imgHeight + (containerPadding * 2);
-            
-            // Appliquer la hauteur optimale
-            item.style.minHeight = `${optimalHeight}px`;
-            item.style.maxHeight = `${optimalHeight + 40}px`; // Petite marge de flexibilité
-            
-            // S'assurer que le contenu ne déborde pas
-            projectContent.style.height = '100%';
-            projectContent.style.display = 'flex';
-            projectContent.style.flexDirection = 'column';
-            projectContent.style.justifyContent = 'center';
-        }
+        // Forcer le recalcul de la hauteur
+        item.offsetHeight; // Trigger reflow
+        
+        // Obtenir la hauteur réelle de l'élément
+        const itemHeight = item.offsetHeight;
+        
+        // Trouver la colonne la plus courte
+        const shortestColumnIndex = columnHeights.indexOf(Math.min(...columnHeights));
+        
+        // Positionner l'élément dans la colonne la plus courte
+        const x = shortestColumnIndex * (itemWidth + gap);
+        const y = columnHeights[shortestColumnIndex];
+        
+        item.style.left = `${x}px`;
+        item.style.top = `${y}px`;
+        item.style.transform = 'none'; // Supprimer les transforms qui peuvent interférer
+        
+        // Mettre à jour la hauteur de cette colonne
+        columnHeights[shortestColumnIndex] += itemHeight + gap;
+        
+        console.log(`📦 Élément ${index + 1}: colonne ${shortestColumnIndex + 1}, position (${x}, ${y}), hauteur: ${itemHeight}`);
     });
     
-    // Relancer le layout après l'optimisation
-    setTimeout(() => layoutMasonry(), 100);
+    // Ajuster la hauteur totale de la galerie
+    const maxHeight = Math.max(...columnHeights);
+    const finalHeight = Math.max(maxHeight - gap, 100); // Enlever le gap final et minimum 100px
+    
+    gallery.style.height = `${finalHeight}px`;
+    gallery.style.position = 'relative'; // S'assurer que le conteneur est relatif
+    
+    console.log(`✅ Masonry terminé: ${columns} colonnes, hauteur finale: ${finalHeight}px`);
 }
+
+
 
 // Fonction pour le contrôleur de taille
 function initSizeController() {
