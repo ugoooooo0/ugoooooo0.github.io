@@ -3750,16 +3750,11 @@ body.mobile-test-mode .projects-gallery {
 .btn,
 .artstation-btn-external,
 .software-item,
-.badge-item {
-    transform: scale(0);
-    opacity: 0;
-}
-
-/* Projets visibles normalement (pas d'animation pour éviter les décalages) */
+.badge-item,
 .gallery-item,
 .carousel-item {
-    opacity: 1;
-    transform: scale(1);
+    transform: scale(0);
+    opacity: 0;
 }
 
 /* Containers et sections restent visibles normalement */
