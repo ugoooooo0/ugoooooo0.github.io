@@ -11,11 +11,6 @@
     --container-width: calc(100% * var(--section-scale) / 100);
     --font-scale: calc(0.8 + (var(--section-scale) / 100) * 0.4); /* De 0.8x à 1.2x */
     --padding-scale: calc(20px * var(--section-scale) / 100);
-    
-    /* Variables pour la grille masonry */
-    --masonry-columns: 3;
-    --masonry-gap: 15px;
-    --container-max-padding: 20px; /* Marge maximum des containers par rapport aux images */
 }
 
 /* Contrôleur de taille */
@@ -136,71 +131,72 @@ body::after {
 }
 
 /* ========================================
-   GALERIE DE PROJETS - MASONRY LAYOUT
+   NOUVEAU SYSTÈME MASONRY - EFFET DE BRIQUE PARFAIT
 ======================================== */
 
 .projects-gallery {
     position: relative;
     width: 100%;
     margin: 20px auto;
-    min-height: 400px;
+    min-height: 100px;
     padding: 0;
     transition: height 0.3s ease;
+    background: transparent;
 }
 
-.projects-gallery.few-items {
-    margin-bottom: 20px;
-}
-
-/* Éléments de la galerie */
+/* Éléments de la galerie - NOUVEAU SYSTÈME */
 .gallery-item {
+    /* Position absolue contrôlée par JavaScript */
     position: absolute;
-    border-radius: 12px;
+    
+    /* Apparence */
+    border-radius: 15px;
     overflow: hidden;
-    background: rgba(15, 20, 25, 0.8);
-    border: 2px solid rgba(100, 255, 218, 0.2);
-    transition: all 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+    background: rgba(15, 20, 25, 0.85);
+    border: 2px solid rgba(100, 255, 218, 0.25);
+    
+    /* Transitions fluides */
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    
+    /* Effets visuels */
     cursor: pointer;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(100, 255, 218, 0.1);
     backdrop-filter: blur(10px);
     
-    /* CONTRÔLE STRICT DE LA MARGE CONTAINER */
-    padding: var(--container-max-padding); /* Marge fixe de 20px maximum */
+    /* Padding pour l'espacement interne */
+    padding: 15px;
     box-sizing: border-box;
+    
+    /* Éviter les problèmes de débordement */
+    overflow: hidden;
 }
 
-/* Styles pour différentes tailles de projets pour un meilleur effet de brique */
-.gallery-item.large {
-    /* Les projets large peuvent être plus hauts */
-    max-height: 500px;
+/* États des éléments */
+.gallery-item:hover {
+    transform: translateY(-10px) scale(1.03);
+    border-color: rgba(100, 255, 218, 0.6);
+    box-shadow: 
+        0 20px 50px rgba(100, 255, 218, 0.25),
+        0 0 0 1px rgba(100, 255, 218, 0.3);
+    background: rgba(15, 20, 25, 0.95);
 }
 
-.gallery-item.medium {
-    /* Hauteur intermédiaire */
-    max-height: 400px;
-}
-
-.gallery-item.small {
-    /* Projets compacts */
-    max-height: 300px;
-}
-
+/* Style spécial pour les projets de jeux */
 .gallery-item.game-project {
-    /* Projets de jeux - mise en valeur */
-    border: 3px solid rgba(255, 215, 0, 0.4);
+    border: 3px solid rgba(255, 215, 0, 0.5);
     background: rgba(25, 25, 30, 0.9);
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.4),
+        0 0 20px rgba(255, 215, 0, 0.2);
 }
 
 .gallery-item.game-project:hover {
-    border-color: rgba(255, 215, 0, 0.7);
-    box-shadow: 0 15px 40px rgba(255, 215, 0, 0.3);
-}
-
-.gallery-item:hover {
-    transform: translateY(-8px) scale(1.02);
-    border-color: rgba(100, 255, 218, 0.5);
-    box-shadow: 0 15px 40px rgba(100, 255, 218, 0.2);
-    background: rgba(15, 20, 25, 0.95);
+    border-color: rgba(255, 215, 0, 0.8);
+    box-shadow: 
+        0 20px 50px rgba(255, 215, 0, 0.3),
+        0 0 30px rgba(255, 215, 0, 0.4);
 }
 
 /* Images dans la galerie */
@@ -208,16 +204,25 @@ body::after {
     width: 100%;
     height: auto;
     display: block;
-    border-radius: 8px;
-    transition: transform 0.3s ease;
+    border-radius: 10px;
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     object-fit: cover;
     
-    /* CONTRÔLE DE LA TAILLE D'IMAGE - empêche les containers trop grands */
-    max-height: 400px;
+    /* Assurer une bonne qualité d'image */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
 }
 
 .gallery-item:hover img {
-    transform: scale(1.05);
+    transform: scale(1.07);
+}
+
+/* Éléments cachés par les filtres */
+.gallery-item.hidden {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: scale(0.8) !important;
 }
 
 /* Contenu des projets */
