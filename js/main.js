@@ -57,42 +57,43 @@ function initCarousel() {
     
     if (!track || !prevBtn || !nextBtn) return;
     
-    // Associer les images aux projets par ordre automatique (index)
-    const allGalleryItems = document.querySelectorAll('.gallery-item');
-    
-    carouselItems.forEach((item, carouselIndex) => {
+    // Associer les images aux projets en utilisant data-order
+    carouselItems.forEach(item => {
+        const projectOrder = item.dataset.projectOrder;
         const img = item.querySelector('img');
         const titleEl = item.querySelector('.carousel-overlay h3');
         const descEl = item.querySelector('.carousel-overlay p');
         
-        // Utiliser l'index du carousel pour trouver le projet correspondant
-        if (carouselIndex < allGalleryItems.length && img) {
-            const galleryItem = allGalleryItems[carouselIndex];
-            const galleryImg = galleryItem.querySelector('img');
-            
-            if (galleryImg) {
-                // Utiliser l'image de couverture du projet
-                img.src = galleryImg.src;
-                img.alt = galleryImg.alt;
-                
-                // Remplir avec les vraies descriptions de la galerie
-                const originalTitle = galleryImg.alt || `Projet ${carouselIndex + 1}`;
-                const originalDescription = galleryImg.getAttribute('data-description') || 'Description du projet';
-                
-                if (titleEl) {
-                    titleEl.textContent = originalTitle;
-                    titleEl.setAttribute('data-original-title', originalTitle);
-                }
-                if (descEl) {
-                    descEl.textContent = originalDescription;
-                    descEl.setAttribute('data-original-description', originalDescription);
+        if (projectOrder && img) {
+            // Trouver le projet correspondant dans la galerie
+            const galleryItem = document.querySelector(`[data-order="${projectOrder}"]`);
+            if (galleryItem) {
+                const galleryImg = galleryItem.querySelector('img');
+                if (galleryImg) {
+                    // Utiliser l'image de couverture du projet
+                    img.src = galleryImg.src;
+                    img.alt = galleryImg.alt;
+                    
+                    // Remplir avec les vraies descriptions de la galerie ET les sauvegarder
+                    const originalTitle = galleryImg.alt || `Projet ${projectOrder}`;
+                    const originalDescription = galleryImg.getAttribute('data-description') || 'Description du projet';
+                    
+                    if (titleEl) {
+                        titleEl.textContent = originalTitle;
+                        titleEl.setAttribute('data-original-title', originalTitle); // Sauvegarde
+                    }
+                    if (descEl) {
+                        descEl.textContent = originalDescription;
+                        descEl.setAttribute('data-original-description', originalDescription); // Sauvegarde
+                    }
                 }
             }
             
             // Ajouter le clic pour ouvrir dans la lightbox
             item.style.cursor = 'pointer';
             item.addEventListener('click', () => {
-                // Utiliser directement l'élément de galerie correspondant
+                // Trouver le projet correspondant dans la galerie
+                const galleryItem = document.querySelector(`[data-order="${projectOrder}"]`);
                 if (galleryItem) {
                     // D'abord s'assurer que l'item est visible (changer de filtre si nécessaire)
                     const category = galleryItem.getAttribute('data-category');
@@ -273,146 +274,203 @@ function fixVideoImagePositioning() {
     }, 500);
 }
 
-// NOUVEAU SYSTÈME MASONRY - Version qui fonctionne réellement
+// Fonction pour initialiser le masonry JavaScript - ZERO TROU !
 function initMasonry() {
     const gallery = document.querySelector('.projects-gallery');
-    if (!gallery) return;
+    const items = document.querySelectorAll('.gallery-item');
     
-    console.log('🧱 Initialisation du nouveau système masonry');
+    if (!gallery || items.length === 0) return;
     
-    // Attendre que toutes les images soient chargées avant de faire le layout
-    imagesLoaded(gallery, () => {
-        console.log('📸 Toutes les images sont chargées, création du layout masonry');
-        createMasonryLayout();
-        
-        // Re-layout au redimensionnement
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(createMasonryLayout, 250);
-        });
-        
-        // Re-layout au changement de filtre
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                setTimeout(createMasonryLayout, 100);
-            });
-        });
-    });
-}
-
-// Fonction pour vérifier que toutes les images sont chargées
-function imagesLoaded(container, callback) {
-    const images = container.querySelectorAll('img');
-    let loadedCount = 0;
-    const totalImages = images.length;
+    console.log('Initialisation du masonry avec', items.length, 'éléments');
     
-    if (totalImages === 0) {
-        callback();
-        return;
-    }
+    // Attendre que toutes les images soient chargées
+    let loadedImages = 0;
+    const totalImages = items.length;
     
-    function checkComplete() {
-        loadedCount++;
-        if (loadedCount === totalImages) {
-            callback();
+    function checkAllLoaded() {
+        loadedImages++;
+        console.log(`Image ${loadedImages}/${totalImages} chargée`);
+        if (loadedImages === totalImages) {
+            console.log('Toutes les images sont chargées, lancement du layout');
+            setTimeout(() => layoutMasonry(), 100); // Petit délai pour s'assurer que tout est prêt
         }
     }
     
-    images.forEach(img => {
-        if (img.complete && img.naturalHeight !== 0) {
-            checkComplete();
+    items.forEach((item, index) => {
+        const img = item.querySelector('img');
+        if (img) {
+            if (img.complete && img.naturalHeight !== 0) {
+                checkAllLoaded();
+            } else {
+                img.addEventListener('load', checkAllLoaded, { once: true });
+                img.addEventListener('error', () => {
+                    console.warn(`Erreur de chargement pour l'image ${index}`);
+                    checkAllLoaded();
+                }, { once: true });
+            }
         } else {
-            img.addEventListener('load', checkComplete);
-            img.addEventListener('error', checkComplete);
+            checkAllLoaded();
         }
+    });
+    
+    // Sécurité : forcer le layout après 3 secondes même si toutes les images ne sont pas chargées
+    setTimeout(() => {
+        if (loadedImages < totalImages) {
+            console.warn(`Timeout: seulement ${loadedImages}/${totalImages} images chargées, forçage du layout`);
+            layoutMasonry();
+        }
+    }, 3000);
+    
+    // Relayout au redimensionnement avec debounce amélioré
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            console.log('Redimensionnement détecté, re-layout');
+            layoutMasonry();
+        }, 300); // Délai plus long pour éviter les re-layouts trop fréquents
+    });
+    
+    // Relayout quand on change de filtre
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            setTimeout(() => {
+                console.log('Filtre changé, re-layout');
+                layoutMasonry();
+            }, 100);
+        });
     });
 }
 
-// NOUVELLE FONCTION MASONRY - Création de l'effet de brique qui fonctionne
-function createMasonryLayout() {
+function layoutMasonry() {
     const gallery = document.querySelector('.projects-gallery');
     const allItems = document.querySelectorAll('.gallery-item');
     
-    // Filtrer seulement les éléments visibles (non cachés par les filtres)
-    const visibleItems = Array.from(allItems).filter(item => 
-        !item.classList.contains('hidden') && 
-        getComputedStyle(item).display !== 'none'
+    // Filtrer seulement les items visibles
+    const items = Array.from(allItems).filter(item => 
+        getComputedStyle(item).display !== 'none' && !item.classList.contains('hidden')
     );
     
-    if (!gallery || visibleItems.length === 0) {
-        gallery.style.height = '100px';
+    if (!gallery || items.length === 0) {
+        // Si aucun item visible, réduire la hauteur de la galerie ET minimiser l'espacement
+        gallery.style.height = '50px';
+        gallery.style.minHeight = '50px';
         return;
     }
     
-    console.log(`🧱 Layout masonry pour ${visibleItems.length} éléments`);
+    // Obtenir les variables CSS
+    const computedStyle = getComputedStyle(document.documentElement);
+    const columns = parseInt(computedStyle.getPropertyValue('--masonry-columns').trim()) || 3;
+    const gap = parseInt(computedStyle.getPropertyValue('--masonry-gap').trim().replace('px', '')) || 20;
     
-    // Obtenir le nombre de colonnes selon la largeur de l'écran
-    const containerWidth = gallery.offsetWidth;
-    let columns, gap;
-    
-    if (containerWidth >= 1200) {
-        columns = 4;
-        gap = 20;
-    } else if (containerWidth >= 768) {
-        columns = 3;
-        gap = 15;
-    } else if (containerWidth >= 480) {
-        columns = 2;
-        gap = 12;
-    } else {
-        columns = 1;
-        gap = 10;
-    }
-    
-    // Calculer la largeur de chaque élément
-    const itemWidth = (containerWidth - (columns - 1) * gap) / columns;
+    const galleryWidth = gallery.offsetWidth;
+    const itemWidth = (galleryWidth - (columns - 1) * gap) / columns;
     
     // Initialiser les hauteurs des colonnes
-    const columnHeights = Array(columns).fill(0);
+    const columnHeights = new Array(columns).fill(0);
     
-    // Positionner chaque élément
-    visibleItems.forEach((item, index) => {
-        // Réinitialiser les styles
-        item.style.position = 'absolute';
+    // Traiter les items par ordre séquentiel
+    let processedItems = 0;
+    
+    items.forEach((item, index) => {
+        // Définir la largeur de l'item
         item.style.width = `${itemWidth}px`;
-        item.style.opacity = '1';
+        item.style.position = 'absolute';
         
-        // Forcer le recalcul de la hauteur
-        item.offsetHeight; // Trigger reflow
+        // Cacher initialement pour éviter le flash
+        item.style.opacity = '0';
+        item.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
         
-        // Obtenir la hauteur réelle de l'élément
-        const itemHeight = item.offsetHeight;
-        
-        // Trouver la colonne la plus courte
-        const shortestColumnIndex = columnHeights.indexOf(Math.min(...columnHeights));
-        
-        // Positionner l'élément dans la colonne la plus courte
-        const x = shortestColumnIndex * (itemWidth + gap);
-        const y = columnHeights[shortestColumnIndex];
-        
-        item.style.left = `${x}px`;
-        item.style.top = `${y}px`;
-        item.style.transform = 'none'; // Supprimer les transforms qui peuvent interférer
-        
-        // Mettre à jour la hauteur de cette colonne
-        columnHeights[shortestColumnIndex] += itemHeight + gap;
-        
-        console.log(`📦 Élément ${index + 1}: colonne ${shortestColumnIndex + 1}, position (${x}, ${y}), hauteur: ${itemHeight}`);
+        const img = item.querySelector('img');
+        if (img) {
+            const processItem = () => {
+                // Attendre un frame pour que les dimensions soient calculées
+                requestAnimationFrame(() => {
+                    const itemHeight = item.offsetHeight;
+                    
+                    // Trouver la colonne la plus courte
+                    const shortestColumn = columnHeights.indexOf(Math.min(...columnHeights));
+                    
+                    // Calculer la position
+                    const x = shortestColumn * (itemWidth + gap);
+                    const y = columnHeights[shortestColumn];
+                    
+                    // Positionner l'item avec animation fluide
+                    item.style.left = `${x}px`;
+                    item.style.top = `${y}px`;
+                    item.style.opacity = '1';
+                    
+                    // Mettre à jour la hauteur de la colonne
+                    columnHeights[shortestColumn] += itemHeight + gap;
+                    
+                    processedItems++;
+                    
+                    // Ajuster la hauteur du conteneur quand tous les items sont traités
+                    if (processedItems === items.length) {
+                        const maxHeight = Math.max(...columnHeights);
+                        // Réduire la hauteur si peu d'éléments
+                        const finalHeight = items.length <= 3 ? Math.max(maxHeight, 200) : maxHeight;
+                        gallery.style.height = `${finalHeight}px`;
+                        
+                        // Ajouter classe spéciale si peu d'éléments
+                        if (items.length <= 3) {
+                            gallery.classList.add('few-items');
+                            gallery.style.marginBottom = '20px';
+                        } else {
+                            gallery.classList.remove('few-items');
+                            gallery.style.marginBottom = '';
+                        }
+                        
+                        console.log(`Masonry terminé: ${columns} colonnes, ${items.length} items, hauteur: ${finalHeight}px`);
+                    }
+                });
+            };
+            
+            // Si l'image est déjà chargée
+            if (img.complete && img.naturalHeight !== 0) {
+                processItem();
+            } else {
+                // Attendre le chargement de l'image
+                img.addEventListener('load', processItem, { once: true });
+                img.addEventListener('error', processItem, { once: true }); // Gérer les erreurs
+            }
+        } else {
+            // Pas d'image, traiter immédiatement
+            setTimeout(() => {
+                const itemHeight = item.offsetHeight;
+                const shortestColumn = columnHeights.indexOf(Math.min(...columnHeights));
+                const x = shortestColumn * (itemWidth + gap);
+                const y = columnHeights[shortestColumn];
+                
+                item.style.left = `${x}px`;
+                item.style.top = `${y}px`;
+                item.style.opacity = '1';
+                
+                columnHeights[shortestColumn] += itemHeight + gap;
+                processedItems++;
+                
+                if (processedItems === items.length) {
+                    const maxHeight = Math.max(...columnHeights);
+                    // Réduire la hauteur si peu d'éléments
+                    const finalHeight = items.length <= 3 ? Math.max(maxHeight, 200) : maxHeight;
+                    gallery.style.height = `${finalHeight}px`;
+                    
+                    // Ajouter classe spéciale si peu d'éléments
+                    if (items.length <= 3) {
+                        gallery.classList.add('few-items');
+                        gallery.style.marginBottom = '20px';
+                    } else {
+                        gallery.classList.remove('few-items');
+                        gallery.style.marginBottom = '';
+                    }
+                }
+            }, 50);
+        }
     });
     
-    // Ajuster la hauteur totale de la galerie
-    const maxHeight = Math.max(...columnHeights);
-    const finalHeight = Math.max(maxHeight - gap, 100); // Enlever le gap final et minimum 100px
-    
-    gallery.style.height = `${finalHeight}px`;
-    gallery.style.position = 'relative'; // S'assurer que le conteneur est relatif
-    
-    console.log(`✅ Masonry terminé: ${columns} colonnes, hauteur finale: ${finalHeight}px`);
+    console.log(`Masonry initialisé: ${columns} colonnes, ${items.length} items, largeur: ${itemWidth}px`);
 }
-
-
 
 // Fonction pour le contrôleur de taille
 function initSizeController() {
@@ -1153,11 +1211,11 @@ function initPreviewTooltips() {
     
     // Tooltips pour les éléments du carousel
     const carouselItems = document.querySelectorAll('.carousel-item');
-    carouselItems.forEach((item, index) => {
-        // Utiliser l'index automatique au lieu de data-project-order
-        if (index < allGalleryItems.length) {
-            // Trouver le projet correspondant par index
-            const galleryItem = allGalleryItems[index];
+    carouselItems.forEach(item => {
+        const projectOrder = item.getAttribute('data-project-order');
+        if (projectOrder) {
+            // Trouver le projet correspondant dans la galerie pour récupérer sa description
+            const galleryItem = document.querySelector(`[data-order="${projectOrder}"]`);
             if (galleryItem) {
                 const galleryImg = galleryItem.querySelector('img');
                 if (galleryImg) {
