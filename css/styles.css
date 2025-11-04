@@ -11,6 +11,11 @@
     --container-width: calc(100% * var(--section-scale) / 100);
     --font-scale: calc(0.8 + (var(--section-scale) / 100) * 0.4); /* De 0.8x à 1.2x */
     --padding-scale: calc(20px * var(--section-scale) / 100);
+    
+    /* Variables pour la grille masonry */
+    --masonry-columns: 3;
+    --masonry-gap: 15px;
+    --container-max-padding: 20px; /* Marge maximum des containers par rapport aux images */
 }
 
 /* Contrôleur de taille */
@@ -128,6 +133,214 @@ body::after {
     transition: all 0.3s ease;
     width: 100%;
     box-sizing: border-box;
+}
+
+/* ========================================
+   GALERIE DE PROJETS - MASONRY LAYOUT
+======================================== */
+
+.projects-gallery {
+    position: relative;
+    width: 100%;
+    margin: 20px auto;
+    min-height: 400px;
+    padding: 0;
+    transition: height 0.3s ease;
+}
+
+.projects-gallery.few-items {
+    margin-bottom: 20px;
+}
+
+/* Éléments de la galerie */
+.gallery-item {
+    position: absolute;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(15, 20, 25, 0.8);
+    border: 2px solid rgba(100, 255, 218, 0.2);
+    transition: all 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    
+    /* CONTRÔLE STRICT DE LA MARGE CONTAINER */
+    padding: var(--container-max-padding); /* Marge fixe de 20px maximum */
+    box-sizing: border-box;
+}
+
+/* Styles pour différentes tailles de projets pour un meilleur effet de brique */
+.gallery-item.large {
+    /* Les projets large peuvent être plus hauts */
+    max-height: 500px;
+}
+
+.gallery-item.medium {
+    /* Hauteur intermédiaire */
+    max-height: 400px;
+}
+
+.gallery-item.small {
+    /* Projets compacts */
+    max-height: 300px;
+}
+
+.gallery-item.game-project {
+    /* Projets de jeux - mise en valeur */
+    border: 3px solid rgba(255, 215, 0, 0.4);
+    background: rgba(25, 25, 30, 0.9);
+}
+
+.gallery-item.game-project:hover {
+    border-color: rgba(255, 215, 0, 0.7);
+    box-shadow: 0 15px 40px rgba(255, 215, 0, 0.3);
+}
+
+.gallery-item:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(100, 255, 218, 0.5);
+    box-shadow: 0 15px 40px rgba(100, 255, 218, 0.2);
+    background: rgba(15, 20, 25, 0.95);
+}
+
+/* Images dans la galerie */
+.gallery-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+    object-fit: cover;
+    
+    /* CONTRÔLE DE LA TAILLE D'IMAGE - empêche les containers trop grands */
+    max-height: 400px;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+/* Contenu des projets */
+.project-content {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.project-actions {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+
+.gallery-item:hover .project-actions {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Bouton jouer au jeu */
+.play-game-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #1a1a1a;
+    padding: 8px 12px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.85em;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    border: 2px solid #FFD700;
+}
+
+.play-game-btn:hover {
+    background: linear-gradient(135deg, #FFA500, #FF8C00);
+    transform: scale(1.05);
+    text-decoration: none;
+    color: #1a1a1a;
+}
+
+.play-icon {
+    font-size: 1.1em;
+}
+
+/* Styles pour les éléments filtrés */
+.gallery-item.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.8);
+    pointer-events: none;
+}
+
+/* Variables responsives pour les colonnes - Effet de brique amélioré */
+@media (min-width: 1400px) {
+    :root {
+        --masonry-columns: 4; /* Plus de colonnes sur grands écrans */
+        --masonry-gap: 18px;
+    }
+}
+
+@media (max-width: 1200px) {
+    :root {
+        --masonry-columns: 3;
+        --masonry-gap: 15px;
+    }
+}
+
+@media (max-width: 900px) {
+    :root {
+        --masonry-columns: 2;
+        --masonry-gap: 12px;
+        --container-max-padding: 18px;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --masonry-columns: 2;
+        --masonry-gap: 10px;
+        --container-max-padding: 15px;
+    }
+    
+    .gallery-item img {
+        max-height: 300px;
+    }
+    
+    /* Réduire la taille des projets sur tablette */
+    .gallery-item.large { max-height: 400px; }
+    .gallery-item.medium { max-height: 320px; }
+    .gallery-item.small { max-height: 250px; }
+}
+
+@media (max-width: 480px) {
+    :root {
+        --masonry-columns: 1;
+        --masonry-gap: 8px;
+        --container-max-padding: 12px;
+    }
+    
+    .projects-gallery {
+        margin: 15px auto;
+        min-height: 200px;
+    }
+    
+    .gallery-item img {
+        max-height: 250px;
+    }
+    
+    /* Sur mobile, tailles plus compactes */
+    .gallery-item.large { max-height: 300px; }
+    .gallery-item.medium { max-height: 250px; }
+    .gallery-item.small { max-height: 200px; }
+    
+    /* Réduire le padding sur mobile */
+    .gallery-item {
+        padding: 10px;
+    }
 }
 
 /* Header sobre avec animation - Version arrondie */
