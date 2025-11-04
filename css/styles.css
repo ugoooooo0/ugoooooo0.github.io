@@ -130,224 +130,6 @@ body::after {
     box-sizing: border-box;
 }
 
-/* ========================================
-   NOUVEAU SYSTÈME MASONRY - EFFET DE BRIQUE PARFAIT
-======================================== */
-
-.projects-gallery {
-    position: relative;
-    width: 100%;
-    margin: 20px auto;
-    min-height: 100px;
-    padding: 0;
-    transition: height 0.3s ease;
-    background: transparent;
-}
-
-/* Éléments de la galerie - NOUVEAU SYSTÈME */
-.gallery-item {
-    /* Position absolue contrôlée par JavaScript */
-    position: absolute;
-    
-    /* Apparence */
-    border-radius: 15px;
-    overflow: hidden;
-    background: rgba(15, 20, 25, 0.85);
-    border: 2px solid rgba(100, 255, 218, 0.25);
-    
-    /* Transitions fluides */
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    
-    /* Effets visuels */
-    cursor: pointer;
-    box-shadow: 
-        0 8px 25px rgba(0, 0, 0, 0.4),
-        0 0 0 1px rgba(100, 255, 218, 0.1);
-    backdrop-filter: blur(10px);
-    
-    /* Padding pour l'espacement interne */
-    padding: 15px;
-    box-sizing: border-box;
-    
-    /* Éviter les problèmes de débordement */
-    overflow: hidden;
-}
-
-/* États des éléments */
-.gallery-item:hover {
-    transform: translateY(-10px) scale(1.03);
-    border-color: rgba(100, 255, 218, 0.6);
-    box-shadow: 
-        0 20px 50px rgba(100, 255, 218, 0.25),
-        0 0 0 1px rgba(100, 255, 218, 0.3);
-    background: rgba(15, 20, 25, 0.95);
-}
-
-/* Style spécial pour les projets de jeux */
-.gallery-item.game-project {
-    border: 3px solid rgba(255, 215, 0, 0.5);
-    background: rgba(25, 25, 30, 0.9);
-    box-shadow: 
-        0 8px 25px rgba(0, 0, 0, 0.4),
-        0 0 20px rgba(255, 215, 0, 0.2);
-}
-
-.gallery-item.game-project:hover {
-    border-color: rgba(255, 215, 0, 0.8);
-    box-shadow: 
-        0 20px 50px rgba(255, 215, 0, 0.3),
-        0 0 30px rgba(255, 215, 0, 0.4);
-}
-
-/* Images dans la galerie */
-.gallery-item img {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 10px;
-    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    object-fit: cover;
-    
-    /* Assurer une bonne qualité d'image */
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-}
-
-.gallery-item:hover img {
-    transform: scale(1.07);
-}
-
-/* Éléments cachés par les filtres */
-.gallery-item.hidden {
-    opacity: 0 !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-    transform: scale(0.8) !important;
-}
-
-/* Contenu des projets */
-.project-content {
-    position: relative;
-    overflow: hidden;
-    border-radius: 8px;
-}
-
-.project-actions {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.3s ease;
-}
-
-.gallery-item:hover .project-actions {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* Bouton jouer au jeu */
-.play-game-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: linear-gradient(135deg, #FFD700, #FFA500);
-    color: #1a1a1a;
-    padding: 8px 12px;
-    border-radius: 20px;
-    text-decoration: none;
-    font-size: 0.85em;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    border: 2px solid #FFD700;
-}
-
-.play-game-btn:hover {
-    background: linear-gradient(135deg, #FFA500, #FF8C00);
-    transform: scale(1.05);
-    text-decoration: none;
-    color: #1a1a1a;
-}
-
-.play-icon {
-    font-size: 1.1em;
-}
-
-/* Styles pour les éléments filtrés */
-.gallery-item.hidden {
-    opacity: 0;
-    visibility: hidden;
-    transform: scale(0.8);
-    pointer-events: none;
-}
-
-/* Variables responsives pour les colonnes - Effet de brique amélioré */
-@media (min-width: 1400px) {
-    :root {
-        --masonry-columns: 4; /* Plus de colonnes sur grands écrans */
-        --masonry-gap: 18px;
-    }
-}
-
-@media (max-width: 1200px) {
-    :root {
-        --masonry-columns: 3;
-        --masonry-gap: 15px;
-    }
-}
-
-@media (max-width: 900px) {
-    :root {
-        --masonry-columns: 2;
-        --masonry-gap: 12px;
-        --container-max-padding: 18px;
-    }
-}
-
-@media (max-width: 768px) {
-    :root {
-        --masonry-columns: 2;
-        --masonry-gap: 10px;
-        --container-max-padding: 15px;
-    }
-    
-    .gallery-item img {
-        max-height: 300px;
-    }
-    
-    /* Réduire la taille des projets sur tablette */
-    .gallery-item.large { max-height: 400px; }
-    .gallery-item.medium { max-height: 320px; }
-    .gallery-item.small { max-height: 250px; }
-}
-
-@media (max-width: 480px) {
-    :root {
-        --masonry-columns: 1;
-        --masonry-gap: 8px;
-        --container-max-padding: 12px;
-    }
-    
-    .projects-gallery {
-        margin: 15px auto;
-        min-height: 200px;
-    }
-    
-    .gallery-item img {
-        max-height: 250px;
-    }
-    
-    /* Sur mobile, tailles plus compactes */
-    .gallery-item.large { max-height: 300px; }
-    .gallery-item.medium { max-height: 250px; }
-    .gallery-item.small { max-height: 200px; }
-    
-    /* Réduire le padding sur mobile */
-    .gallery-item {
-        padding: 10px;
-    }
-}
-
 /* Header sobre avec animation - Version arrondie */
 header {
     background: linear-gradient(135deg, rgba(15, 20, 25, 0.95), rgba(26, 31, 54, 0.95));
@@ -1567,11 +1349,11 @@ nav a:hover {
     color: #13aff0 !important;
     border-color: #333 !important;
     background: rgba(19, 175, 240, 0.15) !important;
-    transform: translateY(-50%) scale(1.05) !important;
+    transform: translateY(-50%) translateX(10px) !important;
 }
 
 .artstation-btn-external:hover .logo-container {
-    transform: scale(1.05);
+    transform: scale(1.1);
     background: rgba(19, 175, 240, 0.2);
     border-color: #333;
 }
@@ -4090,9 +3872,20 @@ header {
     transform-origin: left center;
 }
 
-/* Animation hover simple - juste un scale */
 .artstation-btn-external:hover {
-    transition: all 0.3s ease !important;
+    animation: artstationPop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes artstationPop {
+    0% {
+        transform: translateY(-50%) translateX(10px) scale(1);
+    }
+    50% {
+        transform: translateY(-50%) translateX(15px) scale(1.1);
+    }
+    100% {
+        transform: translateY(-50%) translateX(10px) scale(1);
+    }
 }
 
 
