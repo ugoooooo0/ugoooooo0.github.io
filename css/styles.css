@@ -811,27 +811,32 @@ nav a:hover {
 }
 
 .projects-gallery {
-    column-count: 3;
-    column-gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(clamp(200px, 30vw, 250px), 1fr));
+    gap: clamp(10px, 2vw, 15px);
+    padding: clamp(20px, 4vw, 40px) clamp(10px, 3vw, 20px);
+    max-width: 1200px;
+    margin: 0 auto;
+    transition: height 0.3s ease, min-height 0.3s ease;
+    min-height: 100px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Quand il y a peu d'éléments visibles, réduire l'espacement */
+.projects-gallery:has(.gallery-item:nth-child(n+1):nth-child(-n+3)) {
+    padding: 20px;
+    min-height: 50px;
+}
+
+/* Grille Masonry avec JavaScript - AUCUN TROU ! */
+.projects-gallery {
+    position: relative;
     padding: 40px 20px;
     max-width: 1400px;
     margin: 0 auto;
-}
-
-/* Responsive pour les colonnes */
-@media (max-width: 1024px) {
-    .projects-gallery {
-        column-count: 2;
-        column-gap: 15px;
-    }
-}
-
-@media (max-width: 768px) {
-    .projects-gallery {
-        column-count: 1;
-        column-gap: 0;
-        padding: 20px 10px;
-    }
+    /* Le JavaScript va gérer le positionnement */
+    transition: height 0.3s ease, min-height 0.3s ease, padding 0.3s ease;
 }
 
 /* Style spécial pour peu d'éléments visibles */
@@ -849,12 +854,9 @@ nav a:hover {
     margin-top: 20px;
 }
 
-/* Items pour système de colonnes CSS (Pinterest style) */
+/* Items positionnés par JavaScript */
 .gallery-item {
-    display: inline-block; /* Important pour le système de colonnes */
-    width: 100%; /* Prendre toute la largeur de la colonne */
-    margin-bottom: 20px; /* Espacement entre les éléments */
-    break-inside: avoid; /* Éviter que l'élément soit coupé entre colonnes */
+    position: absolute; /* Positionnement absolu pour masonry */
     overflow: hidden;
     border-radius: clamp(8px, 2vw, 12px);
     cursor: pointer;
@@ -862,8 +864,12 @@ nav a:hover {
     background: rgba(26, 31, 54, 0.5);
     border: 1px solid rgba(100, 255, 218, 0.1);
     padding: clamp(6px, 1.5vw, 8px);
-    box-sizing: border-box;
+    /* La largeur sera calculée par JavaScript */
+    box-sizing: border-box; /* Important pour les calculs précis */
+    max-width: 100vw; /* Éviter le débordement */
+    /* Amélioration pour éviter les bugs d'encadrement */
     backface-visibility: hidden;
+    transform-style: preserve-3d;
 }
 
 .gallery-item img {
@@ -3740,27 +3746,32 @@ body.mobile-test-mode .projects-gallery {
    EFFET POP STYLE CANVA POUR LES ELEMENTS
    ======================================== */
 
-/* Cacher les éléments pour l'effet POP */
-.btn,
-.artstation-btn-external,
-.software-item,
-.badge-item,
-.gallery-item,
-.carousel-item {
-    transform: scale(0);
-    opacity: 0;
-}
-
-/* Containers et sections restent visibles normalement */
+/* Cacher TOUS les éléments dès le début avec CSS */
 header,
+.gallery-item,
+.carousel-item,
 .featured-projects-section,
 .presentation-section,
 .logiciels-section,
 .contact-section,
 .cv-section,
-.buttons-container,
+.artstation-btn-external,
+.btn,
+.software-item,
+.badge-item,
+.buttons-container {
+    transform: scale(0);
+    opacity: 0;
+}
+
+/* Images séparément pour éviter les conflits */
 .profile-image,
-.cv-image,
+.cv-image {
+    transform: scale(0);
+    opacity: 0;
+}
+
+/* Le container des badges doit rester visible pour que ses enfants puissent apparaître */
 .presentation-badges {
     opacity: 1;
     transform: scale(1);
