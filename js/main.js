@@ -27,6 +27,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Ajouter les tooltips de prévisualisation
         initPreviewTooltips();
         
+        // Initialiser les images de survol pour les projets vidéo
+        initVideoHoverImages();
+        
         // Initialiser le masonry après chargement des images
         initMasonry();
         
@@ -1234,5 +1237,53 @@ function initPreviewTooltips() {
             }
         }
     });
+}
+
+// ===== SYSTÈME DE HOVER IMAGE POUR PROJETS VIDÉO =====
+function initVideoHoverImages() {
+    console.log('🎥 Initialisation des images de survol pour les projets vidéo...');
+    
+    // Sélectionner tous les projets avec vidéo
+    const videoProjects = document.querySelectorAll('.gallery-item[data-has-video="oui"]');
+    
+    videoProjects.forEach(project => {
+        // D'abord vérifier s'il y a un data-hover-image défini
+        let hoverImageUrl = project.getAttribute('data-hover-image');
+        
+        // Si pas d'image de survol définie, utiliser la deuxième image de la galerie
+        if (!hoverImageUrl) {
+            const galleryData = project.getAttribute('data-gallery');
+            if (galleryData) {
+                try {
+                    const gallery = JSON.parse(galleryData);
+                    // Utiliser la deuxième image comme fallback (index 1)
+                    if (gallery.length > 1 && !gallery[1].includes('youtube.com')) {
+                        hoverImageUrl = gallery[1];
+                    }
+                } catch (error) {
+                    console.error('Erreur lors du parsing de la galerie:', error);
+                }
+            }
+        }
+        
+        // Appliquer l'image de survol si on en a une
+        if (hoverImageUrl) {
+            // Appliquer l'image de survol via CSS custom property
+            project.style.setProperty('--hover-image', `url('${hoverImageUrl}')`);
+            
+            // Mettre à jour le pseudo-element ::before avec l'image
+            const style = document.createElement('style');
+            style.textContent = `
+                .gallery-item[data-order="${project.getAttribute('data-order')}"]::before {
+                    background-image: url('${hoverImageUrl}');
+                }
+            `;
+            document.head.appendChild(style);
+            
+            console.log(`✅ Image de survol ajoutée pour le projet ordre ${project.getAttribute('data-order')}`);
+        }
+    });
+    
+    console.log(`🎬 ${videoProjects.length} projets vidéo traités pour les images de survol`);
 }
 
