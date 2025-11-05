@@ -1,183 +1,244 @@
-/**
- * Gestionnaire d'effets POP style CANVA
- * Animation élastique des éléments de la page
- */
-
-class PagePopAnimation {
+// Système de traduction simple FR <-> EN
+class SimpleTranslation {
     constructor() {
+        this.currentLanguage = localStorage.getItem('language') || 'fr';
+        
+        // Traductions directes : Français = English
+        this.translations = {
+            // Navigation
+            'PORTFOLIO UGO RAVARD': 'UGO RAVARD PORTFOLIO',
+            'PRÉSENTATION': 'ABOUT',
+            'PORTFOLIO': 'PORTFOLIO', 
+            'CV': 'RESUME',
+            'CONTACT': 'CONTACT',
+            'ACCUEIL': 'HOME',
+            
+            // Page présentation
+            'ARTISTE 3D': '3D ARTIST',
+            'Je m\'appelle Ugo Ravard, j\'ai 18 ans et je suis passionné par la création numérique et la 3D depuis plusieurs années. J\'aime donner vie à des idées à travers la modélisation, l\'animation et la conception visuelle. Actuellement étudiant au CNAM Enjmin, une école reconnue en France dans le domaine du jeu vidéo et de la création numérique, je développe mes compétences artistiques et techniques pour bâtir une carrière dans l\'industrie créative. Ce portfolio rassemble mes travaux et projets, reflets de mon univers et de mon évolution artistique.': 'My name is Ugo Ravard, I am 18 years old and passionate about digital creation and 3D for several years. I love bringing ideas to life through modeling, animation and visual design. Currently studying at CNAM Enjmin, a renowned school in France in video games and digital creation, I develop my artistic and technical skills to build a career in the creative industry. This portfolio brings together my work and projects, reflections of my universe and artistic evolution.',
+            '🎨 PORTFOLIO SITE WEB': '🎨 WEBSITE PORTFOLIO',
+            
+            // Badges
+            '5 ans d\'expérience': '5 years experience',
+            'École CNAM Enjmin': 'CNAM Enjmin School', 
+            'Super gentil :)': 'Super nice :)',
+            'TRAVAILLONS ENSEMBLE !': 'LET\'S WORK TOGETHER!',
+            
+            // CV Section
+            'Mon CV': 'My Resume',
+            'Découvrez mon parcours, mes compétences et mes expériences professionnelles.': 'Discover my background, skills and professional experiences.',
+            '📄 Voir mon CV': '📄 View my Resume',
+            
+            // Logiciels
+            'Logiciels & Outils': 'Software & Tools',
+            'Les outils que j\'utilise pour donner vie à mes créations': 'The tools I use to bring my creations to life',
+            
+            // Contact
+            'Envoyez-moi un message': 'Send me a message',
+            'Votre nom': 'Your name',
+            'Votre email': 'Your email', 
+            'Votre message...': 'Your message...',
+            '📩 Envoyer le message': '📩 Send message',
+            
+            // Portfolio
+            'Mes Meilleurs Projets': 'My Best Projects',
+            'ALL': 'ALL',
+            '3D': '3D',
+            'Tournage/Montage': 'Filming/Editing',
+            
+            // Projets descriptions courtes pour les data-description
+            'vaisseau spatial game-ready': 'game-ready spaceship',
+            'qualité AAA': 'AAA quality',
+            'extérieur + intérieur': 'exterior + interior', 
+            'animation et demoreel': 'animation and demoreel',
+            'ville futuriste': 'futuristic city',
+            'modélisation et animation': 'modeling and animation',
+            'armure futuriste': 'futuristic armor',
+            'matériaux détaillés': 'detailed materials',
+            'base terrestre': 'terrestrial base',
+            'moto spatiale': 'space motorcycle',
+            'concept design': 'concept design',
+            'environnement sci-fi': 'sci-fi environment',
+            'station orbitale': 'orbital station',
+            'level design': 'level design',
+            'composition et lightning': 'composition and lighting',
+            'rendu photoréaliste': 'photorealistic rendering',
+            'jeu vidéo': 'video game',
+            'énigmes en FPS': 'FPS puzzles',
+            'développé en équipe': 'team developed',
+            'Blender + Unity': 'Blender + Unity',
+            'vaisseau chasseur lourd': 'heavy fighter ship',
+            'projet personnel': 'personal project',
+            'work in progress': 'work in progress',
+            'eoliennes au dessus des nuages': 'wind turbines above clouds',
+            'route sous la pluie': 'road in the rain',
+            'effets de particules': 'particle effects',
+            'éclairage atmosphérique': 'atmospheric lighting',
+            'rendu volumétrique': 'volumetric rendering',
+            'véhicule spatial futuriste': 'futuristic space vehicle',
+            'reproduction fidèle': 'faithful reproduction',
+            'casque avec matériaux réalistes': 'helmet with realistic materials',
+            'scène conceptuelle': 'conceptual scene',
+            'rendu sur Twinmotion': 'rendered on Twinmotion',
+            'inspiré de Star Wars': 'Star Wars inspired',
+            'reproduction du vaisseau': 'ship reproduction',
+            'à partir d\'une image 2D': 'from a 2D image',
+            'architecture futuriste': 'futuristic architecture',
+            'shading, lightning, compositing': 'shading, lighting, compositing',
+            'mise en scène avec lighting studio': 'studio lighting setup',
+            'épave d\'une station': 'station wreck',
+            'conception de planète': 'planet conception',
+            'matériaux nodaux': 'nodal materials',
+            'conception téléphone 3D': '3D phone design',
+            'présentation vidéo complète': 'complete video presentation',
+            'trou noir et distorsion': 'black hole and distortion',
+            'textures PBR photoréalistes': 'photorealistic PBR textures',
+            'environnements marécageux': 'swamp environments',
+            'displacement mapping': 'displacement mapping',
+            'tests de lighting': 'lighting tests',
+            'nuages volumétriques': 'volumetric clouds',
+            'atmosphère réaliste': 'realistic atmosphere',
+            'textures et matériaux': 'textures and materials',
+            'processus de création': 'creation process',
+            'tracking et VFX': 'tracking and VFX',
+            'compositing VFX avancé': 'advanced VFX compositing',
+            'conception sur Gaea': 'designed on Gaea',
+            'rendu sur Unreal Engine 5': 'rendered on Unreal Engine 5',
+            'environnement naturel': 'natural environment',
+            'matériaux procéduraux': 'procedural materials',
+            'modèles 3D techniques': 'technical 3D models',
+            'inspiré du jeu Satisfactory': 'inspired by Satisfactory game',
+            'pour un particulier sur Fiverr': 'for a client on Fiverr',
+            'tournages professionnels': 'professional filming',
+            'sur Bordeaux, Toulouse, Anglet': 'in Bordeaux, Toulouse, Anglet',
+            'post production et VFX': 'post production and VFX',
+            'tournages et montages': 'filming and editing',
+            'émission YouTube': 'YouTube show',
+            
+            // Footer
+            '© 2024 Ugo Ravard - Tous droits réservés': '© 2024 Ugo Ravard - All rights reserved'
+        };
+        
         this.init();
     }
-
+    
     init() {
-        // Attendre que la page soit chargée
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.startPopAnimations());
-        } else {
-            this.startPopAnimations();
-        }
+        this.createLanguageButtons();
+        this.applyTranslations();
     }
-
-    startPopAnimations() {
-        // Préparer tous les éléments pour l'animation
-        this.prepareElements();
+    
+    createLanguageButtons() {
+        // Supprimer ancien toggle s'il existe
+        const oldToggle = document.querySelector('.language-toggle');
+        if (oldToggle) oldToggle.remove();
         
-        // Démarrer les animations avec des délais plus doux
-        setTimeout(() => {
-            this.animateHeader();
-        }, 200);
+        // Créer nouveaux boutons
+        const toggle = document.createElement('div');
+        toggle.className = 'language-toggle';
         
-        setTimeout(() => {
-            this.animateMainContent();
-        }, 400);
+        // Bouton français
+        const frBtn = document.createElement('button');
+        frBtn.className = `lang-btn ${this.currentLanguage === 'fr' ? 'active' : ''}`;
+        frBtn.innerHTML = '🇫🇷 FR';
+        frBtn.addEventListener('click', () => this.switchLanguage('fr'));
         
-        setTimeout(() => {
-            this.animateProjects();
-        }, 600);
-    }
-
-    prepareElements() {
-        // Les éléments sont déjà cachés par le CSS, pas besoin de les préparer
-        console.log('Éléments préparés pour l\'animation POP');
-    }
-
-    animateHeader() {
-        const header = document.querySelector('header');
+        // Bouton anglais
+        const enBtn = document.createElement('button');
+        enBtn.className = `lang-btn ${this.currentLanguage === 'en' ? 'active' : ''}`;
+        enBtn.innerHTML = '🇺🇸 EN';
+        enBtn.addEventListener('click', () => this.switchLanguage('en'));
+        
+        toggle.appendChild(frBtn);
+        toggle.appendChild(enBtn);
+        
+        // Ajouter dans le header
+        const header = document.querySelector('header .header-content');
         if (header) {
-            this.popElement(header, 0);
-        }
-        
-        // Bouton ArtStation externe
-        const artstationBtn = document.querySelector('.artstation-btn-external');
-        if (artstationBtn) {
-            this.popElement(artstationBtn, 200);
+            header.appendChild(toggle);
         }
     }
-
-    animateMainContent() {
-        // Section présentation ou featured projects
-        const presentationSection = document.querySelector('.presentation-section');
-        const featuredSection = document.querySelector('.featured-projects-section');
+    
+    switchLanguage(lang) {
+        console.log('Switching to language:', lang);
         
-        if (presentationSection) {
-            this.popElement(presentationSection, 100);
-            
-            // Animer l'image de profil séparément
-            const profileImage = document.querySelector('.profile-image');
-            if (profileImage) {
-                this.popElement(profileImage, 300);
+        this.currentLanguage = lang;
+        localStorage.setItem('language', lang);
+        
+        // Mettre à jour les boutons
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.textContent.includes(lang.toUpperCase())) {
+                btn.classList.add('active');
             }
+        });
+        
+        this.applyTranslations();
+        
+        // Animation fluide
+        document.body.style.opacity = '0.9';
+        setTimeout(() => {
+            document.body.style.opacity = '1';
+        }, 150);
+    }
+    
+    applyTranslations() {
+        // Sauvegarder les textes originaux français la première fois
+        if (!this.originalTexts) {
+            this.originalTexts = new Map();
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                this.originalTexts.set(element, element.getAttribute('data-translate'));
+            });
             
-            // Animer les badges de présentation
-            const badges = document.querySelectorAll('.badge-item');
-            badges.forEach((badge, index) => {
-                this.popElement(badge, 500 + (index * 100));
+            this.originalDescriptions = new Map();
+            document.querySelectorAll('[data-description]').forEach(element => {
+                this.originalDescriptions.set(element, element.getAttribute('data-description'));
             });
         }
         
-        if (featuredSection) {
-            this.popElement(featuredSection, 100);
-        }
-        
-        // Section CV
-        const cvSection = document.querySelector('.cv-section');
-        if (cvSection) {
-            this.popElement(cvSection, 400);
-        }
-        
-        // Image CV séparément (même si elle est dans la section)
-        const cvImage = document.querySelector('.cv-image');
-        if (cvImage) {
-            this.popElement(cvImage, 600);
-        }
-        
-        // Sections logiciels et contact
-        const logicielsSection = document.querySelector('.logiciels-section');
-        const contactSection = document.querySelector('.contact-section');
-        
-        if (logicielsSection) {
-            this.popElement(logicielsSection, 800);
-            // Animer les logiciels individuellement
-            this.animateSoftwareItems();
-        }
-        
-        if (contactSection) {
-            this.popElement(contactSection, 1000);
-        }
-    }
-
-    animateProjects() {
-        // Projets de la galerie (portfolio) - plus fluide
-        const galleryItems = document.querySelectorAll('.gallery-item');
-        galleryItems.forEach((item, index) => {
-            this.popElement(item, index * 120);
-        });
-        
-        // Items du carousel - délai plus doux
-        const carouselItems = document.querySelectorAll('.carousel-item');
-        carouselItems.forEach((item, index) => {
-            this.popElement(item, index * 150);
-        });
-        
-        // Animer les boutons si on n'est pas sur la page d'index
-        if (!document.querySelector('.presentation-section')) {
-            const buttons = document.querySelectorAll('.btn');
-            buttons.forEach((btn, index) => {
-                this.popElement(btn, index * 200);
+        if (this.currentLanguage === 'fr') {
+            // Remettre les textes français originaux
+            this.originalTexts.forEach((originalText, element) => {
+                if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                    element.placeholder = originalText;
+                } else {
+                    element.textContent = originalText;
+                }
+            });
+            
+            // Remettre les descriptions françaises
+            this.originalDescriptions.forEach((originalDesc, element) => {
+                element.setAttribute('data-description', originalDesc);
             });
         } else {
-            // Sur la page index, animer les boutons différemment
-            this.animateButtons();
+            // Traduire en anglais
+            this.originalTexts.forEach((originalText, element) => {
+                const translation = this.translations[originalText];
+                if (translation) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.placeholder = translation;
+                    } else {
+                        element.textContent = translation;
+                    }
+                }
+            });
+            
+            // Traduire les descriptions
+            this.originalDescriptions.forEach((originalDesc, element) => {
+                let translatedDesc = originalDesc;
+                
+                Object.keys(this.translations).forEach(fr => {
+                    const en = this.translations[fr];
+                    translatedDesc = translatedDesc.replace(new RegExp(fr, 'gi'), en);
+                });
+                
+                element.setAttribute('data-description', translatedDesc);
+            });
         }
-    }
-
-    popElement(element, delay = 0) {
-        setTimeout(() => {
-            // Simplement ajouter la classe d'animation
-            element.classList.add('pop-show');
-        }, delay);
-    }
-
-    animateSoftwareItems() {
-        // Animer chaque logiciel individuellement
-        const softwareItems = document.querySelectorAll('.software-item');
-        softwareItems.forEach((item, index) => {
-            this.popElement(item, 900 + (index * 60));
-        });
-    }
-
-    animateButtons() {
-        // Animer tous les boutons de la page
-        const buttonsContainer = document.querySelector('.buttons-container');
-        if (buttonsContainer) {
-            this.popElement(buttonsContainer, 400);
-        }
-        
-        // Animer les boutons individuellement aussi
-        const allButtons = document.querySelectorAll('.btn');
-        allButtons.forEach((btn, index) => {
-            this.popElement(btn, 600 + (index * 150));
-        });
-    }
-
-    // Méthode pour animer un nouvel élément ajouté dynamiquement
-    static animateNewElement(element, delay = 0) {
-        const instance = new PagePopAnimation();
-        element.style.transform = 'scale(0)';
-        element.style.opacity = '0';
-        element.style.transition = 'all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
-        instance.popElement(element, delay);
     }
 }
 
-// Initialiser automatiquement quand le DOM est prêt
+// Initialiser le système
+let translator;
 document.addEventListener('DOMContentLoaded', () => {
-    new PagePopAnimation();
+    translator = new SimpleTranslation();
 });
-
-// Aussi au chargement complet de la page pour être sûr
-window.addEventListener('load', () => {
-    new PagePopAnimation();
-});
-
-// Exporter pour utilisation globale
-window.PagePopAnimation = PagePopAnimation;
