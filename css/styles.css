@@ -3777,6 +3777,54 @@ header,
     transform: scale(1);
 }
 
+/* ========================================
+   NOUVEAUX BOUTONS DE LANGUE SIMPLES
+   ======================================== */
+
+.language-toggle {
+    display: flex;
+    gap: 5px;
+    margin-left: auto;
+}
+
+.lang-btn {
+    padding: 8px 12px;
+    background: rgba(100, 255, 218, 0.1);
+    border: 1px solid rgba(100, 255, 218, 0.3);
+    border-radius: 6px;
+    color: #64ffda;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.lang-btn:hover {
+    background: rgba(100, 255, 218, 0.2);
+    border-color: rgba(100, 255, 218, 0.5);
+    transform: translateY(-1px);
+}
+
+.lang-btn.active {
+    background: #64ffda;
+    color: #0f1419;
+    border-color: #64ffda;
+}
+
+@media (max-width: 768px) {
+    .language-toggle {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+    }
+    
+    .lang-btn {
+        padding: 6px 8px;
+        font-size: 10px;
+    }
+}
+
 /* État final - éléments visibles avec animation plus fluide */
 .pop-show {
     animation: popBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
