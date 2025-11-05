@@ -116,7 +116,13 @@ class SimpleTranslation {
             'émission YouTube': 'YouTube show',
             
             // Footer
-            '© 2024 Ugo Ravard - Tous droits réservés': '© 2024 Ugo Ravard - All rights reserved'
+            '© 2024 Ugo Ravard - Tous droits réservés': '© 2024 Ugo Ravard - All rights reserved',
+            
+            // Test page
+            'Test du Système de Traduction': 'Translation System Test',
+            'Textes de Test': 'Test Texts',
+            'Bonjour, ceci est un test du système de traduction.': 'Hello, this is a translation system test.',
+            'Informations de Debug': 'Debug Information'
         };
         
         this.init();
@@ -128,6 +134,8 @@ class SimpleTranslation {
     }
     
     createLanguageButtons() {
+        console.log('🔧 Création des boutons de langue...');
+        
         // Supprimer ancien toggle s'il existe
         const oldToggle = document.querySelector('.language-toggle');
         if (oldToggle) oldToggle.remove();
@@ -155,6 +163,9 @@ class SimpleTranslation {
         const header = document.querySelector('header .header-content');
         if (header) {
             header.appendChild(toggle);
+            console.log('✅ Boutons de langue ajoutés au header');
+        } else {
+            console.error('❌ Header .header-content introuvable !');
         }
     }
     
@@ -240,5 +251,11 @@ class SimpleTranslation {
 // Initialiser le système
 let translator;
 document.addEventListener('DOMContentLoaded', () => {
-    translator = new SimpleTranslation();
+    try {
+        console.log('🔄 Initialisation du système de traduction...');
+        translator = new SimpleTranslation();
+        console.log('✅ Système de traduction initialisé avec succès');
+    } catch (error) {
+        console.error('❌ Erreur lors de l\'initialisation du système de traduction:', error);
+    }
 });
