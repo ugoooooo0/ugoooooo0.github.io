@@ -116,7 +116,7 @@ class SimpleTranslation {
             'émission YouTube': 'YouTube show',
             
             // Footer
-            '© 2024 Ugo Ravard - Tous droits réservés': '© 2024 Ugo Ravard - All rights reserved',
+            '© 2025 Ugo Ravard - Tous droits réservés': '© 2025 Ugo Ravard - All rights reserved',
             
             // Test page
             'Test du Système de Traduction': 'Translation System Test',
