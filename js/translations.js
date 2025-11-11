@@ -117,6 +117,7 @@ class SimpleTranslation {
             
             // Footer
             '© 2025 Ugo Ravard - Tous droits réservés': '© 2025 Ugo Ravard - All rights reserved',
+            'Conditions générales d\'utilisation': 'Terms and Conditions of Use',
             
             // Test page
             'Test du Système de Traduction': 'Translation System Test',
