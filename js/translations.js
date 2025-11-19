@@ -22,7 +22,6 @@ class SimpleTranslation {
             '5 ans d\'expérience': '5 years experience',
             'École CNAM Enjmin': 'CNAM Enjmin School', 
             'Super gentil :)': 'Super nice :)',
-            'TRAVAILLONS ENSEMBLE !': 'LET\'S WORK TOGETHER!',
             
             // CV Section
             'Mon CV': 'My Resume',
