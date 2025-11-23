@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Page portfolio détectée');
         
         // Initialiser le carrousel
-        initCarousel();
+        initHeroCarousel();
         
         initFilters();
         initLightbox();
@@ -47,164 +47,321 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Carrousel des projets vedettes
-let currentSlide = 0;
-let carouselInterval;
-const CAROUSEL_AUTO_DELAY = 5000;
+// Hero Carousel - Style Star Citizen
+let currentHeroSlide = 0;
+let heroInterval;
+let progressInterval;
+const HERO_AUTO_DELAY = 10000; // 10 secondes
 
-function initCarousel() {
-    const track = document.getElementById('carousel-track');
-    const prevBtn = document.getElementById('carousel-prev');
-    const nextBtn = document.getElementById('carousel-next');
-    const indicators = document.querySelectorAll('.indicator');
-    const carouselItems = document.querySelectorAll('.carousel-item');
+function initHeroCarousel() {
+    const heroThumbs = document.querySelectorAll('.hero-thumb');
+    const prevBtn = document.getElementById('hero-prev');
+    const nextBtn = document.getElementById('hero-next');
+    const heroTitle = document.getElementById('hero-title');
+    const heroSubtitle = document.getElementById('hero-subtitle');
+    const heroBgImage = document.getElementById('hero-bg-image');
+    let heroCta = document.getElementById('hero-cta'); // Utiliser let pour pouvoir la reassigner
     
-    if (!track || !prevBtn || !nextBtn) return;
-    
-    // Associer les images aux projets en utilisant data-order
-    carouselItems.forEach(item => {
-        const projectOrder = item.dataset.projectOrder;
-        const img = item.querySelector('img');
-        const titleEl = item.querySelector('.carousel-overlay h3');
-        const descEl = item.querySelector('.carousel-overlay p');
-        
-        if (projectOrder && img) {
-            // Trouver le projet correspondant dans la galerie
-            const galleryItem = document.querySelector(`[data-order="${projectOrder}"]`);
-            if (galleryItem) {
-                const galleryImg = galleryItem.querySelector('img');
-                if (galleryImg) {
-                    // Utiliser l'image de couverture du projet
-                    img.src = galleryImg.src;
-                    img.alt = galleryImg.alt;
-                    
-                    // Remplir avec les vraies descriptions de la galerie ET les sauvegarder
-                    const originalTitle = galleryImg.alt || `Projet ${projectOrder}`;
-                    const originalDescription = galleryImg.getAttribute('data-description') || 'Description du projet';
-                    
-                    if (titleEl) {
-                        titleEl.textContent = originalTitle;
-                        titleEl.setAttribute('data-original-title', originalTitle); // Sauvegarde
-                    }
-                    if (descEl) {
-                        descEl.textContent = originalDescription;
-                        descEl.setAttribute('data-original-description', originalDescription); // Sauvegarde
-                    }
-                }
-            }
-            
-            // Ajouter le clic pour ouvrir dans la lightbox
-            item.style.cursor = 'pointer';
-            item.addEventListener('click', () => {
-                // Trouver le projet correspondant dans la galerie
-                const galleryItem = document.querySelector(`[data-order="${projectOrder}"]`);
-                if (galleryItem) {
-                    // D'abord s'assurer que l'item est visible (changer de filtre si nécessaire)
-                    const category = galleryItem.getAttribute('data-category');
-                    const activeFilter = document.querySelector('.filter-btn.active').getAttribute('data-filter');
-                    
-                    // Si le filtre actuel ne correspond pas, changer pour 'all'
-                    if (activeFilter !== 'all' && activeFilter !== category) {
-                        const allButton = document.querySelector('.filter-btn[data-filter="all"]');
-                        if (allButton) {
-                            allButton.click();
-                            // Attendre que le filtre soit appliqué
-                            setTimeout(() => {
-                                const galleryImg = galleryItem.querySelector('img');
-                                if (galleryImg) {
-                                    // Définir window.currentProject avant d'ouvrir la lightbox
-                                    window.currentProject = {
-                                        galleryItem: galleryItem,
-                                        img: galleryImg
-                                    };
-                                    galleryImg.click();
-                                }
-                            }, 100);
-                            return;
-                        }
-                    }
-                    
-                    // Si déjà visible, ouvrir directement
-                    const galleryImg = galleryItem.querySelector('img');
-                    if (galleryImg) {
-                        // Définir window.currentProject avant d'ouvrir la lightbox
-                        window.currentProject = {
-                            galleryItem: galleryItem,
-                            img: galleryImg
-                        };
-                        galleryImg.click();
-                    }
-                }
-            });
-        }
-    });
-    
-    function updateCarousel() {
-        const translateX = -currentSlide * 100;
-        track.style.transform = `translateX(${translateX}%)`;
-        
-        // Mettre à jour les indicateurs
-        indicators.forEach((indicator, index) => {
-            indicator.classList.toggle('active', index === currentSlide);
-        });
+    if (!heroThumbs.length) {
+        console.log('Aucun thumbnail trouvé');
+        return;
     }
     
+    console.log('Hero carousel initialisé avec', heroThumbs.length, 'thumbnails');
+    console.log('Bouton CTA trouvé:', !!heroCta);
+    
+    // Fonction pour mettre à jour le hero
+    function updateHero(index) {
+        const activeThumb = heroThumbs[index];
+        if (!activeThumb) return;
+        
+        // CORRECTIF COMPLET: Reset TOTAL de toutes les animations
+        heroThumbs.forEach((thumb, i) => {
+            thumb.classList.remove('active');
+            // Supprimer COMPLÈTEMENT l'animation CSS
+            thumb.style.animation = 'none !important';
+            thumb.style.animationPlayState = 'paused';
+            thumb.style.animationDelay = '0s';
+            thumb.style.animationDuration = '0s';
+            // Forcer une recalculation du style
+            thumb.offsetHeight;
+            thumb.offsetWidth;
+        });
+        
+        // Attendre que le navigateur applique vraiment les changements
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                // Remettre l'animation CSS par défaut sur TOUS les thumbnails
+                heroThumbs.forEach(thumb => {
+                    thumb.style.animation = '';
+                    thumb.style.animationPlayState = '';
+                    thumb.style.animationDelay = '';
+                    thumb.style.animationDuration = '';
+                });
+                
+                // PUIS activer le thumbnail sélectionné
+                activeThumb.classList.add('active');
+                console.log('🔄 Animation redémarrée pour thumbnail:', index);
+            });
+        });
+        
+        // Récupérer les données du projet
+        const title = activeThumb.dataset.title;
+        const subtitle = activeThumb.dataset.subtitle;
+        const background = activeThumb.dataset.background;
+        const projectOrder = activeThumb.dataset.order;
+        
+        // Mettre à jour le contenu avec animation smooth
+        if (heroTitle && heroSubtitle && heroBgImage) {
+            // Animation de sortie plus smooth
+            heroTitle.style.transition = 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            heroSubtitle.style.transition = 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            
+            heroTitle.style.opacity = '0';
+            heroTitle.style.transform = 'translateY(-20px)';
+            heroSubtitle.style.opacity = '0';
+            heroSubtitle.style.transform = 'translateY(-15px)';
+            
+            // Animation de l'image avec effet de transition
+            heroBgImage.classList.add('transitioning');
+            
+            setTimeout(() => {
+                // Changer le contenu
+                heroTitle.textContent = title;
+                heroSubtitle.textContent = subtitle;
+                heroBgImage.src = background;
+                
+                // Retirer l'effet de transition
+                heroBgImage.classList.remove('transitioning');
+                
+                // Animation d'entrée plus smooth
+                setTimeout(() => {
+                    heroTitle.style.opacity = '1';
+                    heroTitle.style.transform = 'translateY(0)';
+                    heroSubtitle.style.opacity = '1';
+                    heroSubtitle.style.transform = 'translateY(0)';
+                }, 100);
+            }, 400);
+        }
+        
+        // Configurer le bouton CTA pour OUVRIR DIRECTEMENT la lightbox du projet
+        heroCta = document.getElementById('hero-cta'); // Récupérer la référence actuelle
+        if (heroCta && projectOrder) {
+            console.log('🎯 Configuration CTA pour ouvrir lightbox projet data-order:', projectOrder);
+            
+            // Supprimer TOUS les event listeners existants
+            const newCta = heroCta.cloneNode(true);
+            heroCta.parentNode.replaceChild(newCta, heroCta);
+            heroCta = newCta; // Référence vers le nouveau bouton
+            
+            // Ajouter l'event listener pour OUVRIR LA LIGHTBOX
+            heroCta.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                console.log('🎯🎯🎯 CLIC CTA! Ouverture lightbox pour data-order:', projectOrder);
+                
+                // Chercher le projet dans la galerie
+                const galleryItem = document.querySelector(`.gallery-item[data-order="${projectOrder}"]`);
+                console.log('🔍 Projet trouvé:', galleryItem);
+                
+                if (galleryItem) {
+                    const projectImg = galleryItem.querySelector('img');
+                    
+                    if (projectImg) {
+                        console.log('🚀 OUVERTURE DE LA LIGHTBOX!');
+                        
+                        // Définir le projet actuel pour la lightbox
+                        window.currentProject = {
+                            galleryItem: galleryItem,
+                            img: projectImg
+                        };
+                        
+                        // Récupérer la galerie d'images
+                        const galleryData = galleryItem.getAttribute('data-gallery');
+                        if (galleryData) {
+                            try {
+                                currentGallery = JSON.parse(galleryData);
+                            } catch (e) {
+                                console.error('Erreur parsing gallery:', e);
+                                currentGallery = [projectImg.src];
+                            }
+                        } else {
+                            currentGallery = [projectImg.src];
+                        }
+                        
+                        currentImageIndex = 0;
+                        
+                        // Ouvrir la lightbox
+                        const lightbox = document.getElementById('lightbox');
+                        if (lightbox) {
+                            lightbox.style.display = 'flex';
+                            document.body.style.overflow = 'hidden';
+                            isLightboxOpen = true;
+                            
+                            // Charger le média
+                            loadMedia(0);
+                            
+                            // Mettre à jour les compteurs et navigation
+                            const currentImageSpan = document.getElementById('current-image');
+                            const totalImagesSpan = document.getElementById('total-images');
+                            if (currentImageSpan && totalImagesSpan) {
+                                currentImageSpan.textContent = '1';
+                                totalImagesSpan.textContent = currentGallery.length;
+                            }
+                            
+                            // Mettre à jour les boutons prev/next
+                            const lightboxPrev = document.querySelector('.lightbox-prev');
+                            const lightboxNext = document.querySelector('.lightbox-next');
+                            if (lightboxPrev && lightboxNext) {
+                                lightboxPrev.style.display = currentGallery.length > 1 ? 'block' : 'none';
+                                lightboxNext.style.display = currentGallery.length > 1 ? 'block' : 'none';
+                            }
+                            
+                            console.log('✅ Lightbox ouverte avec succès!');
+                        } else {
+                            console.error('❌ Lightbox element not found!');
+                        }
+                        
+                    } else {
+                        console.error('❌ Image du projet non trouvée!');
+                    }
+                } else {
+                    console.error('❌ PROJET NON TROUVÉ! data-order:', projectOrder);
+                    
+                    // Debug: lister tous les projets disponibles
+                    console.log('📋 Projets disponibles:');
+                    document.querySelectorAll('.gallery-item[data-order]').forEach(item => {
+                        console.log(`   - data-order: ${item.getAttribute('data-order')} | alt: ${item.querySelector('img')?.getAttribute('alt')}`);
+                    });
+                    
+                    // Fallback: alert d'erreur
+                    alert(`Projet non trouvé (ordre ${projectOrder}). Vérifiez la console pour plus d'infos.`);
+                }
+            };
+            
+            console.log('✅ CTA configuré pour ouverture lightbox data-order:', projectOrder);
+        } else {
+            console.error('⚠️ PROBLÈME CONFIG CTA:', {
+                heroCta: !!heroCta, 
+                projectOrder: projectOrder,
+                ctaElement: document.getElementById('hero-cta')
+            });
+        }
+    }
+    
+    // Navigation avec les vignettes
+    heroThumbs.forEach((thumb, index) => {
+        thumb.addEventListener('click', () => {
+            console.log('🖱️ Clic manuel sur thumbnail:', index);
+            currentHeroSlide = index;
+            
+            // SOLUTION ULTIME: Forcer le redémarrage complet
+            heroThumbs.forEach(t => {
+                t.classList.remove('active');
+                // Hack CSS pour forcer le reset
+                t.style.display = 'none';
+            });
+            
+            // Double requestAnimationFrame + timeout pour être sûr
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    setTimeout(() => {
+                        heroThumbs.forEach(t => {
+                            t.style.display = '';
+                        });
+                        updateHero(currentHeroSlide);
+                        restartAutoplay();
+                    }, 10);
+                });
+            });
+        });
+    });
+    
+    // Boutons de navigation
     function nextSlide() {
-        currentSlide = (currentSlide + 1) % carouselItems.length;
-        updateCarousel();
+        currentHeroSlide = (currentHeroSlide + 1) % heroThumbs.length;
+        updateHero(currentHeroSlide);
     }
     
     function prevSlide() {
-        currentSlide = (currentSlide - 1 + carouselItems.length) % carouselItems.length;
-        updateCarousel();
+        currentHeroSlide = (currentHeroSlide - 1 + heroThumbs.length) % heroThumbs.length;
+        updateHero(currentHeroSlide);
     }
     
-    function goToSlide(index) {
-        currentSlide = index;
-        updateCarousel();
-    }
-    
-    // Événements
     nextBtn.addEventListener('click', () => {
         nextSlide();
-        resetAutoPlay();
+        restartAutoplay();
     });
     
     prevBtn.addEventListener('click', () => {
         prevSlide();
-        resetAutoPlay();
+        restartAutoplay();
     });
     
-    indicators.forEach((indicator, index) => {
-        indicator.addEventListener('click', () => {
-            goToSlide(index);
-            resetAutoPlay();
+    // Auto-play avec gestion de la barre de progression
+    function startAutoplay() {
+        heroInterval = setInterval(nextSlide, HERO_AUTO_DELAY);
+    }
+    
+    function stopAutoplay() {
+        if (heroInterval) {
+            clearInterval(heroInterval);
+        }
+    }
+    
+    function restartAutoplay() {
+        stopAutoplay();
+        
+        // CORRECTIF TOTAL: Reset complet de TOUTES les animations
+        heroThumbs.forEach((thumb, i) => {
+            // Supprimer complètement toute animation
+            thumb.classList.remove('active');
+            thumb.style.animation = 'none !important';
+            thumb.style.animationPlayState = 'paused';
+            thumb.style.animationDelay = '0s';
+            thumb.style.animationDuration = '0s';
+            thumb.style.animationIterationCount = '1';
+            // Force la recalculation
+            thumb.offsetHeight;
+            thumb.offsetWidth;
         });
-    });
-    
-    // Auto-play
-    function startAutoPlay() {
-        carouselInterval = setInterval(nextSlide, CAROUSEL_AUTO_DELAY);
+        
+        // Double requestAnimationFrame pour être SÛR que le navigateur applique
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                // Remettre TOUS les styles CSS par défaut
+                heroThumbs.forEach(thumb => {
+                    thumb.style.animation = '';
+                    thumb.style.animationPlayState = '';
+                    thumb.style.animationDelay = '';
+                    thumb.style.animationDuration = '';
+                    thumb.style.animationIterationCount = '';
+                });
+                
+                // Réactiver le thumbnail actuel
+                const currentActiveThumb = heroThumbs[currentHeroSlide];
+                if (currentActiveThumb) {
+                    currentActiveThumb.classList.add('active');
+                    console.log('🚀 Autoplay redémarré avec animation complète pour:', currentHeroSlide);
+                }
+                
+                // Redémarrer l'autoplay
+                startAutoplay();
+            });
+        });
     }
     
-    function stopAutoPlay() {
-        clearInterval(carouselInterval);
+    // Pause au survol du carousel complet (pas seulement hero-main)
+    const heroCarousel = document.querySelector('.hero-carousel-section');
+    if (heroCarousel) {
+        heroCarousel.addEventListener('mouseenter', stopAutoplay);
+        heroCarousel.addEventListener('mouseleave', startAutoplay);
     }
     
-    function resetAutoPlay() {
-        stopAutoPlay();
-        startAutoPlay();
-    }
-    
-    // Pause sur hover
-    const carouselContainer = document.querySelector('.carousel-container');
-    if (carouselContainer) {
-        carouselContainer.addEventListener('mouseenter', stopAutoPlay);
-        carouselContainer.addEventListener('mouseleave', startAutoPlay);
-    }
-    
-    // Démarrer l'auto-play
-    startAutoPlay();
-    updateCarousel();
+    // Initialiser avec le premier projet
+    updateHero(0);
+    startAutoplay();
 }
 
 // Fonction pour préprocesser les images et améliorer le layout
@@ -784,6 +941,7 @@ function initLightbox() {
         updateCounter();
         updateNavigation();
         updateGameButton();
+        update3DButton();
     }
     
     // Charger un média (image ou vidéo)
@@ -887,9 +1045,10 @@ function initLightbox() {
             updateCounter();
             updateNavigation();
             
-            // Délai pour s'assurer que tout est chargé avant d'afficher le bouton
+            // Délai pour s'assurer que tout est chargé avant d'afficher les boutons
             setTimeout(() => {
                 updateGameButton();
+                update3DButton();
             }, 100);
         }
     }
@@ -967,6 +1126,94 @@ function initLightbox() {
             console.log('🎮 Hiding game button - not a game or no URL');
             gameButton.style.display = 'none';
         }
+    }
+    
+    // Mettre à jour le bouton 3D Sketchfab
+    function update3DButton() {
+        const threeDButton = document.getElementById('lightbox-3d-access');
+        console.log('🎨 update3DButton called');
+        console.log('🎨 threeDButton found:', threeDButton);
+        console.log('🎨 window.currentProject:', window.currentProject);
+        
+        if (!threeDButton) {
+            console.error('🎨 3D button element not found!');
+            return;
+        }
+        
+        if (!window.currentProject) {
+            console.log('🎨 No current project, hiding button');
+            threeDButton.style.display = 'none';
+            return;
+        }
+        
+        const galleryItem = window.currentProject.galleryItem;
+        console.log('🎨 galleryItem:', galleryItem);
+        
+        if (!galleryItem) {
+            console.error('🎨 No gallery item found!');
+            threeDButton.style.display = 'none';
+            return;
+        }
+        
+        const has3D = galleryItem.getAttribute('data-3d');
+        
+        console.log('🎨 data-3d attribute:', has3D);
+        console.log('🎨 data-3d exists:', has3D !== null);
+        
+        // Si l'attribut data-3d existe (même vide pour l'instant)
+        if (has3D !== null) {
+            console.log('🎨 SHOWING 3D BUTTON!');
+            threeDButton.textContent = '🎨 Voir en 3D';
+            threeDButton.title = 'Voir le modèle 3D interactif';
+            threeDButton.onclick = function() {
+                console.log('🎨 3D Button clicked');
+                show3DModel(has3D);
+            };
+            threeDButton.style.display = 'flex';
+        } else {
+            console.log('🎨 Hiding 3D button - no data-3d attribute');
+            threeDButton.style.display = 'none';
+        }
+    }
+    
+    // Afficher le modèle 3D Sketchfab
+    function show3DModel(sketchfabUrl) {
+        const sketchfabContainer = document.getElementById('lightbox-sketchfab-container');
+        const sketchfabIframe = document.getElementById('lightbox-sketchfab-iframe');
+        const closeButton = document.getElementById('close-sketchfab');
+        
+        if (!sketchfabContainer || !sketchfabIframe || !closeButton) {
+            console.error('🎨 Sketchfab elements not found!');
+            return;
+        }
+        
+        // Si pas d'URL Sketchfab fournie, afficher un message
+        if (!sketchfabUrl || sketchfabUrl === '') {
+            alert('Modèle 3D bientôt disponible sur cette page !');
+            return;
+        }
+        
+        // Configurer l'iframe Sketchfab
+        sketchfabIframe.src = sketchfabUrl;
+        
+        // Afficher le container
+        sketchfabContainer.style.display = 'flex';
+        
+        // Gérer la fermeture
+        closeButton.onclick = function() {
+            sketchfabContainer.style.display = 'none';
+            sketchfabIframe.src = ''; // Arrêter le chargement
+        };
+        
+        // Fermer aussi avec Escape
+        function handle3DEscape(e) {
+            if (e.key === 'Escape') {
+                sketchfabContainer.style.display = 'none';
+                sketchfabIframe.src = '';
+                document.removeEventListener('keydown', handle3DEscape);
+            }
+        }
+        document.addEventListener('keydown', handle3DEscape);
     }
     
     // Restaurer les descriptions originales du carrousel
