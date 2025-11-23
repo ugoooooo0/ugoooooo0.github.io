@@ -164,25 +164,26 @@ h1 {
     font-weight: 700;
 }
 
-/* Header pour la page portfolio - Version arrondie */
+/* Header pour la page portfolio - Style Star Citizen */
 .portfolio-page header {
-    background: linear-gradient(135deg, rgba(15, 20, 25, 0.95), rgba(26, 31, 54, 0.95));
-    padding: 30px 0;
-    position: sticky;
-    top: 20px; /* Retour à la valeur originale */
-    z-index: 100;
+    background: rgba(15, 20, 25, 0.9);
+    padding: 15px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
     backdrop-filter: blur(15px);
-    border: 1px solid rgba(100, 255, 218, 0.2);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    margin: 20px; /* Retour aux marges originales */
-    border-radius: 20px; /* Retour aux bords originaux */
-    transition: all 0.4s ease;
+    border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+    margin: 0;
+    border-radius: 0;
+    transition: all 0.3s ease;
 }
 
 .portfolio-page header:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-    border-color: rgba(100, 255, 218, 0.4);
+    background: rgba(15, 20, 25, 0.95);
+    border-bottom-color: rgba(100, 255, 218, 0.3);
 }
 
 /* Ajuster le conteneur pour compenser les marges */
@@ -529,21 +530,10 @@ nav a:hover {
 .btn-primary {
     background: linear-gradient(45deg, #64ffda, #1de9b6);
     color: #0f1419;
-    border: 4px solid;
-    border-image: linear-gradient(45deg, #ff0080, #00ff80, #8000ff, #ff0080) 1;
+    border: 2px solid #64ffda;
     border-radius: 15px;
-    animation: rgb-border 4s ease-in-out infinite;
 }
 
-@keyframes rgb-border {
-    0% { border-image: linear-gradient(45deg, #ff0080, #00ff80, #8000ff, #ff0080) 1; }
-    16.6% { border-image: linear-gradient(45deg, #ff4080, #40ff80, #8040ff, #ff4080) 1; }
-    33.3% { border-image: linear-gradient(45deg, #00ff80, #8000ff, #ff8000, #00ff80) 1; }
-    50% { border-image: linear-gradient(45deg, #8000ff, #ff8000, #0080ff, #8000ff) 1; }
-    66.6% { border-image: linear-gradient(45deg, #ff8000, #0080ff, #ff0080, #ff8000) 1; }
-    83.3% { border-image: linear-gradient(45deg, #0080ff, #ff0080, #40ff40, #0080ff) 1; }
-    100% { border-image: linear-gradient(45deg, #ff0080, #00ff80, #8000ff, #ff0080) 1; }
-}
 
 .btn-secondary {
     background: linear-gradient(45deg, #667eea, #764ba2);
@@ -1297,12 +1287,11 @@ nav a:hover {
     box-shadow: 0 0 20px rgba(100, 255, 218, 0.2) !important;
 }
 
-/* Bouton ArtStation externe - à gauche de l'en-tête */
+/* Bouton ArtStation externe - en bas à gauche */
 .artstation-btn-external {
     position: fixed;
     left: 30px;
-    top: 50%;
-    transform: translateY(-50%);
+    bottom: 30px;
     z-index: 1000;
     display: flex;
     flex-direction: column;
@@ -1405,6 +1394,9 @@ nav a:hover {
     
     .artstation-btn-external {
         left: 20px;
+        bottom: 20px;
+        top: auto;
+        transform: none;
         padding: 15px 10px 12px 10px !important;
         font-size: 0.75em !important;
         min-width: 70px;
@@ -1810,8 +1802,8 @@ body:not(.portfolio-page) nav a:hover::before {
 
 .lightbox-close {
     position: absolute;
-    top: -25px;
-    right: -25px;
+    top: 10px;
+    right: 10px;
     color: white;
     font-size: 28px;
     cursor: pointer;
@@ -1859,34 +1851,44 @@ body:not(.portfolio-page) nav a:hover::before {
     max-height: 75vh;
 }
 
+/* Flèches de navigation lightbox - positionnées sur l'image */
 .lightbox-prev,
 .lightbox-next {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(100, 255, 218, 0.8);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    color: white;
-    font-size: 20px;
-    width: 45px;
-    height: 45px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid rgba(100, 255, 218, 0.8);
+    color: #64ffda;
+    font-size: 24px;
+    width: 50px;
+    height: 50px;
     cursor: pointer;
-    border-radius: 50%;
+    border-radius: 8px;
     transition: all 0.3s ease;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(10px);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 10001;
     font-weight: bold;
+    opacity: 0.8;
+}
+
+.lightbox-prev:hover,
+.lightbox-next:hover {
+    background: rgba(100, 255, 218, 0.2);
+    border-color: #64ffda;
+    opacity: 1;
+    transform: translateY(-50%) scale(1.1);
 }
 
 .lightbox-prev {
-    left: -60px;
+    left: 15px;
 }
 
 .lightbox-next {
-    right: -60px;
+    right: 15px;
 }
 
 .lightbox-game-access {
@@ -1929,6 +1931,95 @@ body:not(.portfolio-page) nav a:hover::before {
     50% { 
         transform: scale(1.02);
     }
+}
+
+
+/* Bouton d'accès aux modèles 3D Sketchfab */
+.lightbox-3d-access {
+    position: absolute;
+    top: 50%;
+    right: -180px;
+    transform: translateY(calc(-50% + 60px));
+    background: linear-gradient(135deg, #1976d2, #42a5f5);
+    border: 2px solid #1976d2;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 12px 16px;
+    cursor: pointer;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+    z-index: 10001;
+    white-space: nowrap;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 140px;
+    animation: threeDPulse 3s infinite;
+}
+
+.lightbox-3d-access:hover {
+    background: linear-gradient(135deg, #42a5f5, #64b5f6);
+    transform: translateY(calc(-50% + 60px)) scale(1.1);
+    text-decoration: none;
+    color: white;
+    animation: none;
+}
+
+@keyframes threeDPulse {
+    0%, 100% { 
+        transform: translateY(calc(-50% + 60px)) scale(1);
+    }
+    50% { 
+        transform: translateY(calc(-50% + 60px)) scale(1.02);
+    }
+}
+
+/* Container pour les modèles Sketchfab */
+.lightbox-sketchfab-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10002;
+}
+
+.lightbox-sketchfab-container iframe {
+    width: 85vw;
+    height: 75vh;
+    border: 2px solid rgba(100, 255, 218, 0.5);
+    border-radius: 8px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+}
+
+.close-sketchfab-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 68, 68, 0.9);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.close-sketchfab-btn:hover {
+    background: rgba(255, 68, 68, 1);
+    transform: scale(1.05);
 }
 
 .lightbox-prev:hover,
@@ -1994,6 +2085,28 @@ body:not(.portfolio-page) nav a:hover::before {
         font-size: 12px;
         padding: 8px 12px;
         min-width: 120px;
+    }
+    
+    .lightbox-3d-access {
+        right: -50px;
+        top: auto;
+        bottom: -140px;
+        transform: none;
+        font-size: 12px;
+        padding: 8px 12px;
+        min-width: 120px;
+    }
+    
+    .lightbox-sketchfab-container iframe {
+        width: 95vw;
+        height: 70vh;
+    }
+    
+    .close-sketchfab-btn {
+        top: 10px;
+        right: 10px;
+        font-size: 12px;
+        padding: 8px 12px;
     }
     
     .lightbox-close {
@@ -2469,106 +2582,395 @@ nav ul li:last-child {
     }
 }
 
-/* Carousel Featured Projects */
-.featured-projects-section {
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-.featured-projects-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
-}
-
-.featured-title {
-    text-align: center;
-    font-size: 2rem;
-    color: #3498db;
-    margin-bottom: 20px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: all 0.3s ease;
-    pointer-events: none;
-}
-
-.featured-projects-container:hover .featured-title {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.carousel-container {
+/* Hero Carousel - Style Star Citizen */
+.hero-carousel-section {
     position: relative;
-    max-width: 100%;
-    margin: 0 auto;
+    height: 60vh;
+    min-height: 400px;
+    max-height: 600px;
     overflow: hidden;
-    border-radius: 8px;
+    background: #0a0a0a;
+    margin-bottom: 60px;
+    margin-top: 80px;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
 }
 
-.carousel-wrapper {
-    overflow: hidden;
-    border-radius: 6px;
-}
-
-.carousel-track {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-}
-
-.carousel-item {
-    min-width: 100%;
+.hero-carousel-container {
     position: relative;
-    overflow: hidden;
-    aspect-ratio: 21/9;
-    height: 250px;
-    /* Corrections pour les bugs de format */
-    border-radius: 8px;
-    background: rgba(26, 31, 54, 0.2);
-    backface-visibility: hidden;
+    width: 100%;
+    height: 100%;
 }
 
-.carousel-item img {
+.hero-main {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.hero-background img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: center;
-    display: block;
-    border-radius: 8px;
-    /* Amélioration du rendu */
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: optimize-contrast;
-    backface-visibility: hidden;
+    transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    filter: brightness(0.7);
+    transform: scale(1);
 }
 
-.carousel-btn {
+.hero-background img.transitioning {
+    transform: scale(1.05);
+    filter: brightness(0.5) blur(2px);
+    opacity: 0.7;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        45deg,
+        rgba(0, 0, 0, 0.4) 0%,
+        rgba(0, 0, 0, 0.2) 50%,
+        rgba(0, 0, 0, 0.3) 100%
+    );
+    z-index: 2;
+}
+
+/* Fondu de transition en bas uniquement */
+.hero-background::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(
+        to top,
+        #0f1419 0%,
+        rgba(15, 20, 25, 0.9) 20%,
+        rgba(15, 20, 25, 0.6) 50%,
+        rgba(15, 20, 25, 0.3) 75%,
+        transparent 100%
+    );
+    z-index: 3;
+    pointer-events: none;
+}
+
+.hero-content {
     position: absolute;
     top: 50%;
+    left: 60px;
     transform: translateY(-50%);
-    background: rgba(52, 152, 219, 0.8);
+    z-index: 3;
+    max-width: 600px;
+    text-align: left;
+}
+
+.hero-title {
+    font-size: 4rem;
+    font-weight: 700;
+    color: #ffffff !important;
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background-clip: initial !important;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+    letter-spacing: 1px;
+    line-height: 1.1;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: heroFadeIn 1s ease-out 0.3s forwards;
+    font-family: 'Inter', 'Segoe UI', 'Arial', sans-serif;
+    text-align: left;
+    font-weight: 600;
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    color: #ffffff;
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+    line-height: 1.4;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: heroFadeIn 1s ease-out 0.6s forwards;
+    font-family: 'Inter', 'Segoe UI', 'Arial', sans-serif;
+    text-align: left;
+    font-weight: 400;
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.hero-cta {
+    background: linear-gradient(45deg, #00b4db, #0083b0);
     border: none;
     color: white;
-    font-size: 1.8rem;
-    padding: 12px 16px;
+    padding: 15px 40px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     cursor: pointer;
     border-radius: 4px;
     transition: all 0.3s ease;
-    z-index: 2;
-    width: 45px;
-    height: 45px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: heroFadeIn 1s ease-out 0.9s forwards;
+    box-shadow: 0 4px 15px rgba(0, 180, 219, 0.4);
+}
+
+.hero-cta:hover {
+    background: linear-gradient(45deg, #0083b0, #005f73);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 180, 219, 0.6);
+}
+
+@keyframes heroFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Navigation repositionnée sur le carrousel */
+.hero-nav-container {
+    position: absolute;
+    bottom: 40px;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    height: auto;
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 0;
+    z-index: 10;
+    pointer-events: none;
+    margin-left: calc(-50vw + 50%);
 }
 
-.carousel-btn:hover {
-    background: rgba(52, 152, 219, 1);
-    transform: translateY(-50%) scale(1.05);
+.hero-thumbnails {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    width: 100vw;
+    overflow-x: visible;
+    overflow-y: visible;
+    padding: 0 20px;
+    background: transparent;
+    border-radius: 0;
+    backdrop-filter: none;
+    border: none;
+    pointer-events: all;
+    justify-content: center;
 }
 
-.carousel-btn.prev {
-    left: 10px;
+.hero-thumb {
+    position: relative;
+    flex: 1;
+    min-width: 150px;
+    height: 60px;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(15px);
+    display: flex;
+    align-items: center;
+    pointer-events: all;
 }
+
+.hero-thumb::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, rgba(0, 180, 219, 0.3), rgba(0, 131, 176, 0.3));
+    transition: width 0.3s ease;
+    z-index: 1;
+    border-radius: 6px;
+}
+
+.hero-thumb.active::before {
+    animation: progressFill 10s linear forwards;
+    /* CORRECTIF: Forcer le redémarrage de l'animation */
+    animation-fill-mode: none;
+    animation-delay: 0s;
+}
+
+@keyframes progressFill {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+.hero-thumb.active {
+    border-color: #00b4db;
+    box-shadow: 0 0 15px rgba(0, 180, 219, 0.4);
+    transform: scale(1.02);
+    background: rgba(0, 180, 219, 0.1);
+}
+
+.hero-thumb:hover:not(.active) {
+    transform: scale(1.01);
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(0, 0, 0, 0.9);
+}
+
+.hero-thumb img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-right: 12px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 3;
+}
+
+.thumb-overlay {
+    position: relative;
+    flex: 1;
+    background: transparent;
+    padding: 0;
+    transform: none;
+    transition: none;
+    display: flex;
+    align-items: center;
+}
+
+.thumb-title {
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 12px;
+    position: relative;
+    z-index: 3;
+}
+
+.hero-nav-btn {
+    display: none; /* Flèches cachées */
+}
+
+.hero-nav-btn:hover {
+    background: rgba(0, 180, 219, 0.3);
+    border-color: rgba(0, 180, 219, 0.5);
+    transform: scale(1.1);
+}
+
+.hero-nav-btn.prev {
+    margin-right: 20px;
+}
+
+.hero-nav-btn.next {
+    margin-left: 20px;
+}
+
+/* Hero Carousel Responsive */
+@media (max-width: 768px) {
+    .hero-carousel-section {
+        height: 50vh;
+        min-height: 300px;
+        margin-top: 70px;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .hero-cta {
+        padding: 12px 30px;
+        font-size: 1rem;
+    }
+    
+    .hero-content {
+        left: 5%;
+        max-width: 90%;
+    }
+    
+    .hero-nav-container {
+        bottom: 20px;
+    }
+    
+    .hero-thumbnails {
+        gap: 10px;
+        max-width: 98vw;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+    
+    .hero-thumbnails::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .hero-thumb {
+        width: 160px;
+        height: 50px;
+    }
+    
+    .hero-thumb img {
+        width: 50px;
+        height: 50px;
+        margin-right: 8px;
+    }
+    
+    .thumb-title {
+        font-size: 0.75rem;
+        padding-right: 8px;
+    }
+    
+    .hero-nav-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+    
+    .hero-nav-btn.prev {
+        margin-right: 10px;
+    }
+    
+    .hero-nav-btn.next {
+        margin-left: 10px;
+    }
+    
+    .thumb-title {
+        font-size: 0.7rem;
+    }
+}
+
 
 .carousel-btn.next {
     right: 10px;
@@ -2677,9 +3079,14 @@ nav ul li:last-child {
     
     header,
     .portfolio-page header {
-        margin: 5px;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        margin: 0 !important;
         padding: 10px 0;
-        border-radius: 8px;
+        border-radius: 0 !important;
+        z-index: 1000 !important;
     }
     
     .portfolio-page header h1 {
@@ -2768,8 +3175,13 @@ body.mobile-test-mode .container {
 /* Ajustements spécifiques pour le mode test */
 body.mobile-test-mode header,
 body.mobile-test-mode .portfolio-page header {
-    margin: 10px 5px !important;
-    border-radius: 15px !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    z-index: 1000 !important;
     padding: 15px 0 !important;
 }
 
