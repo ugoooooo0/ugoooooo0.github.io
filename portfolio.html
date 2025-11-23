@@ -30,7 +30,7 @@
                 <a href="index.html" class="back-home-btn" data-translate="ACCUEIL">
                     ACCUEIL
                 </a>
-                <h1 data-translate="Ugo RAVARD Artist 3D / 2D">Ugo RAVARD Artist 3D / 2D</h1>
+                <h1 data-translate="Ugo RAVARD Artist 3D">Ugo RAVARD Artist 3D</h1>
             </div>
             <nav>
                 <ul>
@@ -42,70 +42,112 @@
         </header>
 
         <main>
-            <!-- Bandeau Carrousel - Meilleurs Projets -->
-            <section class="featured-projects-section">
-                <div class="featured-projects-container">
-                    <h2 class="featured-title" data-translate="Mes Meilleurs Projets">Mes Meilleurs Projets</h2>
-                    
-                    <div class="carousel-container">
-                        <button class="carousel-btn prev" id="carousel-prev">‹</button>
+            <!-- Hero Carrousel - Style cinématique -->
+            <section class="hero-carousel-section">
+                <div class="hero-carousel-container">
+                    <!-- Hero principal avec image de fond -->
+                    <div class="hero-main" id="hero-main">
+                        <div class="hero-background" id="hero-background">
+                            <img src="https://i.imgur.com/kTgWziu.png" alt="Hero Background" id="hero-bg-image">
+                        </div>
                         
-                        <div class="carousel-wrapper">
-                            <div class="carousel-track" id="carousel-track">
-                                <!-- 1. The Prism -->
-                                <div class="carousel-item" data-project-order="2">
-                                    <img src="https://i.imgur.com/MTSt6BY.jpeg" alt="The Prism">
-                                    <div class="carousel-overlay">
-                                        <h3>The Prism</h3>
-                                    </div>
-                                </div>
-                                
-                                <!-- 2. Le Colossus -->
-                                <div class="carousel-item" data-project-order="27">
-                                    <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/images/2D%20-%203D/space%20station.png" alt="Le Colossus">
-                                    <div class="carousel-overlay">
-                                        <h3>Le Colossus</h3>
-                                    </div>
-                                </div>
-                                
-                                <!-- 3. Ville avec animation de voiture -->
-                                <div class="carousel-item" data-project-order="3">
-                                    <img src="https://raw.githubusercontent.com/ugoooooo0/ugoooooo0.github.io/refs/heads/main/assets/images/images/2D%20-%203D/city%20blender.png" alt="Ville 3D">
-                                    <div class="carousel-overlay">
-                                        <h3>Ville 3D</h3>
-                                    </div>
-                                </div>
+                        <div class="hero-content">
+                            <div class="hero-text">
+                                <h1 class="hero-title" id="hero-title">Dungeon Haven</h1>
+                                <p class="hero-subtitle" id="hero-subtitle">Jeu vidéo complet développé en équipe</p>
+                                <button class="hero-cta" id="hero-cta">DÉCOUVRIR LE PROJET</button>
+                            </div>
+                        </div>
 
-                                
-                                <!-- 5. Projet EDF -->
-                                <div class="carousel-item" data-project-order="33">
-                                    <img src="https://i.imgur.com/tvdD2dR.png" alt="Projet EDF">
-                                    <div class="carousel-overlay">
-                                        <h3>Projet EDF</h3>
-                                    </div>
+                        <!-- Overlay gradient -->
+                        <div class="hero-overlay"></div>
+                    </div>
+                    
+                    <!-- Navigation avec vignettes en bas -->
+                    <div class="hero-nav-container">
+                        <button class="hero-nav-btn prev" id="hero-prev">‹</button>
+                        
+                        <div class="hero-thumbnails" id="hero-thumbnails">
+                            <!-- Projet 1 - Arme QBZ-95 -->
+                            <div class="hero-thumb active" 
+                                 data-title="Arme QBZ-95" 
+                                 data-subtitle="Ma première arme inspirée du QBZ95"
+                                 data-thumb="https://i.imgur.com/VfZh97J.png"
+                                 data-background="https://i.imgur.com/s6gnFiI.gif"
+                                 data-order="7">
+                                <img src="https://i.imgur.com/VfZh97J.png" alt="Arme QBZ-95">
+                                <div class="thumb-overlay">
+                                    <span class="thumb-title">Arme QBZ-95</span>
                                 </div>
-                                
-                                <!-- 6. La Vie du Chef -->
-                                <div class="carousel-item" data-project-order="35">
-                                    <img src="https://i.imgur.com/YfKKP0u.png" alt="La Vie du Chef">
-                                    <div class="carousel-overlay">
-                                        <h3>La Vie du Chef</h3>
-                                    </div>
+                            </div>
+                            
+                            <!-- Projet 2 - Le Prisme -->
+                            <div class="hero-thumb" 
+                                 data-title="Le Prisme" 
+                                 data-subtitle="Projet personnel de vaisseau spatial complet qualité AAA"
+                                 data-thumb="https://i.imgur.com/MTSt6BY.jpeg"
+                                 data-background="https://i.imgur.com/iVM2pex.jpeg"
+                                 data-order="2">
+                                <img src="https://i.imgur.com/iVM2pex.jpeg" alt="Le Prisme">
+                                <div class="thumb-overlay">
+                                    <span class="thumb-title">Le Prisme</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Projet 3 - Ville 3D -->
+                            <div class="hero-thumb" 
+                                 data-title="Ville 3D" 
+                                 data-subtitle="Projet d'animation de voiture dans une ville 3D"
+                                 data-thumb="https://i.imgur.com/M526tSA.jpeg"
+                                 data-background="https://i.imgur.com/jp4e7U2.gif"
+                                 data-order="3">
+                                <img src="https://i.imgur.com/M526tSA.jpeg" alt="Ville 3D">
+                                <div class="thumb-overlay">
+                                    <span class="thumb-title">Ville 3D</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Projet 4 - Projet EDF -->
+                            <div class="hero-thumb" 
+                                 data-title="Projet EDF" 
+                                 data-subtitle="Multiples tournages pour EDF Sud-Ouest"
+                                 data-thumb="https://i.imgur.com/tvdD2dR.png"
+                                 data-background="https://i.imgur.com/tvdD2dR.png"
+                                 data-order="33">
+                                <img src="https://i.imgur.com/tvdD2dR.png" alt="Projet EDF">
+                                <div class="thumb-overlay">
+                                    <span class="thumb-title">Projet EDF</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Projet 5 - La Vie du Chef -->
+                            <div class="hero-thumb" 
+                                 data-title="Dungeaon Haven" 
+                                 data-subtitle="Jeu vidéo développé en équipe durant une game jam"
+                                 data-thumb="https://i.imgur.com/kTgWziu.png"
+                                 data-background="https://i.imgur.com/kTgWziu.png"
+                                 data-order="1">
+                                <img src="https://i.imgur.com/kTgWziu.png" alt="Dungeon Haven">
+                                <div class="thumb-overlay">
+                                    <span class="thumb-title">Dungeon Haven</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Projet 6 - Le Colossus -->
+                            <div class="hero-thumb" 
+                                 data-title="Le Colossus" 
+                                 data-subtitle="Vaisseau spatial prêt pour jeu complet"
+                                 data-thumb="https://i.imgur.com/7i4zVDY.jpeg"
+                                 data-background="https://i.imgur.com/7i4zVDY.jpeg"
+                                 data-order="4">
+                                <img src="https://i.imgur.com/7i4zVDY.jpeg" alt="Le Colossus">
+                                <div class="thumb-overlay">
+                                    <span class="thumb-title">Le Colossus</span>
                                 </div>
                             </div>
                         </div>
                         
-                        <button class="carousel-btn next" id="carousel-next">›</button>
-                    </div>
-                    
-                    <!-- Indicateurs -->
-                    <div class="carousel-indicators" id="carousel-indicators">
-                        <button class="indicator active" data-slide="0"></button>
-                        <button class="indicator" data-slide="1"></button>
-                        <button class="indicator" data-slide="2"></button>
-                        <button class="indicator" data-slide="3"></button>
-                        <button class="indicator" data-slide="4"></button>
-                        <button class="indicator" data-slide="5"></button>
+                        <button class="hero-nav-btn next" id="hero-next">›</button>
                     </div>
                 </div>
             </section>
@@ -115,7 +157,7 @@
                 <div class="projects-gallery">
 
                     <!-- Projet 1 - Dungeon Haven - Jeu (NOUVEAU PROJET JEUX) -->
-                    <div class="gallery-item large game-project" data-category="1" data-order="30" data-has-video="non" data-has-game="oui"
+                    <div class="gallery-item large game-project" data-category="1" data-order="1" data-has-video="non" data-has-game="oui"
                          data-gallery='[
                              "https://i.imgur.com/kTgWziu.png",
                              "https://i.imgur.com/2LHPyPO.jpeg",
@@ -125,19 +167,20 @@
                          data-game-url="https://felixve.itch.io/dungeon-haven">
                         <div class="project-content">
                             <img src="https://i.imgur.com/kTgWziu.png" 
-                                 alt="Knight Haven - Jeu vidéo"
-                                 data-description="Logiciel : Unity + Blender - Temps ≃ 50h - ||Dungeon Haven|| - Jeu vidéo complet développé en équipe - Jeu d'énignmes en FPS - J'ai crée tout les assets 3D">
+                                 alt="Dungeon Haven - Jeu vidéo"
+                                 data-description="Logiciel : Unity + Blender - Temps ≃ 50h - ||Dungeon Haven|| - Jeu vidéo complet développé en équipe - Jeu d'énigmes en vue FPS - J'ai créé tous les éléments 3D">
                         </div>
                         <div class="project-actions">
                             <a href="https://felixve.itch.io/dungeon-haven" target="_blank" class="play-game-btn" onclick="event.stopPropagation();">
                                 <span class="play-icon">🎮</span>
-                                <span class="play-text">Jouer au jeu</span>
+                                <span class="play-text">Jouer maintenant</span>
                             </a>
                         </div>
                     </div>
 
                    <div class="gallery-item medium" data-category="1" data-order="2" data-has-video="oui"
                          data-hover-image="https://i.imgur.com/hRgCZl4.gif"
+                         data-3d="https://skfb.ly/pDuZG"
                          data-gallery='[
                              "https://i.imgur.com/iVM2pex.jpeg",
                              "https://i.imgur.com/MTSt6BY.jpeg",
@@ -151,8 +194,8 @@
                              "https://www.youtube.com/watch?v=5vH6pOkH_fA"
                          ]'>
                         <img src="https://i.imgur.com/iVM2pex.jpeg" 
-                             alt="The Prism"
-                             data-description="Logiciel : Blender - Temps ≃ 100h - ||The Prism||Work in progress|| - Projet personnel de vaisseau spatial complet (chasseur lourd 2) qualitée AAA (extérieur + intérieur) avec animation et Demoreel">
+                             alt="Le Prisme"
+                             data-description="Logiciel : Blender - Temps ≃ 100h - ||Le Prisme|| Work in progress|| - Projet personnel de vaisseau spatial complet (chasseur lourd 2) qualité AAA (extérieur + intérieur) avec animation et démo reel">
                     </div>
 
                     <!-- Projet 5 - City avec galerie (CONTIENT UNE VIDÉO YOUTUBE) -->
@@ -170,7 +213,8 @@
                              data-description="Logiciel : Blender - Temps ≃ 35h - Projet d'animation de voiture dans une ville 3D - Modélisation et animation avec vidéo complète">
                     </div>
 
-                    <div class="gallery-item large" data-category="1" data-order="27" data-has-video="non"
+                    <div class="gallery-item large" data-category="1" data-order="4" data-has-video="non"
+                         data-3d="https://skfb.ly/pDuZG"
                          data-gallery='[
                              "https://i.imgur.com/7i4zVDY.jpeg",
                              "https://i.imgur.com/HFJ4Oy3.png",
@@ -183,26 +227,40 @@
                              "https://i.imgur.com/L10rrjj.jpeg"
                          ]'>
                         <img src="https://i.imgur.com/7i4zVDY.jpeg" 
-                             alt="Le Colossus - Vaisseau spatial game-ready"
-                             data-description="Logiciel : Blender - Temps ≃ 60h - ||Le Colossus|| - Vaisseau spatial game-ready complet (Exterieur + intérieur) avec textures, materials et process de création">
+                             alt="Le Colossus - Vaisseau spatial prêt pour jeu"
+                             data-description="Logiciel : Blender - Temps ≃ 60h - ||Le Colossus|| - Vaisseau spatial prêt pour jeu complet (extérieur + intérieur) avec textures, matériaux et processus de création">
                     </div>
                     
                     <!-- Projet 6 - GIF Animation (sans sous-images) -->
-                    <div class="gallery-item small" data-category="1" data-order="4" data-has-video="non">
+                    <div class="gallery-item small" data-category="1" data-order="5" data-has-video="non">
                         <img src="https://i.imgur.com/LB4dDrC.gif" 
                              alt="Animation 3D GIF"
-                             data-description="Logiciel : Blender - Temps ≃ 5h - Animation 3D au format GIF - loop d'animation - Projet d'examin d'entrée dans ma liscence">
+                             data-description="Logiciel : Blender - Temps ≃ 5h - Animation 3D au format GIF - boucle d'animation - Projet d'examen d'entrée dans ma licence">
                     </div>
 
                     <!-- Projet 7 - Screenshot Gallery (sans sous-images) -->
-                    <div class="gallery-item medium" data-category="1" data-order="5" data-has-video="non">
+                    <div class="gallery-item medium" data-category="1" data-order="6" data-has-video="non">
                         <img src="https://i.imgur.com/5Nrvako.jpeg" 
                              alt="Screenshot Gallery"
-                             data-description="Logiciel : Blender - Temps ≃ 8h - Model d'un astraunaute dans une nébuleuse volumétrique">
+                             data-description="Logiciel : Blender - Temps ≃ 8h - Modèle d'un astronaute dans une nébuleuse volumétrique">
                     </div>
 
-                    <div class="gallery-item medium" data-category="1" data-order="20" data-has-video="oui"
-                         data-hover-image="https://i.imgur.com/6xxrK0u.gif"
+                     <div class="gallery-item medium" data-category="1" data-order="7" data-has-video="oui"
+                         data-hover-image="https://i.imgur.com/s6gnFiI.gif"
+                         data-3d=""
+                         data-gallery='[
+                             "https://i.imgur.com/VfZh97J.png",
+                             "https://i.imgur.com/pG3M5a4.png",
+                             "https://i.imgur.com/0nNwooZ.png",
+                             "https://i.imgur.com/9CYbv9W.png",
+                             "https://i.imgur.com/s6gnFiI.gif"
+                         ]'>
+                        <img src="https://i.imgur.com/VfZh97J.png" 
+                             alt="Arme QBZ95"
+                             data-description="Logiciel : Blender - Temps ≃ 4h - Projet d'arme - Conception de ma première arme inspirée du QBZ95">
+                    </div>
+                    
+                    <div class="gallery-item medium" data-category="1" data-order="8" data-has-video="non"
                          data-gallery='[
                              "https://i.imgur.com/oiVM13r.png",
                              "https://www.youtube.com/watch?v=dkax0LbPZuI"
@@ -213,7 +271,7 @@
                     </div>
 
                     <!-- Projet 10 - Animation Route avec galerie (1 sous-image) -->
-                    <div class="gallery-item medium" data-category="1" data-order="8" data-has-video="non"
+                    <div class="gallery-item medium" data-category="1" data-order="9" data-has-video="non"
                          data-gallery='[
                              "https://i.imgur.com/M385dqA.jpeg",
                              "https://i.imgur.com/hm5f6K1.jpeg"
@@ -224,14 +282,14 @@
                     </div>
 
                     <!-- Projet 11 - Fog and GTR (sans sous-images) -->
-                    <div class="gallery-item small" data-category="1" data-order="9" data-has-video="non">
+                    <div class="gallery-item small" data-category="1" data-order="10" data-has-video="non">
                         <img src="https://i.imgur.com/8bP2wNK.png" 
                              alt="GTR dans le brouillard"
                              data-description="Logiciel : Blender - Temps ≃ 15h - Voiture GTR dans un environnement brumeux - Rendu photoréaliste avec effets de volumétrie">
                     </div>
 
                     <!-- Projet 12 - Batspace avec galerie (2 sous-images) -->
-                    <div class="gallery-item large" data-category="1" data-order="10" data-has-video="non"
+                    <div class="gallery-item large" data-category="1" data-order="11" data-has-video="non"
                          data-gallery='[
                              "https://i.imgur.com/etJKXxT.jpeg",
                              "https://i.imgur.com/Na8JoIe.jpeg",
@@ -239,10 +297,10 @@
                          ]'>
                         <img src="https://i.imgur.com/etJKXxT.jpeg" 
                              alt="Batspace - Véhicule spatial"
-                             data-description="Logiciel : Blender - Temps ≃ 12h - ||The Batspace|| Véhicule spatial futuriste - Design conceptuel et modélisation">
+                             data-description="Logiciel : Blender - Temps ≃ 12h - ||Le Batspace|| Véhicule spatial futuriste - Design conceptuel et modélisation">
                     </div>
 
-                    <div class="gallery-item medium" data-category="1" data-order="30" data-has-video="non"
+                    <div class="gallery-item medium" data-category="1" data-order="12" data-has-video="non"
                          data-gallery='[
                              "https://i.imgur.com/l8XUTI1.png",
                              "https://i.imgur.com/WCtLyf8.png",
@@ -253,18 +311,18 @@
                              data-description="Logiciel : Blender - Temps : ≃ 20h - Level design architectural - Conception d'environnements sur Gaea, modélisation sur Blender et rendu sur Unreal Engine 5">
                     </div>
 
-                    <div class="gallery-item medium" data-category="1" data-order="32" data-has-video="non"
+                    <div class="gallery-item medium" data-category="1" data-order="13" data-has-video="non"
                          data-gallery='[
                              "https://i.imgur.com/gxCcinm.png",
                              "https://i.imgur.com/bVVW1vk.jpeg"
                          ]'>
                         <img src="https://i.imgur.com/gxCcinm.png" 
                              alt="Machines industrielles imprimables 3D"
-                             data-description="Logiciel : Blender - Temps ≃ 50h - Machines industrielles - Modèles 3D techniques ispirés du jeu Satisfactory - pour un particulier sur Fiverr">
+                             data-description="Logiciel : Blender - Temps ≃ 50h - Machines industrielles - Modèles 3D techniques inspirés du jeu Satisfactory - pour un particulier sur Fiverr">
                     </div>
 
                     <!-- Projet 13 - Correction -->
-                    <div class="gallery-item medium" data-category="1" data-order="11" data-has-video="non"
+                    <div class="gallery-item medium" data-category="1" data-order="14" data-has-video="non"
                          data-gallery='[
                              "https://i.imgur.com/An3GRse.png",
                              "https://i.imgur.com/QLZEImJ.jpeg",
@@ -273,11 +331,11 @@
                          ]'>
                         <img src="https://i.imgur.com/An3GRse.png" 
                              alt="Armure futuriste"
-                             data-description="Logiciel : Blender - Temps ≃ 15h - Armure futuriste 3D - Modélisation et matériaux détaillée (projet pour un particulier sur Fiverr) ">
+                             data-description="Logiciel : Blender - Temps ≃ 15h - Armure futuriste 3D - Modélisation et matériaux détaillés (projet pour un particulier sur Fiverr)">
                     </div>
 
                     <!-- Projet 14 - Apple Vision Pro avec galerie (2 sous-images) -->
-                    <div class="gallery-item small" data-category="1" data-order="12" data-has-video="non"
+                    <div class="gallery-item small" data-category="1" data-order="15" data-has-video="non"
                          data-gallery='[
                              "https://i.imgur.com/PFnuGee.jpeg",
                              "https://i.imgur.com/QXoDWjd.jpeg",
@@ -288,7 +346,7 @@
                              data-description="Logiciel : Blender - Temps ≃ 10h - Modélisation Apple Vision Pro - Reproduction fidèle du casque avec matériaux réalistes">
                     </div>
                     
-                    <div class="gallery-item medium" data-category="1" data-order="2" data-has-video="non"
+                    <div class="gallery-item medium" data-category="1" data-order="16" data-has-video="non"
                          data-gallery='[
                              "https://i.imgur.com/bYcyXZT.jpeg",
                              "https://i.imgur.com/LMWlFZ1.jpeg"
@@ -299,18 +357,18 @@
                     </div>
 
                     <!-- Projet 15 - Correction -->
-                    <div class="gallery-item medium" data-category="1" data-order="13" data-has-video="non"
+                    <div class="gallery-item medium" data-category="1" data-order="17" data-has-video="non"
                          data-gallery='[
                              "https://i.imgur.com/jzolHlt.jpeg",
                              "https://i.imgur.com/MkvQGFh.png"
                          ]'>
                         <img src="https://i.imgur.com/jzolHlt.jpeg" 
                              alt="Scène conceptuelle avec variations"
-                             data-description="Logiciel : Blender - Temps ≃ 25h - Scène conceptuelle 3D - Base terestre Rendue sur Twinmotion">
+                             data-description="Logiciel : Blender - Temps ≃ 25h - Scène conceptuelle 3D - Base terrestre rendue sur Twinmotion">
                     </div>
 
                     <!-- Projet 17 - Motor Space avec galerie (4 sous-images) -->
-                    <div class="gallery-item large" data-category="1" data-order="14" data-has-video="non"
+                    <div class="gallery-item large" data-category="1" data-order="18" data-has-video="non"
                          data-gallery='[
                             "https://i.imgur.com/JURiEbT.jpeg",
                              "https://i.imgur.com/JoouOKq.png",
@@ -325,32 +383,32 @@
                     </div>
                     
                     <!-- Projet 18 - Correction -->
-                    <div class="gallery-item medium" data-category="1" data-order="15" data-has-video="non"
+                    <div class="gallery-item medium" data-category="1" data-order="19" data-has-video="non"
                          data-gallery='[
                              "https://i.imgur.com/AskS27f.jpeg",
                              "https://i.imgur.com/MFObaDC.jpeg"
                          ]'>
                         <img src="https://i.imgur.com/AskS27f.jpeg" 
                              alt="Retribution - Scène dramatique"
-                             data-description="Logiciel : Blender - Temps ≃ 15h - ||Retribution|| - Reproduction du vaisseau mer du jeu Star Citizen à partir d'une image 2D">
+                             data-description="Logiciel : Blender - Temps ≃ 15h - ||Retribution|| - Reproduction du vaisseau de guerre du jeu Star Citizen à partir d'une image 2D">
                     </div>
 
                     <!-- Projet 8 - Toon Scape (sans sous-images) -->
-                    <div class="gallery-item small" data-category="1" data-order="6" data-has-video="non">
+                    <div class="gallery-item small" data-category="1" data-order="20" data-has-video="non">
                         <img src="https://i.imgur.com/nYp46XK.png" 
                              alt="Toon Scape"
-                             data-description="Logiciel : Blender - Temps ≃ 6h - Paysage en style cartoon - ispiré des oevres Ghibli">
+                             data-description="Logiciel : Blender - Temps ≃ 6h - Paysage en style cartoon - inspiré des œuvres Ghibli">
                     </div>
 
                     <!-- Projet 9 - Distrib Insta (sans sous-images) -->
-                    <div class="gallery-item small" data-category="1" data-order="7" data-has-video="non">
+                    <div class="gallery-item small" data-category="1" data-order="21" data-has-video="non">
                         <img src="https://i.imgur.com/IfFt83t.png" 
                              alt="Projet cartoon Instagram"
                              data-description="Logiciel : Photoshop - Temps ≃ 4h - Design cartoon d'un distributeur">
                     </div>
 
                     <!-- Projet 19 - Sci-fi Scene avec galerie (2 sous-images) -->
-                    <div class="gallery-item small" data-category="1" data-order="16" data-has-video="non"
+                    <div class="gallery-item small" data-category="1" data-order="22" data-has-video="non"
                          data-gallery='[
                              "https://i.imgur.com/izVTzPB.jpeg",
                              "https://i.imgur.com/Q1sF3Hb.jpeg",
@@ -362,14 +420,14 @@
                     </div>
 
                     <!-- Projet 20 - Shoot Tel (sans sous-images) -->
-                    <div class="gallery-item small" data-category="1" data-order="17" data-has-video="non">
+                    <div class="gallery-item small" data-category="1" data-order="23" data-has-video="non">
                         <img src="https://i.imgur.com/c4EAy8n.png" 
                              alt="Shoot photo téléphone stylisé"
                              data-description="Logiciel : Blender - Temps ≃ 5h - Mise en scène avec lighting studio et rendu">
                     </div>
 
                     <!-- Projet 22 - Space Station avec galerie (2 sous-images) -->
-                    <div class="gallery-item large" data-category="1" data-order="18" data-has-video="non"
+                    <div class="gallery-item large" data-category="1" data-order="24" data-has-video="non"
                          data-gallery='[
                              "https://i.imgur.com/3Ruqxku.jpeg",
                              "https://i.imgur.com/6iZj9wI.jpeg",
@@ -381,7 +439,7 @@
                     </div>
 
                     <!-- Projet 23 - Correction -->
-                    <div class="gallery-item medium" data-category="1" data-order="19" data-has-video="non"
+                    <div class="gallery-item medium" data-category="1" data-order="25" data-has-video="non"
                          data-gallery='[
                              "https://i.imgur.com/K1iwNmq.jpeg",
                              "https://i.imgur.com/i7mdDi4.png"
@@ -391,31 +449,31 @@
                              data-description="Logiciel : Blender - Temps ≃ 5h - Terra - Conception de planète (matétériaux type nodals)">
                     </div>
 
-                     <div class="gallery-item large" data-category="1" data-order="21" data-has-video="non">
+                     <div class="gallery-item large" data-category="1" data-order="26" data-has-video="non">
                         <img src="https://i.imgur.com/jyIU6PG.jpeg" 
                              alt="Paysage cosmique avec trou noir"
                              data-description="Logiciel : Blender - Temps ≃ 5h - Paysage cosmique avec trou noir - Exploration des effets spatiaux et de la distorsion gravitationnelle">
                     </div>
 
-                    <div class="gallery-item large" data-category="1" data-order="22" data-has-video="non">
+                    <div class="gallery-item large" data-category="1" data-order="27" data-has-video="non">
                         <img src="https://i.imgur.com/KF3wwYm.jpeg" 
                              alt="Entraînement textures PBR"
                              data-description="Logiciel : Blender - Temps ≃ 6h - Entraînement textures PBR - Étude des matériaux et techniques de texturage photoréaliste">
                     </div>
                     
-                    <div class="gallery-item large" data-category="1" data-order="23" data-has-video="non">
+                    <div class="gallery-item large" data-category="1" data-order="28" data-has-video="non">
                         <img src="https://i.imgur.com/aS0VZJH.jpeg" 
                              alt="Paysages marécageux"
                              data-description="Logiciel : Blender - Temps ≃ 10h - Environnements marécageux 3D">
                     </div>
 
-                    <div class="gallery-item large" data-category="1" data-order="26" data-has-video="non">
+                    <div class="gallery-item large" data-category="1" data-order="29" data-has-video="non">
                         <img src="https://i.imgur.com/UCGzkfR.jpeg" 
                              alt="Starship en vol dans les nuages"
                              data-description="Logiciel : Blender - Temps ≃ 6h - ||Starship|| - nuages volumétriques et atmosphère réaliste">
                     </div>
 
-                  <div class="gallery-item medium" data-category="1" data-order="28" data-has-video="non"
+                  <div class="gallery-item medium" data-category="1" data-order="30" data-has-video="non"
                          data-gallery='[
                              "https://i.imgur.com/9veRK58.jpeg",
                              "https://i.imgur.com/rIx4Wsw.jpeg"
@@ -425,7 +483,7 @@
                              data-description="Logiciel : After Effects + Blender - Temps ≃ 8h -Entrainement VFX / tracking">
                     </div>
 
-                    <div class="gallery-item medium" data-category="1" data-order="29" data-has-video="non"
+                    <div class="gallery-item medium" data-category="1" data-order="31" data-has-video="non"
                          data-gallery='[
                              "https://i.imgur.com/kgWAZ3n.png",
                              "https://i.imgur.com/XhqrpAH.jpeg"
@@ -435,7 +493,7 @@
                              data-description="Logiciel : After Effects + Blender - Temps ≃ 8h - Entrainement VFX / tracking + lightning">
                     </div>
 
-                    <div class="gallery-item large" data-category="1" data-order="31" data-has-video="non">
+                    <div class="gallery-item large" data-category="1" data-order="32" data-has-video="non">
                         <img src="https://i.imgur.com/t8Y441L.jpeg" 
                              alt="Paysage photoréaliste"
                              data-description="Logiciel : Blender - Temps ≃ 15h - Paysage photoréaliste - Environnement naturel + Entrainemet de matériaux proceduraux">
@@ -476,6 +534,15 @@
                              data-description="Logiciel : Final cut pro + After Effects - Temps ≃ 50h - La Vie Du Chef - Tournages et montages pour l'émission YouTube ||La vie du chef||">
                     </div>
 
+                    <div class="gallery-item medium" data-category="2" data-order="36" data-has-video="oui"
+                         data-hover-image="https://i.imgur.com/862i4xF.png"
+                         data-gallery='[
+                        "https://www.youtube.com/watch?v=YReNqegGMWY"
+                         ]'>
+                        <img src="https://i.imgur.com/862i4xF.png"
+                             alt="La Vie Du Chef - Chaîne YouTube"
+                             data-description="Logiciel : Final cut pro + After Effects - Temps ≃ 35h - Agen Motorz - Tournage pour une publicitée au cinéma">
+                    </div>
 
                 </div>
             </section>
@@ -529,16 +596,23 @@
     <!-- Lightbox Modal améliorée -->
     <div id="lightbox" class="lightbox">
         <div class="lightbox-content">
-            <span class="lightbox-close">&times;</span>
             <div class="lightbox-navigation">
-                <button class="lightbox-prev">‹</button>
-                <button class="lightbox-next">›</button>
                 <button id="lightbox-game-access" class="lightbox-game-access" style="display: none;">
                     🎮 Accéder au jeu
+                </button>
+                <button id="lightbox-3d-access" class="lightbox-3d-access" style="display: none;">
+                    🎨 Voir en 3D
                 </button>
             </div>
             <div class="lightbox-image-container">
                 <img id="lightbox-image" src="" alt="">
+                <button class="lightbox-prev">‹</button>
+                <button class="lightbox-next">›</button>
+                <span class="lightbox-close">&times;</span>
+                <div id="lightbox-sketchfab-container" class="lightbox-sketchfab-container" style="display: none;">
+                    <iframe id="lightbox-sketchfab-iframe" src="" frameborder="0" allowvr allowfullscreen></iframe>
+                    <button id="close-sketchfab" class="close-sketchfab-btn">✕ Fermer la vue 3D</button>
+                </div>
             </div>
             <div id="lightbox-description" class="lightbox-description"></div>
             <div class="lightbox-counter">
