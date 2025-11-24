@@ -1,0 +1,486 @@
+/* =================================
+   AMÉLIORATIONS INDEX POUR RECRUTEURS
+   ================================= */
+
+/* Header amélioré */
+.header-content {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.tagline {
+    display: block;
+    font-size: 1rem;
+    color: #64ffda;
+    margin-top: 5px;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+/* Section Héros */
+.hero-section {
+    padding: 80px 20px;
+    background: linear-gradient(135deg, #0f1419 0%, #1a1a2e 50%, #16213e 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(100, 255, 218, 0.1) 0%, transparent 70%);
+    animation: heroGlow 8s ease-in-out infinite;
+}
+
+@keyframes heroGlow {
+    0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+    50% { transform: translate(-50%, -50%) rotate(180deg); }
+}
+
+.hero-content {
+    display: flex;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 60px;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-text {
+    flex: 1;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 20px;
+    line-height: 1.1;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: #b8c4ce;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.hero-cta-container {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.btn-hero-primary {
+    background: linear-gradient(135deg, #64ffda, #4fc3f7);
+    color: #0f1419;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 15px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(100, 255, 218, 0.3);
+}
+
+.btn-hero-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(100, 255, 218, 0.4);
+}
+
+.btn-hero-secondary {
+    background: transparent;
+    color: #64ffda;
+    border: 2px solid #64ffda;
+    font-weight: 600;
+    padding: 13px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-hero-secondary:hover {
+    background: #64ffda;
+    color: #0f1419;
+    transform: translateY(-2px);
+}
+
+.hero-stats {
+    display: flex;
+    gap: 40px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #64ffda;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #b8c4ce;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.hero-visual {
+    flex: 1;
+    position: relative;
+    text-align: center;
+}
+
+.hero-image {
+    max-width: 400px;
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 2;
+}
+
+.hero-decoration {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(45deg, #64ffda, #4fc3f7);
+    border-radius: 20px;
+    opacity: 0.2;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+/* Section Compétences */
+.skills-section {
+    padding: 80px 20px;
+    background: #1a1a2e;
+}
+
+.skills-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.skills-header h2 {
+    font-size: 2.5rem;
+    color: #ffffff;
+    margin-bottom: 15px;
+}
+
+.skills-header p {
+    color: #b8c4ce;
+    font-size: 1.1rem;
+}
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.skill-category {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 30px;
+    border-radius: 15px;
+    border: 1px solid rgba(100, 255, 218, 0.1);
+}
+
+.skill-category h3 {
+    color: #64ffda;
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.skill-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.skill-name {
+    color: #ffffff;
+    font-weight: 600;
+    min-width: 120px;
+}
+
+.skill-bar {
+    flex: 1;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.skill-progress {
+    height: 100%;
+    background: linear-gradient(90deg, #64ffda, #4fc3f7);
+    border-radius: 4px;
+    transition: width 1s ease-out;
+    animation: fillBar 2s ease-out;
+}
+
+@keyframes fillBar {
+    from { width: 0%; }
+}
+
+.skill-level {
+    color: #64ffda;
+    font-size: 0.9rem;
+    font-weight: 600;
+    min-width: 70px;
+    text-align: center;
+}
+
+/* Section Projets Featured */
+.featured-projects-section {
+    padding: 80px 20px;
+    background: #0f1419;
+}
+
+.featured-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.featured-header h2 {
+    font-size: 2.5rem;
+    color: #ffffff;
+    margin-bottom: 15px;
+}
+
+.featured-header p {
+    color: #b8c4ce;
+    font-size: 1.1rem;
+}
+
+.featured-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto 40px;
+}
+
+.featured-project {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid rgba(100, 255, 218, 0.1);
+}
+
+.featured-project:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border-color: rgba(100, 255, 218, 0.3);
+}
+
+.project-image {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.project-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.featured-project:hover .project-image img {
+    transform: scale(1.1);
+}
+
+.project-overlay {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: rgba(100, 255, 218, 0.9);
+    color: #0f1419;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.project-info {
+    padding: 25px;
+}
+
+.project-info h3 {
+    color: #ffffff;
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+.project-info p {
+    color: #b8c4ce;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.project-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tech-tag {
+    background: rgba(100, 255, 218, 0.1);
+    color: #64ffda;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    border: 1px solid rgba(100, 255, 218, 0.2);
+}
+
+.featured-cta {
+    text-align: center;
+    margin-top: 40px;
+}
+
+/* Améliorations section présentation */
+.intro-highlight {
+    background: linear-gradient(135deg, rgba(100, 255, 218, 0.1), rgba(79, 195, 247, 0.1));
+    padding: 25px;
+    border-radius: 12px;
+    border-left: 4px solid #64ffda;
+    margin-bottom: 30px;
+}
+
+.intro-highlight p {
+    font-size: 1.2rem;
+    color: #ffffff;
+    margin: 0;
+    font-weight: 500;
+}
+
+.presentation-details h3 {
+    color: #64ffda;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    margin-top: 25px;
+}
+
+.specialties-list {
+    list-style: none;
+    padding: 0;
+}
+
+.specialties-list li {
+    padding: 8px 0;
+    padding-left: 25px;
+    position: relative;
+    color: #b8c4ce;
+    line-height: 1.5;
+}
+
+.specialties-list li::before {
+    content: '▶';
+    position: absolute;
+    left: 0;
+    color: #64ffda;
+}
+
+.credentials {
+    margin-top: 20px;
+    padding: 20px;
+    background: rgba(100, 255, 218, 0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(100, 255, 218, 0.1);
+}
+
+.credential-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.credential-icon {
+    font-size: 1.2rem;
+}
+
+.credential-text {
+    color: #b8c4ce;
+    font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-content {
+        flex-direction: column;
+        gap: 40px;
+        text-align: center;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-cta-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .hero-stats {
+        justify-content: center;
+        gap: 30px;
+    }
+    
+    .skills-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .featured-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .skill-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .skill-bar {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .hero-section,
+    .skills-section,
+    .featured-projects-section {
+        padding: 60px 15px;
+    }
+}
