@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ugo - Bienvenue dans ma dimension !</title>
     <link rel="icon" type="image/png" href="https://i.imgur.com/GqiNMlW.png">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/index-enhancements.css">
 </head>
 <body>
     <canvas id="particles-canvas"></canvas>
@@ -13,7 +14,8 @@
     <div class="container">
         <header>
             <div class="header-content">
-                <h1 data-translate="UGO RAVARD artist 3D">UGO RAVARD artist 3D</h1>
+                <h1 data-translate="UGO RAVARD">UGO RAVARD</h1>
+                <span class="tagline" data-translate="Artiste 3D • post production • VFX">Artiste 3D • post production • VFX</span>
             </div>
             <nav>
                 <ul>
@@ -31,14 +33,37 @@
             <section id="presentation" class="section presentation-section">
                 <div class="presentation-content">
                     <div class="text-content">
-                        <h2 data-translate="ARTISTE 3D">ARTISTE 3D</h2>
+                        <h2 data-translate="À Propos">À Propos</h2>
                         <div class="presentation-text-container">
-                            <p class="presentation-text" data-translate="Je m'appelle Ugo Ravard, j'ai 18 ans et je suis passionné par la création numérique et la 3D depuis plusieurs années. J'aime donner vie à des idées à travers la modélisation, l'animation et la conception visuelle. Actuellement étudiant au CNAM Enjmin, une école reconnue en France dans le domaine du jeu vidéo et de la création numérique, je développe mes compétences artistiques et techniques pour bâtir une carrière dans l'industrie créative. Ce portfolio rassemble mes travaux et projets, reflets de mon univers et de mon évolution artistique.">Je m'appelle Ugo Ravard, j'ai 18 ans et je suis passionné par la création numérique et la 3D depuis plusieurs années. J'aime donner vie à des idées à travers la modélisation, l'animation et la conception visuelle. Actuellement étudiant au CNAM Enjmin, une école reconnue en France dans le domaine du jeu vidéo et de la création numérique, je développe mes compétences artistiques et techniques pour bâtir une carrière dans l'industrie créative. Ce portfolio rassemble mes travaux et projets, reflets de mon univers et de mon évolution artistique.</p>
+                            <div class="intro-highlight">
+                                <p data-translate="Passionné par la création numérique depuis 5 ans, je transforme des idées en expériences visuelles immersives.">Passionné par la création numérique depuis 5 ans, je transforme des idées en expériences visuelles immersives.</p>
+                            </div>
+                            
+                            <div class="presentation-details">
+                                <h3 data-translate="Mon Parcours">🎓 Mon Parcours</h3>
+                                <p data-translate="Actuellement étudiant au CNAM Enjmin, école de référence française en création numérique et jeu vidéo. Je développe mes compétences artistiques et techniques pour exceller dans l'industrie créative.">Actuellement étudiant au <strong>CNAM Enjmin</strong>, école de référence française en création numérique et jeu vidéo. Je développe mes compétences artistiques et techniques pour exceller dans l'industrie créative.</p>
+                                
+                                <h3 data-translate="Mes Spécialités">⚡ Mes Spécialités</h3>
+                                <ul class="specialties-list">
+                                    <li data-translate="Modélisation 3D haute qualité (véhicules, environnements, props, personnages)">Modélisation 3D haute qualité (véhicules, environnements, personnages)</li>
+                                    <li data-translate="Développement de jeux vidéo avec Unity et Unreal Engine">Développement de jeux vidéo avec Unity et Unreal Engine</li>
+                                    <li data-translate="Animation et motion design pour projets audiovisuels">Animation et motion design pour projets audiovisuels</li>
+                                    <li data-translate="Post-production vidéo et effets visuels">Post-production vidéo et effets visuels</li>
+                                </ul>
+
+                                <h3 data-translate="Avantage alternance">⚡ Avantage alternance</h3>
+                                <ul class="specialties-list">
+                                    <li data-translate="4j/5 en entreprise (lundi au jeudi + cours a distance le vendredi)">4j/5 en entreprise (lundi au jeudi + cours a distance le vendredi)</li>
+                                    <li data-translate="contrat de 3 ans">Contrat de 3 ans</li>
+                                    <li data-translate="salaire d'environ 740€ + 5000€ d'aides de l'état">Salaire d'environ 740€ + 5000€ d'aides de l'état</li>
+                                 </ul>
+
+                            </div>
                         </div>
 
                         <div class="buttons-container">
-                            <a href="portfolio.html" class="btn btn-primary" data-translate="🎨 PORTFOLIO SITE WEB">
-                                🎨 PORTFOLIO SITE WEB
+                            <a href="portfolio.html" class="btn btn-primary" data-translate="🎨 PORTFOLIO COMPLET">
+                                🎨 PORTFOLIO COMPLET
                             </a>
                             <a href="https://www.artstation.com/ugoravard" target="_blank" class="btn btn-artstation" title="Voir mon profil ArtStation">
                                 <img src="https://magazine.artstation.com/wp-content/uploads/2020/11/logo-icon.png" 
@@ -51,22 +76,32 @@
                     
                     <div class="image-content">
                         <img src="https://i.imgur.com/fpw36zD.png" alt="Ugo Ravard" class="profile-image">
+                        <div class="credentials">
+                            <div class="credential-item">
+                                <span class="credential-icon">🏆</span>
+                                <span class="credential-text" data-translate="Projets clients réalisés">Projets clients réalisés</span>
+                            </div>
+                            <div class="credential-item">
+                                <span class="credential-icon">🚀</span>
+                                <span class="credential-text" data-translate="Disponible pour missions">Disponible pour missions</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Badges de présentation - en bas de la section -->
+                <!-- Badges de présentation améliorés -->
                 <div class="presentation-badges">
-                    <div class="badge-item">
-                        <span class="badge-icon">⚡</span>
-                        <span class="badge-text" data-translate="5 ans d'expérience">5 ans d'expérience</span>
-                    </div>
                     <div class="badge-item" data-url="https://enjmin.cnam.fr/formations/licence-arts-numeriques-pour-le-jeu-video/presentation/licence-arts-numeriques-pour-le-jeu-video-1508750.kjsp?RH=1487088879508">
                         <span class="badge-icon">🎓</span>
                         <span class="badge-text" data-translate="École CNAM Enjmin">École CNAM Enjmin</span>
                     </div>
                     <div class="badge-item">
-                        <span class="badge-icon">😊</span>
-                        <span class="badge-text" data-translate="Super gentil :)">Super gentil :)</span>
+                        <span class="badge-icon">⚡</span>
+                        <span class="badge-text" data-translate="5 ans d'expérience">5 ans d'expérience</span>
+                    </div>
+                    <div class="badge-item">
+                        <span class="badge-icon">💼</span>
+                        <span class="badge-text" data-translate="recherche d'alternance">recherche d'alternance</span>
                     </div>
                 </div>
             </section>
