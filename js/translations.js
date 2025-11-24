@@ -7,11 +7,14 @@ class SimpleTranslation {
         this.translations = {
             // Navigation
             'PORTFOLIO UGO RAVARD': 'UGO RAVARD PORTFOLIO',
+            'UGO RAVARD': 'UGO RAVARD',
+            'Artiste 3D • post production • VFX': '3D Artist • post production • VFX',
             'PRÉSENTATION': 'ABOUT',
             'PORTFOLIO': 'PORTFOLIO', 
             'CV': 'RESUME',
             'CONTACT': 'CONTACT',
             'ACCUEIL': 'HOME',
+            'Ugo RAVARD Artist 3D': 'Ugo RAVARD 3D Artist',
             
             // Page présentation
             'ARTISTE 3D': '3D ARTIST',
@@ -22,14 +25,33 @@ class SimpleTranslation {
             '5 ans d\'expérience': '5 years experience',
             'École CNAM Enjmin': 'CNAM Enjmin School', 
             'Super gentil :)': 'Super nice :)',
+            'recherche d\'alternance': 'looking for apprenticeship',
+            
+            // Section À Propos
+            'À Propos': 'About',
+            'Passionné par la création numérique depuis 5 ans, je transforme des idées en expériences visuelles immersives.': 'Passionate about digital creation for 5 years, I transform ideas into immersive visual experiences.',
+            'Mon Parcours': 'My Journey',
+            'Actuellement étudiant au CNAM Enjmin, école de référence française en création numérique et jeu vidéo. Je développe mes compétences artistiques et techniques pour exceller dans l\'industrie créative.': 'Currently studying at CNAM Enjmin, France\'s leading school in digital creation and video games. I develop my artistic and technical skills to excel in the creative industry.',
+            'Mes Spécialités': 'My Specialties',
+            'Modélisation 3D haute qualité (véhicules, environnements, personnages)': 'High-quality 3D modeling (vehicles, environments, characters)',
+            'Développement de jeux vidéo avec Unity et Unreal Engine': 'Video game development with Unity and Unreal Engine',
+            'Animation et motion design pour projets audiovisuels': 'Animation and motion design for audiovisual projects',
+            'Post-production vidéo et effets visuels': 'Video post-production and visual effects',
+            'Avantage alternance': 'Apprenticeship Benefits',
+            '4j/5 en entreprise (lundi au jeudi + cours a distance le vendredi)': '4d/5 in company (Monday to Thursday + remote classes on Friday)',
+            'Contrat de 3 ans': '3-year contract',
+            'Salaire d\'environ 740€ + 5000€ d\'aides de l\'état': 'Salary around €740 + €5000 government aid',
+            '🎨 PORTFOLIO COMPLET': '🎨 COMPLETE PORTFOLIO',
+            'Projets clients réalisés': 'Client projects completed',
+            'Disponible pour missions': 'Available for missions',
             
             // CV Section
             'Mon CV': 'My Resume',
-            'Découvrez mon parcours, mes compétences et mes expériences professionnelles.': 'Discover my background, skills and professional experiences.',
+            'Découvrez mes expériences, formations et compétences à travers mon CV.': 'Discover my experiences, education and skills through my resume.',
             '📄 Voir mon CV': '📄 View my Resume',
             
             // Logiciels
-            'Logiciels & Outils': 'Software & Tools',
+            '🛠️ Logiciels & Outils': '🛠️ Software & Tools',
             'Les outils que j\'utilise pour donner vie à mes créations': 'The tools I use to bring my creations to life',
             
             // Contact
@@ -41,9 +63,28 @@ class SimpleTranslation {
             
             // Portfolio
             'Mes Meilleurs Projets': 'My Best Projects',
-            'ALL': 'ALL',
+            'TOUT': 'ALL',
             '3D': '3D',
             'Tournage/Montage': 'Filming/Editing',
+            
+            // Projets spécifiques du Hero Carousel
+            'Arme QBZ-95': 'QBZ-95 Weapon',
+            'Ma première arme inspirée du QBZ95': 'My first weapon inspired by QBZ95',
+            'Le Prisme': 'The Prism',
+            'Projet personnel de vaisseau spatial complet qualité AAA': 'Personal project of complete AAA quality spaceship',
+            'Ville 3D': '3D City',
+            'Projet d\'animation de voiture dans une ville 3D': '3D city car animation project',
+            'Projet EDF': 'EDF Project',
+            'Multiples tournages pour EDF Sud-Ouest': 'Multiple shoots for EDF Southwest',
+            'Dungeon Haven': 'Dungeon Haven',
+            'Jeu vidéo développé en équipe durant une game jam': 'Video game developed as a team during a game jam',
+            'Le Colossus': 'The Colossus',
+            'Vaisseau spatial prêt pour jeu complet': 'Spaceship ready for complete game',
+            'DÉCOUVRIR LE PROJET': 'DISCOVER PROJECT',
+            'Jouer maintenant': 'Play now',
+            '🎮 Accéder au jeu': '🎮 Access game',
+            '🎨 Voir en 3D': '🎨 View in 3D',
+            '✕ Fermer la vue 3D': '✕ Close 3D view',
             
             // Projets descriptions courtes pour les data-description
             'vaisseau spatial game-ready': 'game-ready spaceship',
