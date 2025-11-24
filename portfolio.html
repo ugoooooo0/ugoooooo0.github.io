@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,7 +34,7 @@
             </div>
             <nav>
                 <ul>
-                    <li><a href="#" class="filter-btn active" data-filter="all" data-translate="ALL">ALL</a></li>
+                    <li><a href="#" class="filter-btn active" data-filter="all" data-translate="TOUT">TOUT</a></li>
                     <li><a href="#" class="filter-btn" data-filter="1" data-translate="3D">3D</a></li>
                     <li><a href="#" class="filter-btn" data-filter="2" data-translate="Tournage/Montage">Tournage/Montage</a></li>
                 </ul>
@@ -55,7 +55,7 @@
                             <div class="hero-text">
                                 <h1 class="hero-title" id="hero-title">Dungeon Haven</h1>
                                 <p class="hero-subtitle" id="hero-subtitle">Jeu vidéo complet développé en équipe</p>
-                                <button class="hero-cta" id="hero-cta">DÉCOUVRIR LE PROJET</button>
+                                <button class="hero-cta" id="hero-cta" data-translate="DÉCOUVRIR LE PROJET">DÉCOUVRIR LE PROJET</button>
                             </div>
                         </div>
 
@@ -122,7 +122,7 @@
                             
                             <!-- Projet 5 - La Vie du Chef -->
                             <div class="hero-thumb" 
-                                 data-title="Dungeaon Haven" 
+                                 data-title="Dungeon Haven" 
                                  data-subtitle="Jeu vidéo développé en équipe durant une game jam"
                                  data-thumb="https://i.imgur.com/kTgWziu.png"
                                  data-background="https://i.imgur.com/kTgWziu.png"
@@ -173,7 +173,7 @@
                         <div class="project-actions">
                             <a href="https://felixve.itch.io/dungeon-haven" target="_blank" class="play-game-btn" onclick="event.stopPropagation();">
                                 <span class="play-icon">🎮</span>
-                                <span class="play-text">Jouer maintenant</span>
+                                <span class="play-text" data-translate="Jouer maintenant">Jouer maintenant</span>
                             </a>
                         </div>
                     </div>
@@ -598,10 +598,10 @@
         <div class="lightbox-content">
             <div class="lightbox-navigation">
                 <button id="lightbox-game-access" class="lightbox-game-access" style="display: none;">
-                    🎮 Accéder au jeu
+                    <span data-translate="🎮 Accéder au jeu">🎮 Accéder au jeu</span>
                 </button>
                 <button id="lightbox-3d-access" class="lightbox-3d-access" style="display: none;">
-                    🎨 Voir en 3D
+                    <span data-translate="🎨 Voir en 3D">🎨 Voir en 3D</span>
                 </button>
             </div>
             <div class="lightbox-image-container">
@@ -611,7 +611,7 @@
                 <span class="lightbox-close">&times;</span>
                 <div id="lightbox-sketchfab-container" class="lightbox-sketchfab-container" style="display: none;">
                     <iframe id="lightbox-sketchfab-iframe" src="" frameborder="0" allowvr allowfullscreen></iframe>
-                    <button id="close-sketchfab" class="close-sketchfab-btn">✕ Fermer la vue 3D</button>
+                    <button id="close-sketchfab" class="close-sketchfab-btn" data-translate="✕ Fermer la vue 3D">✕ Fermer la vue 3D</button>
                 </div>
             </div>
             <div id="lightbox-description" class="lightbox-description"></div>
